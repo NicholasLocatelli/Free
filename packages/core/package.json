@@ -1,0 +1,17 @@
+{
+  "name": "@free/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Category-agnostic recovery domain engine: periods, relapses, urges, milestones, money estimate.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.3"
+  }
+}
