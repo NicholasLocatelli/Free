@@ -1,8 +1,10 @@
 # Tech Stack
 
-_Versioni verificate sul registry npm il **2026-10-02**. La documentazione ufficiale di
-expo.dev non era raggiungibile dall'ambiente di build: compatibilità finale confermata in M2 con
-`npx expo install --check`. Motivazioni in [ADR-001](ADR-001-tech-stack.md)._
+_Versioni verificate sul registry npm il **2026-10-02**; compatibilità Expo confermata il
+**2026-10-03** (issue #1) con `bundledNativeModules.json` di `expo@57.0.26` e
+`EXPO_OFFLINE=1 npx expo install --check` ("Dependencies are up to date"; l'API di Expo non è
+raggiungibile dall'ambiente di build, quindi il check è offline). Motivazioni in
+[ADR-001](ADR-001-tech-stack.md)._
 
 | Area                 | Scelta                                                                         | Versione                                               | Stato                                                                           |
 | -------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------------------------- |
