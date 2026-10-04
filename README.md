@@ -14,19 +14,19 @@ consapevolezza e accesso rapido a risorse di aiuto ufficiali.
 
 ## Stato
 
-| Milestone          | Stato                                                          |
-| ------------------ | -------------------------------------------------------------- |
-| M0 — Discovery     | ✅ completata ([review](docs/reviews/MILESTONE-0-1-REVIEW.md)) |
-| M1 — Architecture  | ✅ completata — dominio `@free/core` implementato e testato    |
-| M2 — Design System | 🔜 prossima (token definiti in `docs/ux/design-system.md`)     |
-| M3 — MVP Core      | pianificata                                                    |
+| Milestone          | Stato                                                                        |
+| ------------------ | ---------------------------------------------------------------------------- |
+| M0 — Discovery     | ✅ completata ([review](docs/reviews/MILESTONE-0-1-REVIEW.md))               |
+| M1 — Architecture  | ✅ completata — dominio `@free/core` implementato e testato                  |
+| M2 — Design System | 🟡 codice completo (#1, #2) — verifica accessibilità su dispositivo pendente |
+| M3 — MVP Core      | pianificata                                                                  |
 
 Roadmap completa: [docs/product/roadmap.md](docs/product/roadmap.md).
 
 ## Struttura
 
 ```
-apps/mobile/        App Expo (React Native) — scaffold in M2
+apps/mobile/        App Expo SDK 57 (React Native) con design system in src/ui
 packages/core/      Motore di dominio puro TypeScript: periodi, ricadute, impulsi,
                     milestone, stima denaro. Nessuna dipendenza da React/piattaforma.
 docs/product/       Visione, principi, MVP, roadmap, competitor, help center, metriche
