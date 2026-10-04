@@ -1,38 +1,68 @@
 import { currentPeriodView, type Instant, type Journey } from "@free/core";
-import { StyleSheet, Text, View } from "react-native";
-import { formatElapsed } from "./formatElapsed";
+import { ScrollView, StyleSheet } from "react-native";
+import { formatDayTime, formatGoal, formatMoney } from "../../i18n/format";
+import { t } from "../../i18n/it";
+import { AppText, ProgressRing, spacing, Stat, Timer } from "../../ui";
 
 interface TodayScreenProps {
   journey: Journey;
   now: Instant;
 }
 
+const PERCENT = 100;
+
 /**
- * Scaffold of the dashboard (issue #1). Layout, theming and design-system components
- * arrive with #2; persistence and onboarding with #3/#4.
+ * Dashboard read view. Actions (urge, relapse, help) are added with their flows in M4/M5
+ * so that no button exists without a working destination.
  */
 export function TodayScreen({ journey, now }: TodayScreenProps) {
   const view = currentPeriodView(journey, now);
   if (!view) return null;
-  const elapsed = formatElapsed(view.parts);
+  const { next, progressToNext } = view.milestones;
 
   return (
-    <View style={styles.container}>
-      <View accessible accessibilityLabel={elapsed.accessibilityLabel}>
-        <Text style={styles.headline}>{elapsed.headline}</Text>
-        <Text style={styles.detail}>{elapsed.detail}</Text>
-      </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <AppText variant="display" accessibilityRole="header">
+        {t("today.title")}
+      </AppText>
       {view.clockSkew && (
-        <Text accessibilityRole="alert" style={styles.detail}>
-          L'ora del dispositivo sembra cambiata. Il conteggio riprenderà automaticamente.
-        </Text>
+        <AppText color="warning" accessibilityRole="alert">
+          {t("today.clockSkew")}
+        </AppText>
       )}
-    </View>
+      <ProgressRing
+        value={progressToNext}
+        accessibilityLabel={
+          next === null
+            ? t("today.allGoalsReached")
+            : t("today.nextGoal", { goal: formatGoal(next) })
+        }
+      >
+        <AppText variant="heading" color="primary">
+          {`${Math.round(progressToNext * PERCENT)}%`}
+        </AppText>
+      </ProgressRing>
+      <Timer parts={view.parts} />
+      <AppText color="muted" style={styles.center}>
+        {t("today.since", { date: formatDayTime(view.startedAt) })}
+      </AppText>
+      <AppText style={styles.center}>
+        {next === null
+          ? t("today.allGoalsReached")
+          : t("today.nextGoal", { goal: formatGoal(next) })}
+      </AppText>
+      {view.money.status === "estimated" && (
+        <Stat
+          label={t("money.label")}
+          value={`~ ${formatMoney(view.money.amountMinor, view.money.currency)}`}
+          caption={t("money.caption")}
+        />
+      )}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", justifyContent: "center", gap: 16, padding: 16 },
-  headline: { fontSize: 56, fontWeight: "600", fontVariant: ["tabular-nums"], textAlign: "center" },
-  detail: { fontSize: 17, textAlign: "center" },
+  container: { padding: spacing.lg, gap: spacing.lg, alignItems: "center" },
+  center: { textAlign: "center" },
 });

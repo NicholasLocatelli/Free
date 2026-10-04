@@ -24,7 +24,8 @@ dell'utente nel momento più fragile) e che i flussi critici funzionino su Andro
 - **Tempo iniettato:** nessun test usa l'orologio reale; `now`/`Clock` sono parametri.
 - **Dominio puro = test veloci e deterministici;** la UI non viene testata per logica che vive nel core.
 - **Ogni bug → test di regressione** prima del fix.
-- **No flaky:** un test instabile è un bug da correggere, mai da disabilitare.
+- **No flaky:** un test instabile è un bug da correggere, mai da disabilitare. Nota: i test componenti hanno `testTimeout` 20 s perché a cache Jest fredda (come in CI) la prima trasformazione di moduli RN pesanti (es. `Modal`) supera i 5 s di default; misurato con `jest --clearCache`.
+- **Copy verificato da test:** `i18n.test.ts` fallisce se il dizionario contiene parole vietate dal tono di voce (fallito, reset, da zero, guarire, jackpot…).
 - **Dati realistici e estremi** (anni di storico, migliaia di impulsi) per performance (M6).
 
 ## Gate CI

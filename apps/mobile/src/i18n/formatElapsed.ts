@@ -1,6 +1,6 @@
 import type { DurationParts } from "@free/core";
 
-const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+import { plural } from "./format";
 
 export interface ElapsedText {
   /** Hero value, e.g. "12 giorni". */

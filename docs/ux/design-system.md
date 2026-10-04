@@ -1,7 +1,12 @@
 # Design System
 
-_Owner: A2 Style/Brand Agent + UI Designer Agent + Accessibility Agent. Versione 0.1 — 2026-10-02.
-I token verranno implementati come codice in M2 (`packages/ui` o `apps/mobile/src/theme`)._
+_Owner: A2 Style/Brand Agent + UI Designer Agent + Accessibility Agent. Versione 0.2 — 2026-10-04._
+
+**Implementazione (issue #2):** token in `apps/mobile/src/ui/theme/tokens.ts`, tema in
+`ThemeProvider.tsx` (Sistema/Chiaro/Scuro + "Riduci movimento"), componenti in
+`apps/mobile/src/ui/components/`, copy in `apps/mobile/src/i18n/it.ts`. I contrasti di questa
+pagina sono verificati da `tokens.test.ts`: una modifica della palette che viola AA fa fallire la
+CI. Catalogo visivo (solo build di sviluppo): route `/dev/catalog`.
 
 ## 1. Brand
 
@@ -110,8 +115,9 @@ tracciamento da font CDN. Tutte le dimensioni scalano con le impostazioni di acc
 
 ## 6. Iconografia
 
-Set lineare coerente (stroke 1.75–2 px, angoli arrotondati), es. Lucide — scelta definitiva e
-licenza in M2. Simboli: bussola/orizzonte (brand), onda, foglia, cuore, telefono, libro, scudo.
+Set lineare coerente (stroke 1.75–2 px, angoli arrotondati), es. Lucide. **Rinviato a M4**:
+nessun componente M2 richiede icone (stati e azioni sono sempre espressi in testo); la libreria
+verrà scelta con il primo flusso che ne ha bisogno, verificandone la licenza. Simboli: bussola/orizzonte (brand), onda, foglia, cuore, telefono, libro, scudo.
 **Vietati:** dadi, carte, fiches, slot, monete che cadono, trofei dorati, fiamme "streak".
 
 ## 7. Componenti (contratto per M2)
