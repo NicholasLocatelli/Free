@@ -19,7 +19,7 @@ consapevolezza e accesso rapido a risorse di aiuto ufficiali.
 | M0 — Discovery     | ✅ completata ([review](docs/reviews/MILESTONE-0-1-REVIEW.md))               |
 | M1 — Architecture  | ✅ completata — dominio `@free/core` implementato e testato                  |
 | M2 — Design System | 🟡 codice completo (#1, #2) — verifica accessibilità su dispositivo pendente |
-| M3 — MVP Core      | pianificata                                                                  |
+| M3 — MVP Core      | 🟡 persistenza SQLite completa (#3); onboarding e dashboard in #4            |
 
 Roadmap completa: [docs/product/roadmap.md](docs/product/roadmap.md).
 

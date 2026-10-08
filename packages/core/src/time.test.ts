@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { breakdownDuration, elapsedBetween, MS_PER_DAY, MS_PER_HOUR, MS_PER_MINUTE } from "./time";
+import {
+  breakdownDuration,
+  elapsedBetween,
+  isValidInstant,
+  MS_PER_DAY,
+  MS_PER_HOUR,
+  MS_PER_MINUTE,
+  systemClock,
+} from "./time";
 
 describe("elapsedBetween", () => {
   it("returns the difference between two instants", () => {
@@ -31,5 +39,15 @@ describe("breakdownDuration", () => {
 
   it("never returns negative values", () => {
     expect(breakdownDuration(-5)).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  });
+});
+
+describe("systemClock / isValidInstant", () => {
+  it("reads the device clock as a valid instant", () => {
+    expect(isValidInstant(systemClock.now())).toBe(true);
+  });
+
+  it.each([-1, 1.5, Number.NaN, Number.MAX_SAFE_INTEGER + 2])("rejects %s", (value) => {
+    expect(isValidInstant(value)).toBe(false);
   });
 });

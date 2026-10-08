@@ -194,3 +194,86 @@ describe("settings", () => {
     });
   });
 });
+
+describe("optional fields and missing open period", () => {
+  it("stores an urge with only the required fields", () => {
+    const journey = unwrap(
+      recordUrge(makeJourney(), {
+        id: "u",
+        occurredAt: T0,
+        intensity: 3,
+        outcome: "acted",
+        now: T0,
+      }),
+    );
+    expect(journey.urges[0]).toMatchObject({
+      trigger: null,
+      durationMinutes: null,
+      copingActions: [],
+      note: null,
+    });
+  });
+
+  it("normalises blank notes to null", () => {
+    const journey = unwrap(recordRelapse(makeJourney(), relapseInput({ note: "   " })));
+    expect(journey.relapses[0]?.note).toBeNull();
+  });
+
+  it("rejects commands that need an open period when none exists", () => {
+    const journey = makeJourney();
+    const closed = {
+      ...journey,
+      periods: journey.periods.map((p) => ({ ...p, endedAt: T0, endReason: "relapse" as const })),
+    };
+    expect(recordRelapse(closed, relapseInput())).toEqual({ ok: false, error: "no_open_period" });
+    expect(editCurrentPeriodStart(closed, T0, T0)).toEqual({ ok: false, error: "no_open_period" });
+  });
+
+  it("rejects invalid instants and future edits", () => {
+    expect(editCurrentPeriodStart(makeJourney(), T0 + 1, T0)).toEqual({
+      ok: false,
+      error: "in_future",
+    });
+    expect(recordUrge(makeJourney(), urgeInput({ occurredAt: Number.NaN }))).toEqual({
+      ok: false,
+      error: "invalid_instant",
+    });
+  });
+
+  it("validates milestones and money at creation", () => {
+    const base = {
+      id: "j",
+      periodId: "p",
+      categoryId: "gambling" as const,
+      startedAt: T0,
+      now: T0,
+    };
+    expect(createJourney({ ...base, milestoneHours: [] })).toEqual({
+      ok: false,
+      error: "invalid_milestones",
+    });
+    expect(
+      createJourney({
+        ...base,
+        money: {
+          enabled: true,
+          currency: "EUR",
+          amountPerSessionMinor: null,
+          sessionsPerUnit: null,
+          frequencyUnit: "week",
+        },
+      }),
+    ).toEqual({ ok: false, error: "invalid_money_settings" });
+  });
+
+  it("accepts valid money settings updates", () => {
+    const money = {
+      enabled: true,
+      currency: "EUR",
+      amountPerSessionMinor: 1_000,
+      sessionsPerUnit: 1,
+      frequencyUnit: "day" as const,
+    };
+    expect(unwrap(updateMoneySettings(makeJourney(), money)).money).toEqual(money);
+  });
+});

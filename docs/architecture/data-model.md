@@ -29,7 +29,11 @@ cancellarli e che non esistano incoerenze tra dati e statistiche.
 **Tempo:** tutti gli istanti sono epoch ms UTC (`Instant`). `recordedAt` ≠ `occurredAt` consente
 registrazioni a posteriori.
 
-## Schema SQLite (M3)
+## Schema SQLite (implementato in #3)
+
+Codice: `apps/mobile/src/data/` — `migrations.ts` (schema), `rows.ts` (mapping e validazione in
+lettura), `JourneyRepository.ts` (salvataggio per differenza in una transazione),
+`SettingsRepository.ts`, `expoSqlExecutor.ts` (device) e `src/test/nodeSqlExecutor.ts` (test).
 
 ```sql
 -- PRAGMA user_version = 1
@@ -87,10 +91,14 @@ CREATE TABLE app_settings (            -- preferenze non sensibili
 ```
 
 - `PRAGMA foreign_keys = ON` e `journal_mode = WAL` all'apertura.
-- Ogni comando di dominio = **una transazione** (es. ricaduta: UPDATE periodo + INSERT periodo +
-  INSERT relapse). L'indice parziale garantisce a livello DB che non esistano due periodi aperti.
+- Ogni comando di dominio = **una transazione**. Il repository salva la differenza tra lo stato
+  persistito e il nuovo `Journey`: aggiorna i periodi modificati **prima** di inserire quelli nuovi
+  (così l'indice parziale "un solo periodo aperto" non vede mai due righe aperte), poi inserisce
+  ricadute e impulsi nuovi. Gli eventi non vengono mai aggiornati né cancellati.
+- I comandi dello store sono serializzati: ognuno parte dallo stato confermato dal precedente.
 - Migrazioni: array ordinato di script, applicati in transazione aggiornando `user_version`;
-  testate in Node (better-sqlite3) partendo da ogni versione precedente.
+  testate in Node (`node:sqlite`): rollback di una migrazione fallita, rifiuto di uno schema più
+  recente dell'app (`SchemaTooNewError`).
 - Mapping riga ⇄ entità: funzioni pure nel repository, testate; i JSON vengono validati in lettura
   (dati corrotti → errore esplicito, Flow 8).
 

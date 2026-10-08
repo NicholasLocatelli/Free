@@ -113,6 +113,15 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner prima della Beta.
 - **Date:** 2026-10-02
 
+### D-015 ✅ `node:sqlite` invece di better-sqlite3 per i test di integrazione
+
+- **Context:** i test di repository e migrazioni devono girare su SQLite reale in CI.
+- **Alternatives:** better-sqlite3 (modulo nativo, prebuilt scaricati da GitHub al momento dell'install); mock dell'SQL.
+- **Chosen:** `node:sqlite`, incluso in Node ≥ 22.5 (SQLite 3.50), dietro l'interfaccia `SqlExecutor`.
+- **Reason:** nessuna dipendenza nativa né download extra; stesso dialetto SQL del device.
+- **Trade-offs:** modulo ancora "experimental" in Node 22 (avviso a runtime); se l'API cambiasse, l'adapter è isolato in un file.
+- **Date:** 2026-10-08
+
 ### D-014 ⏳ Policy di backup di sistema del database
 
 - **Context:** i backup automatici iCloud/Google copierebbero dati sensibili fuori dal device.

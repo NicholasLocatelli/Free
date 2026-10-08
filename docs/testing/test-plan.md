@@ -16,15 +16,15 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 
 ### TC-TIM — Timer
 
-| ID    | Acceptance criteria                                                                   | Stato                        |
-| ----- | ------------------------------------------------------------------------------------- | ---------------------------- |
-| TIM-1 | Durata = now − startedAt; scomposizione giorni/ore/min corretta                       | ✅                           |
-| TIM-2 | "1 giorno" esattamente a 24h dall'inizio                                              | ✅                           |
-| TIM-3 | Transizione DST Europe/Rome non altera la durata                                      | ✅                           |
-| TIM-4 | Orologio indietro → 0 + `clockSkew`, nessun dato modificato                           | ✅ core · 🟡 UI banner       |
-| TIM-5 | Riavvio app / kill / reboot → valore ricalcolato identico                             | ✅ core (stateless) · 🟡 E2E |
-| TIM-6 | Cambio timezone del device → durata invariata, data di inizio mostrata nel nuovo fuso | 🟡 M3 component              |
-| TIM-7 | Ritorno da background → aggiornamento immediato                                       | 🟡 M3                        |
+| ID    | Acceptance criteria                                                                   | Stato                                                                     |
+| ----- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| TIM-1 | Durata = now − startedAt; scomposizione giorni/ore/min corretta                       | ✅                                                                        |
+| TIM-2 | "1 giorno" esattamente a 24h dall'inizio                                              | ✅                                                                        |
+| TIM-3 | Transizione DST Europe/Rome non altera la durata                                      | ✅                                                                        |
+| TIM-4 | Orologio indietro → 0 + `clockSkew`, nessun dato modificato                           | ✅ core · 🟡 UI banner                                                    |
+| TIM-5 | Riavvio app / kill / reboot → valore ricalcolato identico                             | ✅ core (stateless) · ✅ ricarica da DB (`journeyStore.test.ts`) · 🟡 E2E |
+| TIM-6 | Cambio timezone del device → durata invariata, data di inizio mostrata nel nuovo fuso | 🟡 M3 component                                                           |
+| TIM-7 | Ritorno da background → aggiornamento immediato                                       | 🟡 M3                                                                     |
 
 ### TC-URG — Impulso
 
@@ -39,17 +39,17 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 
 ### TC-REL — Ricaduta
 
-| ID    | Acceptance criteria                                                          | Stato                                 |
-| ----- | ---------------------------------------------------------------------------- | ------------------------------------- |
-| REL-1 | Crea nuovo periodo e chiude il precedente all'istante indicato               | ✅                                    |
-| REL-2 | Storico precedente conservato (periodi, impulsi)                             | ✅                                    |
-| REL-3 | Milestone del periodo chiuso conservate                                      | ✅                                    |
-| REL-4 | Dashboard aggiornata al nuovo periodo; tempo totale continua a crescere      | ✅ core · 🟡 E2E                      |
-| REL-5 | Orario prima dell'inizio periodo o nel futuro → rifiutato                    | ✅                                    |
-| REL-6 | Ripartenza successiva all'orario della ricaduta supportata                   | ✅                                    |
-| REL-7 | Nessun copy vietato ("fallito", "reset", "da zero") e nessun colore `danger` | 👤 UX review · 🟡 test snapshot testi |
-| REL-8 | Le risorse di supporto sono visibili nella riflessione                       | 🟡 M4                                 |
-| REL-9 | Scrittura atomica: errore DB a metà → nessun cambiamento persistito          | 🟡 M3 integration                     |
+| ID    | Acceptance criteria                                                          | Stato                                        |
+| ----- | ---------------------------------------------------------------------------- | -------------------------------------------- |
+| REL-1 | Crea nuovo periodo e chiude il precedente all'istante indicato               | ✅                                           |
+| REL-2 | Storico precedente conservato (periodi, impulsi)                             | ✅                                           |
+| REL-3 | Milestone del periodo chiuso conservate                                      | ✅                                           |
+| REL-4 | Dashboard aggiornata al nuovo periodo; tempo totale continua a crescere      | ✅ core · 🟡 E2E                             |
+| REL-5 | Orario prima dell'inizio periodo o nel futuro → rifiutato                    | ✅                                           |
+| REL-6 | Ripartenza successiva all'orario della ricaduta supportata                   | ✅                                           |
+| REL-7 | Nessun copy vietato ("fallito", "reset", "da zero") e nessun colore `danger` | 👤 UX review · 🟡 test snapshot testi        |
+| REL-8 | Le risorse di supporto sono visibili nella riflessione                       | 🟡 M4                                        |
+| REL-9 | Scrittura atomica: errore DB a metà → nessun cambiamento persistito          | ✅ integration (`JourneyRepository.test.ts`) |
 
 ### TC-MON — Stima denaro
 
@@ -75,24 +75,24 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 
 ## 2. Edge case (Edge Case Tester)
 
-| Caso                                                       | Atteso                                                                 | Copertura                   |
-| ---------------------------------------------------------- | ---------------------------------------------------------------------- | --------------------------- |
-| Prima apertura, nessun dato                                | Onboarding; nessuna query fallisce                                     | 🟡 M3                       |
-| Cancellazione dati                                         | Torna all'onboarding; DB rimosso; notifiche annullate                  | 🟡 M7                       |
-| Cambio data/ora manuale avanti                             | Durata cresce (accettato: il device è la fonte di tempo) — documentato | ✅ (comportamento definito) |
-| Cambio data/ora indietro                                   | Clock skew gestito                                                     | ✅                          |
-| Timezone / DST                                             | Durata invariata                                                       | ✅                          |
-| Reinstallazione                                            | Dati persi (local-first) salvo export/backup; onboarding pulito        | 🟡 M7 (dipende da D-014)    |
-| Perdita connessione                                        | Nessun impatto sul core; link esterni con numero copiabile             | 🟡 M5                       |
-| DB corrotto / JSON invalido                                | ErrorState con opzioni; mai cancellazione silenziosa                   | 🟡 M3 integration           |
-| Migrazione interrotta                                      | Rollback transazione                                                   | 🟡 M3 integration           |
-| Dati mancanti (campi null)                                 | Stati `incomplete`/vuoti, nessun crash                                 | ✅ core                     |
-| Valori estremi (100 anni, importi massimi, 10.000 impulsi) | Nessun overflow; UI fluida                                             | ✅ core · 🟡 perf M6        |
-| Doppio tap                                                 | Nessun duplicato                                                       | ✅ core · 🟡 UI             |
-| Notifiche duplicate                                        | Riprogrammazione idempotente (cancella+ripianifica per id)             | 🟡 M6                       |
-| Sessione scaduta                                           | N/A nell'MVP (nessun account)                                          | —                           |
-| Testo nota > 2000 caratteri, emoji, RTL                    | Rifiuto oltre il limite; emoji/RTL salvati correttamente               | ✅ limite · 🟡 UI           |
-| Font 200%, screen reader                                   | Nessun testo troncato nei flussi critici                               | 👤 fine M3/M4               |
+| Caso                                                       | Atteso                                                                 | Copertura                                                          |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Prima apertura, nessun dato                                | Onboarding; nessuna query fallisce                                     | ✅ integration + component (`HomeScreen.test.tsx`)                 |
+| Cancellazione dati                                         | Torna all'onboarding; DB rimosso; notifiche annullate                  | 🟡 M7                                                              |
+| Cambio data/ora manuale avanti                             | Durata cresce (accettato: il device è la fonte di tempo) — documentato | ✅ (comportamento definito)                                        |
+| Cambio data/ora indietro                                   | Clock skew gestito                                                     | ✅                                                                 |
+| Timezone / DST                                             | Durata invariata                                                       | ✅                                                                 |
+| Reinstallazione                                            | Dati persi (local-first) salvo export/backup; onboarding pulito        | 🟡 M7 (dipende da D-014)                                           |
+| Perdita connessione                                        | Nessun impatto sul core; link esterni con numero copiabile             | 🟡 M5                                                              |
+| DB corrotto / JSON invalido                                | ErrorState con opzioni; mai cancellazione silenziosa                   | ✅ `DataCorruptionError` (5 casi) + ErrorState con Riprova         |
+| Migrazione interrotta                                      | Rollback transazione                                                   | ✅ integration                                                     |
+| Dati mancanti (campi null)                                 | Stati `incomplete`/vuoti, nessun crash                                 | ✅ core                                                            |
+| Valori estremi (100 anni, importi massimi, 10.000 impulsi) | Nessun overflow; UI fluida                                             | ✅ core · 🟡 perf M6                                               |
+| Doppio tap                                                 | Nessun duplicato                                                       | ✅ core · ✅ Button · ✅ store (comandi serializzati, id del form) |
+| Notifiche duplicate                                        | Riprogrammazione idempotente (cancella+ripianifica per id)             | 🟡 M6                                                              |
+| Sessione scaduta                                           | N/A nell'MVP (nessun account)                                          | —                                                                  |
+| Testo nota > 2000 caratteri, emoji, RTL                    | Rifiuto oltre il limite; emoji/RTL salvati correttamente               | ✅ limite · 🟡 UI                                                  |
+| Font 200%, screen reader                                   | Nessun testo troncato nei flussi critici                               | 👤 fine M3/M4                                                      |
 
 ## 3. Release QA — criteri di blocco
 
