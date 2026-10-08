@@ -1,8 +1,9 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { createAppStore } from "../src/state/createAppStore";
+import { createAppServices } from "../src/state/createAppStore";
 import { JourneyStoreProvider } from "../src/state/JourneyStoreProvider";
+import { SettingsProvider } from "../src/state/SettingsProvider";
 import { ThemeProvider, useTheme } from "../src/ui";
 
 function ThemedStack() {
@@ -21,16 +22,18 @@ function ThemedStack() {
 }
 
 export default function RootLayout() {
-  const [store] = useState(createAppStore);
+  const [services] = useState(createAppServices);
   useEffect(() => {
-    void store.getState().load();
-  }, [store]);
+    void services.journeyStore.getState().load();
+  }, [services]);
 
   return (
-    <JourneyStoreProvider store={store}>
-      <ThemeProvider>
-        <ThemedStack />
-      </ThemeProvider>
+    <JourneyStoreProvider store={services.journeyStore}>
+      <SettingsProvider settings={services.settings}>
+        <ThemeProvider>
+          <ThemedStack />
+        </ThemeProvider>
+      </SettingsProvider>
     </JourneyStoreProvider>
   );
 }

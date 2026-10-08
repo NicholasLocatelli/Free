@@ -1,0 +1,23 @@
+# Maestro E2E flow ONB-1 (docs/testing/test-plan.md). Runs against a development or
+# release build with a clean install: `maestro test apps/mobile/e2e/onboarding.yaml`.
+# Wired into CI with the emulator job in M6.
+appId: app.approdo.mobile
+---
+- clearState
+- launchApp
+- assertVisible: "Uno spazio privato per seguire il tuo percorso."
+- tapOn: "Inizia"
+- assertVisible: "Per cosa vuoi iniziare il percorso?"
+- tapOn: "Continua"
+- assertVisible: "Quando vuoi iniziare?"
+- tapOn: "Continua"
+- assertVisible: "Qual è il tuo primo obiettivo?"
+- tapOn: "Continua"
+- assertVisible: "Vuoi vedere una stima del denaro non speso?"
+- tapOn: "Inizia il percorso"
+- assertVisible: "Oggi"
+- assertVisible: "0 giorni"
+# Restart: the journey must come back from SQLite (TIM-5).
+- stopApp
+- launchApp
+- assertVisible: "Oggi"

@@ -113,6 +113,31 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner prima della Beta.
 - **Date:** 2026-10-02
 
+### D-016 ✅ Il "primo obiettivo" diventa la prima milestone
+
+- **Context:** l'onboarding chiede il primo obiettivo; serve un effetto reale e non solo estetico.
+- **Alternatives:** salvarlo come preferenza "in evidenza" separata; ignorarlo.
+- **Chosen:** le milestone del percorso partono dall'obiettivo scelto e proseguono con i default successivi (es. 7 giorni → 7, 14, 30, 60, 90, 180, 365).
+- **Reason:** nessun nuovo concetto nel dominio; la Dashboard mostra già "Prossimo obiettivo".
+- **Trade-offs:** chi sceglie 7 giorni non vede i traguardi di 24 h e 3 giorni; potrà aggiungerli dalle impostazioni obiettivi (M4).
+- **Date:** 2026-10-08
+
+### D-017 ✅ Data di inizio con "quanti giorni fa" + "a che ora", senza selettore nativo
+
+- **Context:** Flow 1 prevede un picker di data/ora non nel futuro.
+- **Alternatives:** `@react-native-community/datetimepicker` (API diverse tra Android e iOS, modulo nativo, test più fragili).
+- **Chosen:** due campi testuali validati (`parseStart`), con anteprima "Inizio: 6 ottobre alle ore 21:40".
+- **Reason:** accessibile con screen reader e font grandi, nessuna dipendenza nativa, logica pura testata anche sul cambio d'ora.
+- **Trade-offs:** meno "nativo"; rivalutare dopo i test d'uso in Beta.
+- **Date:** 2026-10-08
+
+### D-018 ✅ Step "Notifiche" rinviato a M6
+
+- **Context:** il brief prevede uno step notifiche nell'onboarding; le notifiche arrivano in M6.
+- **Chosen:** l'onboarding ha 5 step; lo step notifiche verrà aggiunto insieme alla funzione.
+- **Reason:** non descrivere funzioni che non esistono (principio 8) e tenere l'onboarding breve.
+- **Date:** 2026-10-08
+
 ### D-015 ✅ `node:sqlite` invece di better-sqlite3 per i test di integrazione
 
 - **Context:** i test di repository e migrazioni devono girare su SQLite reale in CI.
