@@ -48,3 +48,14 @@ describe("journeyStats", () => {
     });
   });
 });
+
+describe("currentPeriodView without an open period", () => {
+  it("returns null for a journey whose periods are all closed", () => {
+    const journey = makeJourney();
+    const closed = {
+      ...journey,
+      periods: journey.periods.map((p) => ({ ...p, endedAt: T0, endReason: "relapse" as const })),
+    };
+    expect(currentPeriodView(closed, T0)).toBeNull();
+  });
+});
