@@ -5,13 +5,14 @@ import { TodayScreen } from "./TodayScreen";
 
 const T0 = Date.UTC(2026, 9, 1, 20, 0);
 
-function journey(): Journey {
+function journey(extra: Partial<Parameters<typeof createJourney>[0]> = {}): Journey {
   const result = createJourney({
     id: "j",
     periodId: "p",
     categoryId: "gambling",
     startedAt: T0,
     now: T0,
+    ...extra,
   });
   if (!result.ok) throw new Error(result.error);
   return result.value;
@@ -34,5 +35,38 @@ describe("TodayScreen", () => {
     await renderWithTheme(<TodayScreen journey={journey()} now={T0 - MS_PER_HOUR} />);
     expect(screen.getByText("0 giorni")).toBeOnTheScreen();
     expect(screen.getByRole("alert")).toBeOnTheScreen();
+  });
+
+  it("shows the first day state", async () => {
+    await renderWithTheme(<TodayScreen journey={journey()} now={T0 + 5 * MS_PER_MINUTE} />);
+    expect(screen.getByLabelText("0 giorni, 0 ore e 5 minuti")).toBeOnTheScreen();
+    expect(screen.getByText("Prossimo obiettivo: 1 giorno")).toBeOnTheScreen();
+    expect(screen.getByText("Dal 1 ottobre alle ore 22:00")).toBeOnTheScreen();
+  });
+
+  it("acknowledges when every goal is reached", async () => {
+    await renderWithTheme(
+      <TodayScreen journey={journey({ milestoneHours: [24] })} now={T0 + 2 * MS_PER_DAY} />,
+    );
+    expect(screen.getAllByText("Hai raggiunto tutti i tuoi obiettivi.")).toHaveLength(1);
+    expect(
+      screen.getByRole("progressbar", { name: "Hai raggiunto tutti i tuoi obiettivi." }),
+    ).toHaveAccessibilityValue({ now: 100 });
+  });
+
+  it("labels the money figure as an estimate", async () => {
+    const withMoney = journey({
+      money: {
+        enabled: true,
+        currency: "EUR",
+        amountPerSessionMinor: 2_000,
+        sessionsPerUnit: 1,
+        frequencyUnit: "day",
+      },
+    });
+    await renderWithTheme(<TodayScreen journey={withMoney} now={T0 + 3 * MS_PER_DAY} />);
+    expect(
+      screen.getByLabelText("Stima del denaro non speso, ~ 60 €, Basata su quanto ci hai indicato"),
+    ).toBeOnTheScreen();
   });
 });

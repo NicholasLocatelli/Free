@@ -7,7 +7,8 @@ Ogni flow elenca stati, errori e recovery. I comandi di dominio citati esistono 
 ## Flow 1 — Onboarding (prima apertura)
 
 ```
-Welcome ──▶ Categoria ──▶ Inizio ──▶ Primo obiettivo ──▶ Denaro (opz.) ──▶ Notifiche (opz.) ──▶ Dashboard
+Welcome ──▶ Categoria ──▶ Inizio ──▶ Primo obiettivo ──▶ Denaro (opz.) ──▶ Dashboard
+(lo step Notifiche arriva con la funzione in M6, D-018)
 ```
 
 | Step            | Contenuto                                                                                                                                  | Note                                                                                                                   |

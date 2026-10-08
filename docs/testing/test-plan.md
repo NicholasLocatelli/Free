@@ -6,13 +6,13 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 
 ### TC-ONB — Onboarding
 
-| ID    | Acceptance criteria                                                                    | Stato                                                   |
-| ----- | -------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| ONB-1 | Completo onboarding con "Adesso" in ≤ 6 schermate; la Dashboard mostra 0 giorni, 0 ore | 🟡 M3 E2E                                               |
-| ONB-2 | Data di inizio nel passato → giorni/ore corretti in Dashboard                          | ✅ core (`createJourney`, `currentPeriodView`) · 🟡 E2E |
-| ONB-3 | Data nel futuro non selezionabile; se forzata → errore `in_future`                     | ✅ core                                                 |
-| ONB-4 | "Salta" su denaro e notifiche non crea dati né chiede permessi                         | 🟡 M3                                                   |
-| ONB-5 | Kill dell'app a metà onboarding → riprende dallo step corretto                         | 🟡 M3                                                   |
+| ID    | Acceptance criteria                                                                  | Stato                                                                                          |
+| ----- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| ONB-1 | Completo onboarding con "Adesso" in 5 schermate; la Dashboard mostra 0 giorni, 0 ore | ✅ component (`OnboardingFlow.test.tsx`) · 🟡 E2E `apps/mobile/e2e/onboarding.yaml` (CI in M6) |
+| ONB-2 | Data di inizio nel passato → giorni/ore corretti in Dashboard                        | ✅ core + `onboardingModel.test.ts` (incluso cambio d'ora) + component                         |
+| ONB-3 | Data nel futuro non accettata, con spiegazione                                       | ✅ core + component                                                                            |
+| ONB-4 | "Salta" su denaro non crea dati né chiede permessi                                   | ✅ component (stima disattivata di default; nessun permesso richiesto)                         |
+| ONB-5 | Kill dell'app a metà onboarding → riprende dallo step corretto                       | ✅ component (progress in `app_settings`)                                                      |
 
 ### TC-TIM — Timer
 
@@ -23,7 +23,7 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 | TIM-3 | Transizione DST Europe/Rome non altera la durata                                      | ✅                                                                        |
 | TIM-4 | Orologio indietro → 0 + `clockSkew`, nessun dato modificato                           | ✅ core · 🟡 UI banner                                                    |
 | TIM-5 | Riavvio app / kill / reboot → valore ricalcolato identico                             | ✅ core (stateless) · ✅ ricarica da DB (`journeyStore.test.ts`) · 🟡 E2E |
-| TIM-6 | Cambio timezone del device → durata invariata, data di inizio mostrata nel nuovo fuso | 🟡 M3 component                                                           |
+| TIM-6 | Cambio timezone del device → durata invariata, data di inizio mostrata nel nuovo fuso | ✅ core · ✅ test app con `TZ=Europe/Rome`                                |
 | TIM-7 | Ritorno da background → aggiornamento immediato                                       | 🟡 M3                                                                     |
 
 ### TC-URG — Impulso
@@ -60,7 +60,7 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 | MON-3 | Valori mancanti → stato `incomplete` (nessun numero inventato) | ✅              |
 | MON-4 | Disattivazione → stato `disabled`, la card scompare            | ✅ core · 🟡 UI |
 | MON-5 | Valori estremi → intero sicuro                                 | ✅              |
-| MON-6 | Etichetta "Stima del denaro non speso" sempre presente         | 🟡 component    |
+| MON-6 | Etichetta "Stima del denaro non speso" sempre presente         | ✅ component    |
 
 ### TC-HIS — Storico, TC-GOAL — Obiettivi, TC-HELP — Help Center
 

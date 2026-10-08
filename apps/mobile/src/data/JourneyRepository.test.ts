@@ -145,5 +145,7 @@ describe("SettingsRepository", () => {
     await settings.set("theme", "dark");
     await settings.set("theme", "light");
     expect(await settings.get("theme")).toBe("light");
+    await settings.remove("theme");
+    expect(await settings.get("theme")).toBeNull();
   });
 });
