@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "Approdo",
+    "slug": "free",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "approdo",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.approdo.mobile"
+    },
+    "android": {
+      "package": "app.approdo.mobile",
+      "permissions": [],
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
