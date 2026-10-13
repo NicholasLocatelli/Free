@@ -5,6 +5,7 @@ export { Chip } from "./components/Chip";
 export { MilestoneCard, type MilestoneStatus } from "./components/MilestoneCard";
 export { ProgressRing } from "./components/ProgressRing";
 export { ResourceCard, type Resource } from "./components/ResourceCard";
+export { Screen } from "./components/Screen";
 export { Sheet } from "./components/Sheet";
 export { Stat } from "./components/Stat";
 export { EmptyState, ErrorState } from "./components/StateMessage";

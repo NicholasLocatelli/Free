@@ -1,10 +1,10 @@
 import type { FrequencyUnit } from "@free/core";
 import { useState, type ReactNode } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { formatDayTime, formatGoal } from "../../i18n/format";
 import { t, type MessageKey } from "../../i18n/it";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
-import { AppText, Button, Chip, spacing, TextField, Toggle, useTheme } from "../../ui";
+import { AppText, Button, Chip, Screen, spacing, TextField, Toggle, useTheme } from "../../ui";
 import {
   currentTimeText,
   FIRST_GOAL_OPTIONS,
@@ -36,9 +36,9 @@ export function OnboardingFlow({ now = Date.now }: OnboardingFlowProps) {
 
   if (!progress) {
     return (
-      <View style={styles.center}>
+      <Screen centered>
         <ActivityIndicator color={colors.primary} accessibilityLabel="Caricamento" />
-      </View>
+      </Screen>
     );
   }
 
@@ -106,7 +106,7 @@ export function OnboardingFlow({ now = Date.now }: OnboardingFlowProps) {
         : t("common.continue");
 
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+    <Screen centered>
       <AppText variant="caption" color="muted">
         {t("onboarding.progress", { n: index + 1, total: ONBOARDING_STEPS.length })}
       </AppText>
@@ -128,7 +128,7 @@ export function OnboardingFlow({ now = Date.now }: OnboardingFlowProps) {
           />
         )}
       </View>
-    </ScrollView>
+    </Screen>
   );
 }
 
@@ -299,9 +299,7 @@ function StepContent({ step, draft, edit, now }: StepProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: spacing.lg, gap: spacing.xl, flexGrow: 1 },
-  center: { flex: 1, justifyContent: "center" },
   section: { gap: spacing.lg },
   row: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
-  actions: { gap: spacing.sm, marginTop: "auto" },
+  actions: { gap: spacing.sm },
 });

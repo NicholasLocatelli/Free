@@ -1,8 +1,8 @@
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator } from "react-native";
 import { t } from "../../i18n/it";
 import { useNow } from "../../platform/useNow";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
-import { Button, ErrorState, spacing, useTheme } from "../../ui";
+import { Button, ErrorState, Screen, useTheme } from "../../ui";
 import { OnboardingFlow } from "../onboarding/OnboardingFlow";
 import { TodayScreen } from "../today/TodayScreen";
 
@@ -18,21 +18,21 @@ export function HomeScreen() {
 
   if (boot.status === "loading") {
     return (
-      <View style={styles.center}>
+      <Screen centered>
         <ActivityIndicator color={colors.primary} accessibilityLabel="Caricamento" />
-      </View>
+      </Screen>
     );
   }
 
   if (boot.status === "error") {
     return (
-      <View style={styles.center}>
+      <Screen centered>
         <ErrorState
           title={t("error.data.title")}
           body={t("error.data.body")}
           actions={<Button label={t("common.retry")} onPress={load} />}
         />
-      </View>
+      </Screen>
     );
   }
 
@@ -42,7 +42,3 @@ export function HomeScreen() {
 
   return <TodayScreen journey={journey} now={now} />;
 }
-
-const styles = StyleSheet.create({
-  center: { flex: 1, justifyContent: "center", padding: spacing.lg, gap: spacing.md },
-});

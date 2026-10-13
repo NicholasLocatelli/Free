@@ -1,8 +1,8 @@
 import { currentPeriodView, type Instant, type Journey } from "@free/core";
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { formatDayTime, formatGoal, formatMoney } from "../../i18n/format";
 import { t } from "../../i18n/it";
-import { AppText, ProgressRing, spacing, Stat, Timer } from "../../ui";
+import { AppText, ProgressRing, Screen, spacing, Stat, Timer } from "../../ui";
 
 interface TodayScreenProps {
   journey: Journey;
@@ -21,48 +21,50 @@ export function TodayScreen({ journey, now }: TodayScreenProps) {
   const { next, progressToNext } = view.milestones;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <AppText variant="display" accessibilityRole="header">
-        {t("today.title")}
-      </AppText>
-      {view.clockSkew && (
-        <AppText color="warning" accessibilityRole="alert">
-          {t("today.clockSkew")}
+    <Screen centered>
+      <View style={styles.container}>
+        <AppText variant="display" accessibilityRole="header">
+          {t("today.title")}
         </AppText>
-      )}
-      <ProgressRing
-        value={progressToNext}
-        accessibilityLabel={
-          next === null
+        {view.clockSkew && (
+          <AppText color="warning" accessibilityRole="alert">
+            {t("today.clockSkew")}
+          </AppText>
+        )}
+        <ProgressRing
+          value={progressToNext}
+          accessibilityLabel={
+            next === null
+              ? t("today.allGoalsReached")
+              : t("today.nextGoal", { goal: formatGoal(next) })
+          }
+        >
+          <AppText variant="heading" color="primary">
+            {`${Math.round(progressToNext * PERCENT)}%`}
+          </AppText>
+        </ProgressRing>
+        <Timer parts={view.parts} />
+        <AppText color="muted" style={styles.center}>
+          {t("today.since", { date: formatDayTime(view.startedAt) })}
+        </AppText>
+        <AppText style={styles.center}>
+          {next === null
             ? t("today.allGoalsReached")
-            : t("today.nextGoal", { goal: formatGoal(next) })
-        }
-      >
-        <AppText variant="heading" color="primary">
-          {`${Math.round(progressToNext * PERCENT)}%`}
+            : t("today.nextGoal", { goal: formatGoal(next) })}
         </AppText>
-      </ProgressRing>
-      <Timer parts={view.parts} />
-      <AppText color="muted" style={styles.center}>
-        {t("today.since", { date: formatDayTime(view.startedAt) })}
-      </AppText>
-      <AppText style={styles.center}>
-        {next === null
-          ? t("today.allGoalsReached")
-          : t("today.nextGoal", { goal: formatGoal(next) })}
-      </AppText>
-      {view.money.status === "estimated" && (
-        <Stat
-          label={t("money.label")}
-          value={`~ ${formatMoney(view.money.amountMinor, view.money.currency)}`}
-          caption={t("money.caption")}
-        />
-      )}
-    </ScrollView>
+        {view.money.status === "estimated" && (
+          <Stat
+            label={t("money.label")}
+            value={`~ ${formatMoney(view.money.amountMinor, view.money.currency)}`}
+            caption={t("money.caption")}
+          />
+        )}
+      </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: spacing.lg, gap: spacing.lg, alignItems: "center" },
+  container: { gap: spacing.lg, alignItems: "center" },
   center: { textAlign: "center" },
 });

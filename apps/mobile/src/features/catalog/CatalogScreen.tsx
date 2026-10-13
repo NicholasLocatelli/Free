@@ -1,6 +1,6 @@
 import { DEFAULT_MILESTONE_HOURS, MS_PER_HOUR } from "@free/core";
 import { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { t } from "../../i18n/it";
 import {
   AppText,
@@ -11,6 +11,7 @@ import {
   MilestoneCard,
   ProgressRing,
   ResourceCard,
+  Screen,
   Sheet,
   spacing,
   Stat,
@@ -34,7 +35,7 @@ export function CatalogScreen() {
   const [sheetOpen, setSheetOpen] = useState(false);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <Screen>
       <AppText variant="display" accessibilityRole="header">
         Catalogo componenti
       </AppText>
@@ -140,11 +141,10 @@ export function CatalogScreen() {
       >
         <AppText>Contenuto del bottom sheet.</AppText>
       </Sheet>
-    </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: spacing.lg, gap: spacing.lg },
   row: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
 });

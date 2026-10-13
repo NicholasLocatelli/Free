@@ -8,12 +8,16 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "TZ=Europe/Rome jest",
+    "test": "jest",
     "doctor": "expo install --check"
   },
   "jest": {
     "preset": "jest-expo",
-    "testTimeout": 20000
+    "testTimeout": 20000,
+    "globalSetup": "./jest.globalSetup.js",
+    "setupFiles": [
+      "./jest.setup.ts"
+    ]
   },
   "dependencies": {
     "@free/core": "workspace:*",
