@@ -28,14 +28,14 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 
 ### TC-URG — Impulso
 
-| ID    | Acceptance criteria                                                           | Stato           |
-| ----- | ----------------------------------------------------------------------------- | --------------- |
-| URG-1 | Salvataggio con intensità, trigger, durata, azioni, esito, nota               | ✅ core · 🟡 UI |
-| URG-2 | Statistiche aggiornate (conteggio, superati)                                  | ✅              |
-| URG-3 | Limiti: intensità 1 e 10 ok; 0, 11, 5.5 rifiutati; durata −1/1441 rifiutate   | ✅              |
-| URG-4 | Doppio tap su Salva → un solo record (`duplicate_id` + pulsante disabilitato) | ✅ core · 🟡 UI |
-| URG-5 | Esito "Ho giocato" non chiude il periodo; viene offerto il flusso ricaduta    | ✅ core · 🟡 UI |
-| URG-6 | SOS raggiungibile in 1 tap dalla Dashboard; numero TVNGA chiamabile           | 🟡 M4 E2E       |
+| ID    | Acceptance criteria                                                         | Stato                                                                |
+| ----- | --------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| URG-1 | Salvataggio con intensità, trigger, durata, azioni, esito, nota             | ✅ core · ✅ component (`UrgeScreen.test.tsx`)                       |
+| URG-2 | Statistiche aggiornate (conteggio, superati)                                | ✅                                                                   |
+| URG-3 | Limiti: intensità 1 e 10 ok; 0, 11, 5.5 rifiutati; durata −1/1441 rifiutate | ✅ core · ✅ component                                               |
+| URG-4 | Doppio tap su Salva → un solo record                                        | ✅ Button (guard asincrono) · ✅ id generato all'apertura del modulo |
+| URG-5 | Esito "Ho giocato" non chiude il periodo; viene offerto il flusso ricaduta  | ✅ core · ✅ component                                               |
+| URG-6 | SOS raggiungibile in 1 tap dalla Dashboard; numero TVNGA chiamabile         | ✅ component (`SosScreen.test.tsx`, `TodayScreen.test.tsx`) · 🟡 E2E |
 
 ### TC-REL — Ricaduta
 
@@ -44,34 +44,34 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 | REL-1 | Crea nuovo periodo e chiude il precedente all'istante indicato               | ✅                                           |
 | REL-2 | Storico precedente conservato (periodi, impulsi)                             | ✅                                           |
 | REL-3 | Milestone del periodo chiuso conservate                                      | ✅                                           |
-| REL-4 | Dashboard aggiornata al nuovo periodo; tempo totale continua a crescere      | ✅ core · 🟡 E2E                             |
+| REL-4 | Dashboard aggiornata al nuovo periodo; tempo totale continua a crescere      | ✅ core · ✅ component · 🟡 E2E              |
 | REL-5 | Orario prima dell'inizio periodo o nel futuro → rifiutato                    | ✅                                           |
 | REL-6 | Ripartenza successiva all'orario della ricaduta supportata                   | ✅                                           |
-| REL-7 | Nessun copy vietato ("fallito", "reset", "da zero") e nessun colore `danger` | 👤 UX review · 🟡 test snapshot testi        |
-| REL-8 | Le risorse di supporto sono visibili nella riflessione                       | 🟡 M4                                        |
+| REL-7 | Nessun copy vietato ("fallito", "reset", "da zero") e nessun colore `danger` | ✅ test sul dizionario · 👤 UX review        |
+| REL-8 | Le risorse di supporto sono visibili dopo la ricaduta                        | ✅ component                                 |
 | REL-9 | Scrittura atomica: errore DB a metà → nessun cambiamento persistito          | ✅ integration (`JourneyRepository.test.ts`) |
 
 ### TC-MON — Stima denaro
 
-| ID    | Acceptance criteria                                            | Stato           |
-| ----- | -------------------------------------------------------------- | --------------- |
-| MON-1 | Calcolo corretto per giorno/settimana/mese                     | ✅              |
-| MON-2 | Zero all'inizio; arrotondamento per difetto                    | ✅              |
-| MON-3 | Valori mancanti → stato `incomplete` (nessun numero inventato) | ✅              |
-| MON-4 | Disattivazione → stato `disabled`, la card scompare            | ✅ core · 🟡 UI |
-| MON-5 | Valori estremi → intero sicuro                                 | ✅              |
-| MON-6 | Etichetta "Stima del denaro non speso" sempre presente         | ✅ component    |
+| ID    | Acceptance criteria                                                      | Stato                  |
+| ----- | ------------------------------------------------------------------------ | ---------------------- |
+| MON-1 | Calcolo corretto per giorno/settimana/mese                               | ✅                     |
+| MON-2 | Zero all'inizio; arrotondamento per difetto                              | ✅                     |
+| MON-3 | Valori mancanti → stato `incomplete` (nessun numero inventato)           | ✅                     |
+| MON-4 | Disattivazione → stato `disabled`, la card scompare; baseline conservata | ✅ core · ✅ component |
+| MON-5 | Valori estremi → intero sicuro                                           | ✅                     |
+| MON-6 | Etichetta "Stima del denaro non speso" sempre presente                   | ✅ component           |
 
 ### TC-HIS — Storico, TC-GOAL — Obiettivi, TC-HELP — Help Center
 
-| ID     | Acceptance criteria                                                                  | Stato   |
-| ------ | ------------------------------------------------------------------------------------ | ------- |
-| HIS-1  | Riepilogo: tempo totale, periodo più lungo, impulsi superati                         | ✅ core |
-| HIS-2  | Empty state alla prima apertura                                                      | 🟡 M4   |
-| GOAL-1 | Milestone configurabili, ordinate, deduplicate, validate                             | ✅      |
-| GOAL-2 | Progresso verso la prossima milestone corretto; completamento quando tutte raggiunte | ✅      |
-| HELP-1 | Help Center a 1 tap dalla Home, funzionante offline                                  | 🟡 M5   |
-| HELP-2 | Ogni risorsa mostra fonte e data di verifica                                         | 🟡 M5   |
+| ID     | Acceptance criteria                                                                  | Stato        |
+| ------ | ------------------------------------------------------------------------------------ | ------------ |
+| HIS-1  | Riepilogo: tempo totale, periodo più lungo, impulsi superati                         | ✅ core      |
+| HIS-2  | Storico con un solo periodo e nessun impulso                                         | ✅ component |
+| GOAL-1 | Milestone configurabili, ordinate, deduplicate, validate                             | ✅           |
+| GOAL-2 | Progresso verso la prossima milestone corretto; completamento quando tutte raggiunte | ✅           |
+| HELP-1 | Help Center a 1 tap dalla Home, funzionante offline                                  | 🟡 M5        |
+| HELP-2 | Ogni risorsa mostra fonte e data di verifica                                         | 🟡 M5        |
 
 ## 2. Edge case (Edge Case Tester)
 

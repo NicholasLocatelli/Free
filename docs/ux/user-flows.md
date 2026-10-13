@@ -54,6 +54,8 @@ all'apertura del form (rifiuto `duplicate_id` lato dominio).
 
 ## Flow 4 — Registrare una ricaduta
 
+> Implementato in #5 con la riflessione **prima** del salvataggio (D-020): Quando? → Riflessione facoltativa → "Il percorso continua." con Telefono Verde.
+
 1. **Conferma** — "Vuoi registrare che hai giocato? Il tuo percorso precedente resterà nello
    storico." · Quando? (_Adesso_ / scegli orario ≥ inizio periodo) · [Registra] [Annulla]
 2. **Salvataggio** — `recordRelapse` chiude il periodo e ne apre uno nuovo (default: dallo stesso

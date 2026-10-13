@@ -113,6 +113,23 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner prima della Beta.
 - **Date:** 2026-10-02
 
+### D-019 ✅ Navigazione a stack con collegamenti dalla Dashboard (niente tab per ora)
+
+- **Context:** l'IA prevede 3 tab (Oggi, Storico, Impostazioni).
+- **Alternatives:** tab di Expo Router (API non verificabile offline dall'ambiente di build in questa fase).
+- **Chosen:** Stack con pulsanti "Storico" e "Impostazioni" sulla Dashboard; ogni schermata ha "Indietro".
+- **Reason:** meno dipendenze e meno superficie da testare; la Dashboard resta l'unico punto di partenza, coerente con l'uso "in pochi secondi".
+- **Trade-offs:** un tap in più per lo Storico; rivalutare le tab dopo i test d'uso.
+- **Date:** 2026-10-13
+
+### D-020 ✅ Ricaduta: la riflessione si compila prima del salvataggio
+
+- **Context:** Flow 4 prevedeva salvataggio → riflessione → nota; il dominio è append-only (una ricaduta salvata non si modifica).
+- **Chosen:** "Quando?" → riflessione facoltativa (fattori + nota) → salvataggio unico → "Il percorso continua." con il Telefono Verde.
+- **Reason:** un solo evento completo e atomico, senza introdurre la modifica di eventi storici.
+- **Trade-offs:** chi chiude l'app a metà non registra la ricaduta; può ripeterla.
+- **Date:** 2026-10-13
+
 ### D-016 ✅ Il "primo obiettivo" diventa la prima milestone
 
 - **Context:** l'onboarding chiede il primo obiettivo; serve un effetto reale e non solo estetico.

@@ -32,3 +32,11 @@ export async function renderApp(ui: ReactElement, options: Options = {}) {
   );
   return { store, repository, settings };
 }
+
+/** No-op navigation callbacks for screens rendered outside the router. */
+export const noActions = {
+  onUrge: jest.fn(),
+  onRelapse: jest.fn(),
+  onHistory: jest.fn(),
+  onSettings: jest.fn(),
+};

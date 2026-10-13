@@ -3,17 +3,17 @@ import type { JourneyRepository } from "../../data/JourneyRepository";
 import { fireEvent } from "@testing-library/react-native";
 import { newJourney } from "../../test/fixtures";
 import { createMemoryRepository } from "../../test/memoryRepository";
-import { renderApp } from "../../test/renderApp";
+import { noActions, renderApp } from "../../test/renderApp";
 import { HomeScreen } from "./HomeScreen";
 
 describe("HomeScreen", () => {
   it("shows a loading indicator while booting", async () => {
-    await renderApp(<HomeScreen />, { load: false });
+    await renderApp(<HomeScreen actions={noActions} />, { load: false });
     expect(screen.getByLabelText("Caricamento")).toBeOnTheScreen();
   });
 
   it("starts onboarding when there is no journey", async () => {
-    await renderApp(<HomeScreen />);
+    await renderApp(<HomeScreen actions={noActions} />);
     expect(
       await screen.findByRole("header", {
         name: "Uno spazio privato per seguire il tuo percorso.",
@@ -22,7 +22,9 @@ describe("HomeScreen", () => {
   });
 
   it("shows the stored journey after a restart", async () => {
-    await renderApp(<HomeScreen />, { repository: createMemoryRepository(newJourney()) });
+    await renderApp(<HomeScreen actions={noActions} />, {
+      repository: createMemoryRepository(newJourney()),
+    });
     expect(screen.getByRole("header", { name: "Oggi" })).toBeOnTheScreen();
   });
 
@@ -34,7 +36,7 @@ describe("HomeScreen", () => {
       load: () =>
         ++attempts === 1 ? Promise.reject(new Error("corrupt")) : Promise.resolve(journey),
     };
-    await renderApp(<HomeScreen />, { repository });
+    await renderApp(<HomeScreen actions={noActions} />, { repository });
     expect(screen.getByText("Non riusciamo a leggere i dati")).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole("button", { name: "Riprova" }));
     expect(await screen.findByRole("header", { name: "Oggi" })).toBeOnTheScreen();

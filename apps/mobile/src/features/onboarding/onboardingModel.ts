@@ -1,13 +1,25 @@
 import {
   DEFAULT_MILESTONE_HOURS,
-  err,
   ok,
-  validateMoneySettings,
   type FrequencyUnit,
   type Instant,
   type MoneySettings,
   type Result,
 } from "@free/core";
+import {
+  parseMoment,
+  parseMoneyInput,
+  type MomentError,
+  type MoneyError,
+} from "../shared/formInputs";
+
+export {
+  currentTimeText,
+  MAX_DAYS_AGO,
+  parseAmountToMinor,
+  parseSessions,
+  type MoneyError,
+} from "../shared/formInputs";
 
 /**
  * Pure onboarding logic (docs/ux/user-flows.md, Flow 1). The UI only renders a step and
@@ -17,9 +29,6 @@ export const ONBOARDING_STEPS = ["welcome", "category", "start", "goal", "money"
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
 
 export const FIRST_GOAL_OPTIONS: readonly number[] = [24, 72, 168, 720];
-export const MAX_DAYS_AGO = 3650;
-const MINOR_PER_MAJOR = 100;
-const MAX_SESSIONS = 100;
 
 export interface OnboardingDraft {
   startMode: "now" | "past";
@@ -59,33 +68,12 @@ export function previousStep(step: OnboardingStep): OnboardingStep | null {
   return ONBOARDING_STEPS[ONBOARDING_STEPS.indexOf(step) - 1] ?? null;
 }
 
-// --- start --------------------------------------------------------------------------
+// --- start ---------------------------------------------------------------------------
 
-export type StartError = "invalid_days" | "invalid_time" | "in_future";
+export type StartError = MomentError;
 
-/**
- * "N giorni fa alle hh:mm" in the device timezone. Calendar arithmetic uses local Date
- * fields, so DST days are handled by the platform; the result is an absolute instant.
- */
 export function parseStart(draft: OnboardingDraft, now: Instant): Result<Instant, StartError> {
-  if (draft.startMode === "now") return ok(now);
-  const days = Number(draft.daysAgo.trim());
-  if (!Number.isInteger(days) || days < 0 || days > MAX_DAYS_AGO) return err("invalid_days");
-  const match = /^(\d{1,2})[:.](\d{2})$/.exec(draft.time.trim());
-  const hours = Number(match?.[1]);
-  const minutes = Number(match?.[2]);
-  if (!match || hours > 23 || minutes > 59) return err("invalid_time");
-  const date = new Date(now);
-  date.setDate(date.getDate() - days);
-  date.setHours(hours, minutes, 0, 0);
-  const instant = date.getTime();
-  return instant > now ? err("in_future") : ok(instant);
-}
-
-/** Default time for "past" mode: the current local time, e.g. "21:40". */
-export function currentTimeText(now: Instant): string {
-  const d = new Date(now);
-  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  return parseMoment({ mode: draft.startMode, daysAgo: draft.daysAgo, time: draft.time }, now);
 }
 
 // --- goal ---------------------------------------------------------------------------
@@ -97,36 +85,14 @@ export function milestonesFromFirstGoal(firstGoalHours: number): number[] {
 
 // --- money --------------------------------------------------------------------------
 
-export type MoneyError = "invalid_amount" | "invalid_sessions";
-
-/** "50", "12,50", "12.5" → 5000, 1250, 1250 (cents). */
-export function parseAmountToMinor(text: string): number | null {
-  const normalized = text.trim().replace(",", ".");
-  if (!/^\d{1,8}(\.\d{1,2})?$/.test(normalized)) return null;
-  return Math.round(Number(normalized) * MINOR_PER_MAJOR);
-}
-
-export function parseSessions(text: string): number | null {
-  const value = Number(text.trim().replace(",", "."));
-  return text.trim() !== "" && Number.isFinite(value) && value > 0 && value <= MAX_SESSIONS
-    ? value
-    : null;
-}
-
 export function parseMoney(draft: OnboardingDraft): Result<MoneySettings | undefined, MoneyError> {
   if (!draft.moneyEnabled) return ok(undefined);
-  const amount = parseAmountToMinor(draft.amount);
-  if (amount === null) return err("invalid_amount");
-  const sessions = parseSessions(draft.sessions);
-  if (sessions === null) return err("invalid_sessions");
-  const settings: MoneySettings = {
+  return parseMoneyInput({
     enabled: true,
-    currency: "EUR",
-    amountPerSessionMinor: amount,
-    sessionsPerUnit: sessions,
+    amount: draft.amount,
+    sessions: draft.sessions,
     frequencyUnit: draft.frequencyUnit,
-  };
-  return validateMoneySettings(settings).ok ? ok(settings) : err("invalid_amount");
+  });
 }
 
 // --- persistence of an interrupted onboarding (ONB-5) -------------------------------

@@ -44,6 +44,8 @@ export interface JourneyState {
   boot: BootStatus;
   /** Cache of what is persisted; null before onboarding. Updated only after a commit. */
   journey: Journey | null;
+  /** Ids for forms: generated when a form opens, so a re-submit is rejected as duplicate. */
+  createId: () => string;
   // Function-typed properties (not methods) so selectors can pass them around unbound.
   load: () => Promise<void>;
   start: (input: StartInput) => Promise<CommandResult<CreateJourneyError>>;
@@ -93,6 +95,7 @@ export function createJourneyStore({ repository, now, newId }: JourneyStoreDeps)
     return {
       boot: { status: "loading" },
       journey: null,
+      createId: newId,
 
       load: () =>
         serial(async () => {

@@ -4,12 +4,12 @@ import { useNow } from "../../platform/useNow";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import { Button, ErrorState, Screen, useTheme } from "../../ui";
 import { OnboardingFlow } from "../onboarding/OnboardingFlow";
-import { TodayScreen } from "../today/TodayScreen";
+import { TodayScreen, type TodayActions } from "../today/TodayScreen";
 
 /**
  * Entry route: loading → error (with retry) → onboarding → dashboard.
  */
-export function HomeScreen() {
+export function HomeScreen({ actions }: { actions: TodayActions }) {
   const boot = useJourneyStore((s) => s.boot);
   const journey = useJourneyStore((s) => s.journey);
   const load = useJourneyStore((s) => s.load);
@@ -40,5 +40,5 @@ export function HomeScreen() {
     return <OnboardingFlow />;
   }
 
-  return <TodayScreen journey={journey} now={now} />;
+  return <TodayScreen journey={journey} now={now} {...actions} />;
 }

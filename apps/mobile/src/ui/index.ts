@@ -2,6 +2,7 @@ export { AppText } from "./components/AppText";
 export { Button, type ButtonVariant } from "./components/Button";
 export { Card } from "./components/Card";
 export { Chip } from "./components/Chip";
+export { ChoiceGroup } from "./components/ChoiceGroup";
 export { MilestoneCard, type MilestoneStatus } from "./components/MilestoneCard";
 export { ProgressRing } from "./components/ProgressRing";
 export { ResourceCard, type Resource } from "./components/ResourceCard";
