@@ -28,6 +28,10 @@ interface RemindersContextValue {
   loaded: boolean;
   /** Saves prefs; asks for permission only when a reminder is being switched on. */
   update: (next: ReminderPrefs) => Promise<UpdateResult>;
+  /** Re-reads saved prefs (after a backup import). */
+  reload: () => Promise<void>;
+  /** Back to defaults with nothing scheduled (after "delete all data"). */
+  reset: () => Promise<void>;
 }
 
 const RemindersContext = createContext<RemindersContextValue | null>(null);
@@ -107,7 +111,20 @@ export function RemindersProvider({ scheduler, children, now = Date.now }: Remin
     [prefs, scheduler, settings],
   );
 
-  const value = useMemo(() => ({ prefs, loaded, update }), [prefs, loaded, update]);
+  const reload = useCallback(async () => {
+    const raw = await settings.get(REMINDER_SETTINGS_KEY).catch(() => null);
+    setPrefs(deserializePrefs(raw));
+  }, [settings]);
+
+  const reset = useCallback(async () => {
+    setPrefs(DEFAULT_REMINDER_PREFS);
+    await scheduler.replaceAll([]).catch(() => undefined);
+  }, [scheduler]);
+
+  const value = useMemo(
+    () => ({ prefs, loaded, update, reload, reset }),
+    [prefs, loaded, update, reload, reset],
+  );
   return <RemindersContext value={value}>{children}</RemindersContext>;
 }
 

@@ -113,6 +113,29 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner prima della Beta.
 - **Date:** 2026-10-02
 
+### D-022 ✅ Nessun account, confermato dall'owner
+
+- **Context:** domanda dell'owner "ci si può registrare? cosa comporterebbe?" (analisi in `security.md` § Account e anonimato).
+- **Chosen:** l'app resta senza registrazione (conferma di D-004, 2026-10-18).
+- **Reason:** anonimato per costruzione; nessun dato sanitario (art. 9 GDPR) su server; nessun obbligo e rischio da titolare di quei dati.
+- **Date:** 2026-10-18
+
+### D-023 ✅ Blocco app con l'autenticazione del telefono, non con un PIN dell'app
+
+- **Context:** proteggere i dati da chi prende in mano il telefono sbloccato.
+- **Alternatives:** PIN proprio dell'app (da salvare e gestire, recupero difficile, un altro segreto da proteggere).
+- **Chosen:** `expo-local-authentication` (biometria o PIN/sequenza del telefono), richiesto all'apertura e al ritorno dal background; anche lo spegnimento richiede l'autenticazione. Con blocco attivo: contenuto nascosto agli screen reader, anteprima nascosta tra le app recenti (iOS) e `FLAG_SECURE` (Android, blocca anche gli screenshot).
+- **Reason:** nessun segreto salvato nell'app; meccanismo che l'utente conosce già.
+- **Trade-offs:** richiede un blocco schermo sul telefono; chi conosce il PIN del telefono può aprire l'app.
+- **Date:** 2026-10-18
+
+### D-024 ✅ Export in JSON non cifrato (con avviso) e SQLCipher rinviato
+
+- **Context:** #13 chiede export/import e una valutazione di SQLCipher.
+- **Chosen:** export JSON leggibile, salvato dove sceglie l'utente tramite il menu di condivisione, con avviso esplicito "il file non è cifrato"; import validato da `parseJourney` (tutti gli invarianti del dominio) e confermato dall'utente prima di sostituire i dati. SQLCipher **rinviato** alla build di Beta: richiede una development build (non Expo Go) e la gestione di una chiave in secure store; oggi i dati sono già cifrati a riposo dal sistema operativo e protetti dal blocco app.
+- **Trade-offs:** un file esportato e lasciato in giro è leggibile. Export cifrato con password: valutabile in futuro.
+- **Date:** 2026-10-18
+
 ### D-021 ✅ Promemoria solo locali, neutri e spenti di default
 
 - **Context:** F12 (notifiche) contro principi 4 (privacy) e 11 (discrezione).
@@ -173,9 +196,11 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Trade-offs:** modulo ancora "experimental" in Node 22 (avviso a runtime); se l'API cambiasse, l'adapter è isolato in un file.
 - **Date:** 2026-10-08
 
-### D-014 ⏳ Policy di backup di sistema del database
+### D-014 ✅ Dati esclusi dai backup automatici di sistema, export su file a cura dell'utente
 
 - **Context:** i backup automatici iCloud/Google copierebbero dati sensibili fuori dal device.
-- **Proposta:** escludere il DB dai backup + export manuale (P1).
-- **Da decidere:** in M7 con Security e UX (trade-off perdita dati al cambio telefono).
-- **Date:** 2026-10-02
+- **Alternatives:** lasciare i backup di sistema (comodo al cambio telefono, ma i dati finiscono nel cloud dell'utente senza che lo scelga esplicitamente).
+- **Chosen:** decisione dell'owner (2026-10-18): esclusione dai backup + export/import JSON scelto dall'utente (#13). Android: `allowBackup: false` in `app.json`.
+- **Reason:** privacy (priorità 2): nessuna copia fuori dal telefono senza un'azione esplicita.
+- **Trade-offs:** chi cambia telefono senza esportare perde i dati. **iOS non ancora coperto:** escludere il database da iCloud richiede codice nativo (`NSURLIsExcludedFromBackupKey`) via config plugin in una development build; da fare prima della Beta iOS (#13).
+- **Date:** 2026-10-02 · decisa 2026-10-18

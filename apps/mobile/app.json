@@ -13,7 +13,8 @@
     "android": {
       "package": "app.approdo.mobile",
       "permissions": [],
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "allowBackup": false
     },
     "plugins": ["expo-router"],
     "experiments": {

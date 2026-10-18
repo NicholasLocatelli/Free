@@ -11,6 +11,10 @@ export function createMemoryRepository(initial: Journey | null = null): JourneyR
       stored = next;
       return Promise.resolve();
     },
+    replace: (journey) => {
+      stored = journey;
+      return Promise.resolve();
+    },
     deleteAll: () => {
       stored = null;
       return Promise.resolve();

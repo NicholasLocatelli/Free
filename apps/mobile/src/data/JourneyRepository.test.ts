@@ -149,3 +149,16 @@ describe("SettingsRepository", () => {
     expect(await settings.get("theme")).toBeNull();
   });
 });
+
+describe("JourneyRepository.replace", () => {
+  it("atomically replaces the stored journey", async () => {
+    const db = createNodeSqlExecutor();
+    await migrate(db);
+    const repo = createJourneyRepository(db);
+    await repo.save(withHistory(), null);
+    const imported = { ...newJourney(), id: "imported" };
+    await repo.replace(imported);
+    expect(await repo.load()).toEqual(imported);
+    expect(await db.all("SELECT * FROM urges")).toEqual([]);
+  });
+});

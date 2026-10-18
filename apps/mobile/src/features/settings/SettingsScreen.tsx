@@ -11,7 +11,7 @@ import {
   type ThemePreference,
 } from "../../ui";
 
-export type SettingsSection = "money" | "goals" | "start" | "reminders";
+export type SettingsSection = "money" | "goals" | "start" | "reminders" | "privacy";
 export const THEME_SETTINGS_KEY = "theme";
 const PREFERENCES: readonly ThemePreference[] = ["system", "light", "dark"];
 
@@ -45,6 +45,7 @@ export function SettingsScreen({ onOpen, onBack }: SettingsScreenProps) {
       {section("goals", t("settings.goals"))}
       {section("start", t("settings.start"))}
       {section("reminders", t("settings.reminders"))}
+      {section("privacy", t("settings.privacy"))}
       <ChoiceGroup label={t("settings.theme")}>
         {PREFERENCES.map((p) => (
           <Chip

@@ -48,28 +48,36 @@ dedicato.
 
 ## Threat model (STRIDE semplificato)
 
-| Minaccia                             | Scenario                           | Mitigazione                                                                                                                                                                                                                     |
-| ------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Accesso fisico al telefono sbloccato | Partner/collega apre l'app         | Blocco app con biometria/PIN (P1, F13); nome/icona discreti                                                                                                                                                                     |
-| Shoulder surfing / lock screen       | Notifica esplicita visibile        | ✅ Testi neutri verificati da test; Android visibilità privata (#12)                                                                                                                                                            |
-| Furto del dispositivo bloccato       | Estrazione file                    | Cifratura a riposo dell'OS (iOS Data Protection, Android FBE); valutazione SQLCipher con chiave in secure store (M7)                                                                                                            |
-| Backup cloud del sistema             | DB copiato in iCloud/Google backup | Default: escludere il DB dai backup automatici (Android `allowBackup`/regole di backup, iOS `isExcludedFromBackup`) — trade-off: perdita dati al cambio telefono, mitigata da export (P1). Decisione D-014 da confermare in M7. |
-| Log e crash                          | Note/trigger finiscono nei log     | Nessun log di contenuti utente; regola di review; nessun crash reporter remoto nell'MVP                                                                                                                                         |
-| Supply chain                         | Dipendenza compromessa             | Lockfile, CI con `--frozen-lockfile`, dipendenze minime, aggiornamenti revisionati, Dependabot/Renovate (M7)                                                                                                                    |
-| Secret nel repo                      | Chiavi EAS/store                   | Nessun secret nel codice; `.gitignore` per chiavi; secret solo in GitHub/EAS secrets                                                                                                                                            |
-| Deep link malevoli                   | Link che inducono azioni           | Nessuna azione distruttiva via deep link; solo navigazione                                                                                                                                                                      |
-| Link esterni                         | URL manomessi nel contenuto        | Risorse in file versionato e revisionato; solo HTTPS, domini istituzionali                                                                                                                                                      |
+| Minaccia                             | Scenario                           | Mitigazione                                                                                                                    |
+| ------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Accesso fisico al telefono sbloccato | Partner/collega apre l'app         | ✅ Blocco app con biometria/PIN del telefono (D-023); anteprima nascosta tra le app recenti; nome/icona discreti               |
+| Shoulder surfing / lock screen       | Notifica esplicita visibile        | ✅ Testi neutri verificati da test; Android visibilità privata (#12)                                                           |
+| Furto del dispositivo bloccato       | Estrazione file                    | Cifratura a riposo dell'OS (iOS Data Protection, Android FBE); valutazione SQLCipher con chiave in secure store (M7)           |
+| Backup cloud del sistema             | DB copiato in iCloud/Google backup | ✅ Android `allowBackup: false` (D-014); ⏳ iOS esclusione via config plugin; export manuale avvisato come non cifrato (D-024) |
+| Log e crash                          | Note/trigger finiscono nei log     | Nessun log di contenuti utente; regola di review; nessun crash reporter remoto nell'MVP                                        |
+| Supply chain                         | Dipendenza compromessa             | Lockfile, CI con `--frozen-lockfile`, dipendenze minime, aggiornamenti revisionati, Dependabot/Renovate (M7)                   |
+| Secret nel repo                      | Chiavi EAS/store                   | Nessun secret nel codice; `.gitignore` per chiavi; secret solo in GitHub/EAS secrets                                           |
+| Deep link malevoli                   | Link che inducono azioni           | Nessuna azione distruttiva via deep link; solo navigazione                                                                     |
+| Link esterni                         | URL manomessi nel contenuto        | Risorse in file versionato e revisionato; solo HTTPS, domini istituzionali                                                     |
 
 ## Requisiti verificabili (checklist M7)
 
 - [ ] Nessuna richiesta di rete nell'MVP (verifica con proxy durante QA)
-- [ ] Permessi richiesti: solo notifiche (opzionale). Nessun permesso di posizione/contatti/rete extra
-- [ ] Cancellazione dati: dopo "Cancella tutto" il DB non esiste più e l'app torna all'onboarding
+- [x] Permessi richiesti: solo notifiche (opzionale) e autenticazione biometrica (solo se si attiva il blocco). Nessun permesso di posizione/contatti
+- [x] Cancellazione dati: "Cancella tutti i dati" (conferma scrivendo CANCELLA) svuota DB e impostazioni con `VACUUM`, annulla i promemoria, spegne il blocco e torna all'onboarding (#13)
 - [x] Notifiche: nessun riferimento al gioco nel testo (test `reminderPlan.test.ts`)
-- [ ] Nessun dato utente in console/log nelle build release
-- [ ] Policy backup decisa e implementata (D-014)
-- [ ] Privacy policy e dichiarazioni store (Apple Privacy Nutrition Label, Google Data Safety): "nessun dato raccolto"
+- [x] Nessun dato utente in console/log: regola ESLint `no-console` su app e dominio
+- [x] Policy backup decisa (D-014): Android `allowBackup: false` · [ ] iOS: esclusione da iCloud via config plugin (development build)
+- [x] Bozza privacy policy e dichiarazioni store in `docs/legal/` · [ ] revisione legale (input umano)
 - [ ] Revisione dipendenze e licenze
+
+## Import di backup
+
+Un file importato è dato non fidato: `parseBackup` controlla formato, versione e dimensione
+(max 5 MB), poi `parseJourney` (`@free/core`) verifica ogni invariante del dominio (periodi
+non sovrapposti e un solo periodo aperto, id unici, intensità e durate nei limiti, note e tag
+entro le lunghezze massime, stima del denaro coerente). Solo dopo la conferma dell'utente la
+sostituzione avviene in **una transazione**.
 
 ## Futuro: account e sync (P2)
 

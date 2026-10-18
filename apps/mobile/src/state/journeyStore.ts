@@ -55,6 +55,8 @@ export interface JourneyState {
   updateMoney: (money: MoneySettings) => Promise<CommandResult<"invalid_money_settings">>;
   updateMilestones: (hours: readonly number[]) => Promise<CommandResult<"invalid_milestones">>;
   deleteAll: () => Promise<Result<null, "persist_failed">>;
+  /** Replaces everything with an already validated journey (backup import). */
+  importJourney: (journey: Journey) => Promise<Result<null, "persist_failed">>;
 }
 
 export type JourneyStore = StoreApi<JourneyState>;
@@ -134,6 +136,17 @@ export function createJourneyStore({ repository, now, newId }: JourneyStoreDeps)
 
       updateMilestones: (hours) =>
         commit(withJourney((journey) => updateMilestones(journey, hours))),
+
+      importJourney: (journey) =>
+        serial(async () => {
+          try {
+            await repository.replace(journey);
+          } catch {
+            return err("persist_failed");
+          }
+          set({ journey });
+          return ok(null);
+        }),
 
       deleteAll: () =>
         serial(async () => {
