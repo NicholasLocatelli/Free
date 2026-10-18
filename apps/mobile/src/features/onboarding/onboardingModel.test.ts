@@ -24,7 +24,8 @@ const draft = (patch: Partial<OnboardingDraft>): OnboardingDraft => ({
 describe("steps", () => {
   it("moves forward and back through the flow", () => {
     expect(nextStep("welcome")).toBe("category");
-    expect(nextStep("money")).toBeNull();
+    expect(nextStep("money")).toBe("reminders");
+    expect(nextStep("reminders")).toBeNull();
     expect(previousStep("start")).toBe("category");
     expect(previousStep("welcome")).toBeNull();
   });

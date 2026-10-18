@@ -2,6 +2,7 @@ import { DEFAULT_MILESTONE_HOURS } from "@free/core";
 import { fireEvent, screen, waitFor } from "@testing-library/react-native";
 import type { JourneyRepository } from "../../data/JourneyRepository";
 import { createMemoryRepository, createMemorySettings } from "../../test/memoryRepository";
+import { createFakeScheduler } from "../../test/fakeScheduler";
 import { renderApp } from "../../test/renderApp";
 import { OnboardingFlow } from "./OnboardingFlow";
 import { ONBOARDING_SETTINGS_KEY, serializeProgress, INITIAL_PROGRESS } from "./onboardingModel";
@@ -28,9 +29,9 @@ async function goToStep(steps: number) {
 }
 
 describe("OnboardingFlow", () => {
-  it("completes with defaults in five steps and creates the journey (ONB-1)", async () => {
+  it("completes with defaults in six steps and creates the journey (ONB-1)", async () => {
     const { store, settings } = await renderApp(<OnboardingFlow now={now} />, { now });
-    expect(await screen.findByText("Passo 1 di 5")).toBeOnTheScreen();
+    expect(await screen.findByText("Passo 1 di 6")).toBeOnTheScreen();
     expect(
       screen.getByText("Non è una terapia e non sostituisce un professionista."),
     ).toBeOnTheScreen();
@@ -39,6 +40,8 @@ describe("OnboardingFlow", () => {
     expect(
       screen.getByRole("header", { name: "Vuoi vedere una stima del denaro non speso?" }),
     ).toBeOnTheScreen();
+    await press("Continua");
+    expect(screen.getByRole("header", { name: "Vuoi dei promemoria discreti?" })).toBeOnTheScreen();
     await press("Inizia il percorso");
 
     const journey = await journeyOf(store);
@@ -52,7 +55,7 @@ describe("OnboardingFlow", () => {
 
   it("starts in the past and from the chosen first goal, with a money baseline", async () => {
     const { store } = await renderApp(<OnboardingFlow now={now} />, { now });
-    await screen.findByText("Passo 1 di 5");
+    await screen.findByText("Passo 1 di 6");
     await goToStep(2);
 
     await choose("Prima di adesso");
@@ -71,6 +74,7 @@ describe("OnboardingFlow", () => {
     );
     await fireEvent.changeText(screen.getByLabelText("Quante volte?"), "3");
     await choose("Al mese");
+    await press("Continua");
     await press("Inizia il percorso");
 
     const journey = await journeyOf(store);
@@ -87,26 +91,26 @@ describe("OnboardingFlow", () => {
 
   it("blocks a start in the future with an explanation (ONB-3)", async () => {
     await renderApp(<OnboardingFlow now={now} />, { now });
-    await screen.findByText("Passo 1 di 5");
+    await screen.findByText("Passo 1 di 6");
     await goToStep(2);
     await choose("Prima di adesso");
     await fireEvent.changeText(screen.getByLabelText("Quanti giorni fa?"), "0");
     await fireEvent.changeText(screen.getByLabelText("A che ora? (hh:mm)"), "23:00");
     await press("Continua");
     expect(screen.getByRole("alert")).toHaveTextContent("L'inizio non può essere nel futuro.");
-    expect(screen.getByText("Passo 3 di 5")).toBeOnTheScreen();
+    expect(screen.getByText("Passo 3 di 6")).toBeOnTheScreen();
   });
 
   it("explains invalid money values instead of saving them", async () => {
     const { store } = await renderApp(<OnboardingFlow now={now} />, { now });
-    await screen.findByText("Passo 1 di 5");
+    await screen.findByText("Passo 1 di 6");
     await goToStep(4);
     await fireEvent.press(screen.getByRole("switch", { name: "Mostra la stima" }));
     await fireEvent.changeText(
       screen.getByLabelText("Quanto spendevi in media ogni volta? (€)"),
       "tanti",
     );
-    await press("Inizia il percorso");
+    await press("Continua");
     expect(screen.getByRole("alert")).toHaveTextContent("Inserisci un importo come 20 o 12,50.");
     expect(store.getState().journey).toBeNull();
   });
@@ -119,17 +123,17 @@ describe("OnboardingFlow", () => {
       }),
     });
     await renderApp(<OnboardingFlow now={now} />, { now, settings });
-    expect(await screen.findByText("Passo 4 di 5")).toBeOnTheScreen();
+    expect(await screen.findByText("Passo 4 di 6")).toBeOnTheScreen();
     expect(screen.getByRole("radio", { name: "30 giorni" })).toBeSelected();
   });
 
   it("saves progress as the user moves, and goes back without losing the draft", async () => {
     const { settings } = await renderApp(<OnboardingFlow now={now} />, { now });
-    await screen.findByText("Passo 1 di 5");
+    await screen.findByText("Passo 1 di 6");
     await goToStep(3);
     await choose("3 giorni");
     await press("Indietro");
-    expect(screen.getByText("Passo 3 di 5")).toBeOnTheScreen();
+    expect(screen.getByText("Passo 3 di 6")).toBeOnTheScreen();
     await press("Continua");
     expect(screen.getByRole("radio", { name: "3 giorni" })).toBeSelected();
     expect(await settings.get(ONBOARDING_SETTINGS_KEY)).toContain('"firstGoalHours":72');
@@ -138,8 +142,8 @@ describe("OnboardingFlow", () => {
   it("reports a start that became invalid by the time of saving (clock moved back)", async () => {
     let clock = NOW;
     await renderApp(<OnboardingFlow now={() => NOW} />, { now: () => clock });
-    await screen.findByText("Passo 1 di 5");
-    await goToStep(4);
+    await screen.findByText("Passo 1 di 6");
+    await goToStep(5);
     clock = NOW - 60_000;
     await press("Inizia il percorso");
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -153,11 +157,30 @@ describe("OnboardingFlow", () => {
       save: () => Promise.reject(new Error("disk full")),
     };
     await renderApp(<OnboardingFlow now={now} />, { now, repository });
-    await screen.findByText("Passo 1 di 5");
-    await goToStep(4);
+    await screen.findByText("Passo 1 di 6");
+    await goToStep(5);
     await press("Inizia il percorso");
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Non è stato possibile salvare. Riprova.",
     );
+  });
+
+  it("offers discreet reminders and asks permission only when one is switched on", async () => {
+    const { scheduler, state } = createFakeScheduler("granted");
+    const { store } = await renderApp(<OnboardingFlow now={now} />, { now, scheduler });
+    await screen.findByText("Passo 1 di 6");
+    await goToStep(5);
+    expect(state.requests).toBe(0);
+    await fireEvent.press(
+      screen.getByRole("switch", { name: "Avvisami quando raggiungo un traguardo" }),
+    );
+    await waitFor(() => {
+      expect(state.requests).toBe(1);
+    });
+    await press("Inizia il percorso");
+    await journeyOf(store);
+    await waitFor(() => {
+      expect(state.scheduled.some((n) => n.kind === "milestone")).toBe(true);
+    });
   });
 });

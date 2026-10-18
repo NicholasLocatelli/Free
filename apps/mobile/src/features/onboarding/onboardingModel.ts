@@ -25,7 +25,14 @@ export {
  * Pure onboarding logic (docs/ux/user-flows.md, Flow 1). The UI only renders a step and
  * edits the draft; parsing, validation and the final command input live here.
  */
-export const ONBOARDING_STEPS = ["welcome", "category", "start", "goal", "money"] as const;
+export const ONBOARDING_STEPS = [
+  "welcome",
+  "category",
+  "start",
+  "goal",
+  "money",
+  "reminders",
+] as const;
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
 
 export const FIRST_GOAL_OPTIONS: readonly number[] = [24, 72, 168, 720];

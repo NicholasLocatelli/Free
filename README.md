@@ -22,6 +22,7 @@ consapevolezza e accesso rapido a risorse di aiuto ufficiali.
 | M3 — MVP Core      | 🟡 codice completo (#3, #4) — prova su dispositivo pendente                  |
 | M4 — Tracking      | 🟡 codice completo (#5): SOS, impulsi, ricaduta, storico, impostazioni       |
 | M5 — Help Center   | 🟡 codice completo (#6); revisione professionale dei testi pendente          |
+| M6 — Testing       | 🟡 promemoria discreti fatti (#12); E2E in CI da fare                        |
 
 Roadmap completa: [docs/product/roadmap.md](docs/product/roadmap.md).
 

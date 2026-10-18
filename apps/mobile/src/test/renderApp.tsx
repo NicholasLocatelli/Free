@@ -3,6 +3,9 @@ import type { SettingsRepository } from "../data/SettingsRepository";
 import { createJourneyStore } from "../state/journeyStore";
 import { JourneyStoreProvider } from "../state/JourneyStoreProvider";
 import { SettingsProvider } from "../state/SettingsProvider";
+import { RemindersProvider } from "../features/reminders/RemindersProvider";
+import type { ReminderScheduler } from "../platform/notifications";
+import { createFakeScheduler } from "./fakeScheduler";
 import { idSequence } from "./fixtures";
 import { createMemoryRepository, createMemorySettings } from "./memoryRepository";
 import { renderWithTheme } from "./render";
@@ -13,6 +16,7 @@ interface Options {
   settings?: SettingsRepository;
   now?: () => number;
   load?: boolean;
+  scheduler?: ReminderScheduler;
 }
 
 /** Renders `ui` with the real store and theme, backed by in-memory repositories. */
@@ -27,7 +31,14 @@ export async function renderApp(ui: ReactElement, options: Options = {}) {
   if (options.load ?? true) await store.getState().load();
   await renderWithTheme(
     <JourneyStoreProvider store={store}>
-      <SettingsProvider settings={settings}>{ui}</SettingsProvider>
+      <SettingsProvider settings={settings}>
+        <RemindersProvider
+          scheduler={options.scheduler ?? createFakeScheduler().scheduler}
+          now={options.now ?? Date.now}
+        >
+          {ui}
+        </RemindersProvider>
+      </SettingsProvider>
     </JourneyStoreProvider>,
   );
   return { store, repository, settings };

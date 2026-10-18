@@ -1,6 +1,8 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import { RemindersProvider } from "../src/features/reminders/RemindersProvider";
+import { createExpoReminderScheduler } from "../src/platform/notifications";
 import { createAppServices } from "../src/state/createAppStore";
 import { JourneyStoreProvider } from "../src/state/JourneyStoreProvider";
 import { THEME_SETTINGS_KEY } from "../src/features/settings/SettingsScreen";
@@ -39,6 +41,7 @@ function ThemedStack() {
 
 export default function RootLayout() {
   const [services] = useState(createAppServices);
+  const [scheduler] = useState(createExpoReminderScheduler);
   useEffect(() => {
     void services.journeyStore.getState().load();
   }, [services]);
@@ -46,10 +49,12 @@ export default function RootLayout() {
   return (
     <JourneyStoreProvider store={services.journeyStore}>
       <SettingsProvider settings={services.settings}>
-        <ThemeProvider>
-          <SavedThemePreference />
-          <ThemedStack />
-        </ThemeProvider>
+        <RemindersProvider scheduler={scheduler}>
+          <ThemeProvider>
+            <SavedThemePreference />
+            <ThemedStack />
+          </ThemeProvider>
+        </RemindersProvider>
       </SettingsProvider>
     </JourneyStoreProvider>
   );

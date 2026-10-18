@@ -8,7 +8,7 @@ Ogni flow elenca stati, errori e recovery. I comandi di dominio citati esistono 
 
 ```
 Welcome ──▶ Categoria ──▶ Inizio ──▶ Primo obiettivo ──▶ Denaro (opz.) ──▶ Dashboard
-(lo step Notifiche arriva con la funzione in M6, D-018)
+──▶ Promemoria (opz., D-021)
 ```
 
 | Step            | Contenuto                                                                                                                                  | Note                                                                                                                   |
