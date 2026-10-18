@@ -9,6 +9,7 @@ export interface TodayActions {
   onRelapse: () => void;
   onHistory: () => void;
   onSettings: () => void;
+  onHelp: () => void;
 }
 
 interface TodayScreenProps extends TodayActions {
@@ -18,10 +19,7 @@ interface TodayScreenProps extends TodayActions {
 
 const PERCENT = 100;
 
-/**
- * Dashboard (Flow 2). The help centre entry arrives with M5; until then the SOS screen
- * carries the verified helpline.
- */
+/** Dashboard (Flow 2): progress at a glance, urge/relapse actions, help one tap away. */
 export function TodayScreen({
   journey,
   now,
@@ -29,6 +27,7 @@ export function TodayScreen({
   onRelapse,
   onHistory,
   onSettings,
+  onHelp,
 }: TodayScreenProps) {
   const view = currentPeriodView(journey, now);
   if (!view) return null;
@@ -89,6 +88,7 @@ export function TodayScreen({
         <Button label={t("today.urgeButton")} onPress={onUrge} />
         <Button label={t("today.relapseButton")} variant="secondary" onPress={onRelapse} />
         <View style={styles.links}>
+          <Button label={t("nav.help")} variant="tertiary" onPress={onHelp} />
           <Button label={t("nav.history")} variant="tertiary" onPress={onHistory} />
           <Button label={t("nav.settings")} variant="tertiary" onPress={onSettings} />
         </View>

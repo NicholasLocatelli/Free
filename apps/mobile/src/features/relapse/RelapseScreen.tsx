@@ -23,6 +23,7 @@ const DAYS_MAX_LENGTH = 4;
 
 interface RelapseScreenProps {
   onDone: () => void;
+  onHelp: () => void;
   onCancel: () => void;
   now?: () => number;
 }
@@ -31,7 +32,7 @@ interface RelapseScreenProps {
  * Flow 4. Never says "failed" or "reset": the previous period is closed, kept in history
  * with its milestones, and a new period starts. Factors and note are optional.
  */
-export function RelapseScreen({ onDone, onCancel, now = Date.now }: RelapseScreenProps) {
+export function RelapseScreen({ onDone, onHelp, onCancel, now = Date.now }: RelapseScreenProps) {
   const journey = useJourneyStore((s) => s.journey);
   const recordRelapse = useJourneyStore((s) => s.recordRelapse);
   const [step, setStep] = useState<Step>("when");
@@ -57,6 +58,7 @@ export function RelapseScreen({ onDone, onCancel, now = Date.now }: RelapseScree
         )}
         <AppText variant="heading">{t("relapse.supportTitle")}</AppText>
         <ResourceCard resource={TVNGA} />
+        <Button label={t("help.more")} variant="secondary" onPress={onHelp} />
         <Button label={t("relapse.backToToday")} onPress={onDone} />
       </Screen>
     );

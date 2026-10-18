@@ -21,6 +21,7 @@ consapevolezza e accesso rapido a risorse di aiuto ufficiali.
 | M2 — Design System | 🟡 codice completo (#1, #2) — verifica accessibilità su dispositivo pendente |
 | M3 — MVP Core      | 🟡 codice completo (#3, #4) — prova su dispositivo pendente                  |
 | M4 — Tracking      | 🟡 codice completo (#5): SOS, impulsi, ricaduta, storico, impostazioni       |
+| M5 — Help Center   | 🟡 codice completo (#6); revisione professionale dei testi pendente          |
 
 Roadmap completa: [docs/product/roadmap.md](docs/product/roadmap.md).
 
@@ -60,7 +61,7 @@ pnpm test       # solo test
 
 In Italia: **Telefono Verde Nazionale per le problematiche legate al gioco d'azzardo — 800 558822**
 (Istituto Superiore di Sanità, gratuito e anonimo, lun–ven 10–16). In emergenza: **112**.
-Fonti e data di verifica in [docs/product/help-center.md](docs/product/help-center.md).
+Fonti e data di verifica (ultima: 2026-10-18) in [docs/product/help-center.md](docs/product/help-center.md).
 
 ## Licenza
 

@@ -13,18 +13,22 @@ const now = () => NOW;
 async function setup() {
   const onDone = jest.fn();
   const onCancel = jest.fn();
-  const app = await renderApp(<RelapseScreen onDone={onDone} onCancel={onCancel} now={now} />, {
-    repository: createMemoryRepository(newJourney()),
-    now,
-  });
-  return { ...app, onDone, onCancel };
+  const onHelp = jest.fn();
+  const app = await renderApp(
+    <RelapseScreen onDone={onDone} onHelp={onHelp} onCancel={onCancel} now={now} />,
+    {
+      repository: createMemoryRepository(newJourney()),
+      now,
+    },
+  );
+  return { ...app, onDone, onCancel, onHelp };
 }
 
 const press = (name: string) => fireEvent.press(screen.getByRole("button", { name }));
 
 describe("RelapseScreen", () => {
   it("closes the period, keeps history and offers support (REL-1..4, REL-8)", async () => {
-    const { store, onDone } = await setup();
+    const { store, onDone, onHelp } = await setup();
     expect(
       screen.getByText(
         "Il tuo percorso precedente resterà nello storico, insieme ai traguardi che hai raggiunto.",
@@ -51,6 +55,8 @@ describe("RelapseScreen", () => {
       note: "giorno di paga",
     });
 
+    await press("Altre risorse di aiuto");
+    expect(onHelp).toHaveBeenCalled();
     await press("Torna a Oggi");
     expect(onDone).toHaveBeenCalled();
   });
