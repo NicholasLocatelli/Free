@@ -10,6 +10,8 @@ _Owner: UX Architect Agent. 2026-10-02._
 
 ## Navigation map
 
+> Stato attuale (D-019): navigazione a stack; Storico e Impostazioni si aprono dalla Dashboard. Le tab restano un'opzione da rivalutare dopo i test d'uso.
+
 ```
 Root (Expo Router)
 ├── (onboarding)                 stack, mostrato se non esiste un percorso

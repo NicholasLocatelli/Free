@@ -58,7 +58,15 @@ export default tseslint.config(
     },
   },
   {
-    files: ["**/*.mjs", "**/*.config.ts"],
+    files: ["**/*.mjs", "**/*.js", "**/*.config.ts"],
     ...tseslint.configs.disableTypeChecked,
+  },
+  {
+    // CommonJS config files executed by Node (e.g. Jest globalSetup).
+    files: ["**/*.js"],
+    languageOptions: {
+      sourceType: "commonjs",
+      globals: { module: "writable", process: "readonly" },
+    },
   },
 );

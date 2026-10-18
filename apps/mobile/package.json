@@ -13,7 +13,11 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "testTimeout": 20000
+    "testTimeout": 20000,
+    "globalSetup": "./jest.globalSetup.js",
+    "setupFiles": [
+      "./jest.setup.ts"
+    ]
   },
   "dependencies": {
     "@free/core": "workspace:*",

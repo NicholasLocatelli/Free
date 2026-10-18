@@ -21,7 +21,7 @@ dell'utente nel momento più fragile) e che i flussi critici funzionino su Andro
 
 ## Principi
 
-- **Tempo iniettato:** nessun test usa l'orologio reale; `now`/`Clock` sono parametri.
+- **Tempo iniettato:** nessun test usa l'orologio reale; `now`/`Clock` sono parametri. I test dell'app girano con fuso `Europe/Rome`, impostato da `jest.globalSetup.js` (funziona su Linux, macOS e Windows).
 - **Dominio puro = test veloci e deterministici;** la UI non viene testata per logica che vive nel core.
 - **Ogni bug → test di regressione** prima del fix.
 - **No flaky:** un test instabile è un bug da correggere, mai da disabilitare. Nota: i test componenti hanno `testTimeout` 20 s perché a cache Jest fredda (come in CI) la prima trasformazione di moduli RN pesanti (es. `Modal`) supera i 5 s di default; misurato con `jest --clearCache`.

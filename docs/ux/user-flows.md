@@ -7,7 +7,8 @@ Ogni flow elenca stati, errori e recovery. I comandi di dominio citati esistono 
 ## Flow 1 — Onboarding (prima apertura)
 
 ```
-Welcome ──▶ Categoria ──▶ Inizio ──▶ Primo obiettivo ──▶ Denaro (opz.) ──▶ Notifiche (opz.) ──▶ Dashboard
+Welcome ──▶ Categoria ──▶ Inizio ──▶ Primo obiettivo ──▶ Denaro (opz.) ──▶ Dashboard
+(lo step Notifiche arriva con la funzione in M6, D-018)
 ```
 
 | Step            | Contenuto                                                                                                                                  | Note                                                                                                                   |
@@ -52,6 +53,8 @@ futuro. Il pulsante Salva si disabilita al primo tap (anti doppio tap) e l'id è
 all'apertura del form (rifiuto `duplicate_id` lato dominio).
 
 ## Flow 4 — Registrare una ricaduta
+
+> Implementato in #5 con la riflessione **prima** del salvataggio (D-020): Quando? → Riflessione facoltativa → "Il percorso continua." con Telefono Verde.
 
 1. **Conferma** — "Vuoi registrare che hai giocato? Il tuo percorso precedente resterà nello
    storico." · Quando? (_Adesso_ / scegli orario ≥ inizio periodo) · [Registra] [Annulla]

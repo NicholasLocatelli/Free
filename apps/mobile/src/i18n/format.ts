@@ -1,4 +1,4 @@
-import { MS_PER_DAY, MS_PER_HOUR, type Instant } from "@free/core";
+import { MS_PER_DAY, MS_PER_HOUR, MS_PER_MINUTE, type Instant } from "@free/core";
 
 const HOURS_PER_DAY = MS_PER_DAY / MS_PER_HOUR;
 
@@ -9,6 +9,14 @@ export function formatGoal(hours: number): string {
   return hours % HOURS_PER_DAY === 0
     ? plural(hours / HOURS_PER_DAY, "giorno", "giorni")
     : plural(hours, "ora", "ore");
+}
+
+/** Human duration for history and reflection: "12 giorni", "5 ore", "40 minuti". */
+export function formatDuration(ms: number): string {
+  const safe = Math.max(0, ms);
+  if (safe >= MS_PER_DAY) return plural(Math.floor(safe / MS_PER_DAY), "giorno", "giorni");
+  if (safe >= MS_PER_HOUR) return plural(Math.floor(safe / MS_PER_HOUR), "ora", "ore");
+  return plural(Math.floor(safe / MS_PER_MINUTE), "minuto", "minuti");
 }
 
 const dayMonth = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long" });

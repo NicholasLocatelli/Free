@@ -4,6 +4,7 @@ import type { SqlExecutor } from "./SqlExecutor";
 export interface SettingsRepository {
   get(key: string): Promise<string | null>;
   set(key: string, value: string): Promise<void>;
+  remove(key: string): Promise<void>;
 }
 
 export function createSettingsRepository(db: SqlExecutor): SettingsRepository {
@@ -20,6 +21,9 @@ export function createSettingsRepository(db: SqlExecutor): SettingsRepository {
         "INSERT INTO app_settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
         [key, value],
       );
+    },
+    async remove(key) {
+      await db.run("DELETE FROM app_settings WHERE key = ?", [key]);
     },
   };
 }
