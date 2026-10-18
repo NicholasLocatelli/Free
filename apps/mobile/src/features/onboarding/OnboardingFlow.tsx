@@ -17,6 +17,7 @@ import {
   type OnboardingDraft,
   type OnboardingStep,
 } from "./onboardingModel";
+import { RemindersForm } from "../reminders/RemindersForm";
 import { useOnboardingProgress } from "./useOnboardingProgress";
 
 const UNITS: readonly FrequencyUnit[] = ["day", "week", "month"];
@@ -57,6 +58,13 @@ export function OnboardingFlow({ now = Date.now }: OnboardingFlowProps) {
   // Intermediate steps are synchronous, so the button never shows a busy state between
   // steps; only the last step awaits the save (and guards against double submit).
   const advance = () => {
+    if (step === "money") {
+      const money = parseMoney(draft);
+      if (!money.ok) {
+        setError(`onboarding.money.${money.error}`);
+        return;
+      }
+    }
     if (step === "start") {
       const parsed = parseStart(draft, now());
       if (!parsed.ok) {
@@ -101,7 +109,7 @@ export function OnboardingFlow({ now = Date.now }: OnboardingFlowProps) {
   const primaryLabel =
     step === "welcome"
       ? t("onboarding.welcome.cta")
-      : step === "money"
+      : step === "reminders"
         ? t("onboarding.finish")
         : t("common.continue");
 
@@ -117,7 +125,7 @@ export function OnboardingFlow({ now = Date.now }: OnboardingFlowProps) {
         </AppText>
       )}
       <View style={styles.actions}>
-        <Button label={primaryLabel} onPress={step === "money" ? finish : advance} />
+        <Button label={primaryLabel} onPress={step === "reminders" ? finish : advance} />
         {back !== null && (
           <Button
             label={t("common.back")}
@@ -245,6 +253,14 @@ function StepContent({ step, draft, edit, now }: StepProps) {
               />
             ))}
           </View>
+        </View>
+      );
+
+    case "reminders":
+      return (
+        <View style={styles.section}>
+          <Title>{t("onboarding.reminders.title")}</Title>
+          <RemindersForm />
         </View>
       );
 

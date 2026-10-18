@@ -113,6 +113,15 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner prima della Beta.
 - **Date:** 2026-10-02
 
+### D-021 ✅ Promemoria solo locali, neutri e spenti di default
+
+- **Context:** F12 (notifiche) contro principi 4 (privacy) e 11 (discrezione).
+- **Alternatives:** push da server; testi motivazionali espliciti ("7 giorni senza giocare!").
+- **Chosen:** expo-notifications locali; check-in giornaliero e traguardi; testi fissi neutri; permesso chiesto solo all'attivazione; ripianificazione completa a ogni modifica; step facoltativo in onboarding (chiude D-018).
+- **Reason:** nessun dato esce dal telefono; nessuno può dedurre il tema dalla lock screen; nessun duplicato possibile.
+- **Trade-offs:** testi meno "motivanti"; niente promemoria intelligenti basati sugli orari degli impulsi (valutabile in futuro, sempre in locale).
+- **Date:** 2026-10-18
+
 ### D-019 ✅ Navigazione a stack con collegamenti dalla Dashboard (niente tab per ora)
 
 - **Context:** l'IA prevede 3 tab (Oggi, Storico, Impostazioni).
@@ -148,7 +157,7 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Trade-offs:** meno "nativo"; rivalutare dopo i test d'uso in Beta.
 - **Date:** 2026-10-08
 
-### D-018 ✅ Step "Notifiche" rinviato a M6
+### D-018 ✅ Step "Notifiche" rinviato a M6 (chiusa da D-021: step "Promemoria" aggiunto)
 
 - **Context:** il brief prevede uno step notifiche nell'onboarding; le notifiche arrivano in M6.
 - **Chosen:** l'onboarding ha 5 step; lo step notifiche verrà aggiunto insieme alla funzione.
