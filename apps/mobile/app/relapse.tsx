@@ -8,6 +8,9 @@ export default function Relapse() {
       onDone={() => {
         router.dismissTo("/");
       }}
+      onHelp={() => {
+        router.push("/help/after-relapse");
+      }}
       onCancel={() => {
         router.back();
       }}

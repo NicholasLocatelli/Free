@@ -16,6 +16,7 @@ type Mode = "menu" | "breathe" | "wait";
 
 interface SosScreenProps {
   onRecord: () => void;
+  onHelp: () => void;
   onClose: () => void;
   openUrl?: (url: string) => Promise<unknown>;
   now?: () => number;
@@ -89,6 +90,7 @@ const defaultOpenUrl = (url: string) => Linking.openURL(url);
 /** "Ho un impulso": immediate techniques first, recording second (Flow 3). */
 export function SosScreen({
   onRecord,
+  onHelp,
   onClose,
   openUrl = defaultOpenUrl,
   now = Date.now,
@@ -152,6 +154,7 @@ export function SosScreen({
         )}
       </View>
       <Button label={t("sos.record")} onPress={onRecord} />
+      <Button label={t("help.more")} variant="tertiary" onPress={onHelp} />
       <Button label={t("common.close")} variant="tertiary" onPress={onClose} />
     </Screen>
   );

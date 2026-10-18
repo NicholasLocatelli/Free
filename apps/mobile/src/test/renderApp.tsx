@@ -39,4 +39,5 @@ export const noActions = {
   onRelapse: jest.fn(),
   onHistory: jest.fn(),
   onSettings: jest.fn(),
+  onHelp: jest.fn(),
 };

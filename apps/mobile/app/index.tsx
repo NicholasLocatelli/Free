@@ -18,6 +18,9 @@ export default function Index() {
         onSettings: () => {
           router.push("/settings");
         },
+        onHelp: () => {
+          router.push("/help");
+        },
       }}
     />
   );

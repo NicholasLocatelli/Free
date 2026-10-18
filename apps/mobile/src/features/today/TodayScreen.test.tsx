@@ -87,6 +87,7 @@ describe("TodayScreen", () => {
       onRelapse: jest.fn(),
       onHistory: jest.fn(),
       onSettings: jest.fn(),
+      onHelp: jest.fn(),
     };
     await renderWithTheme(<TodayScreen journey={journey()} now={T0} {...actions} />);
     for (const [name, handler] of [
@@ -94,6 +95,7 @@ describe("TodayScreen", () => {
       ["Registra una ricaduta", actions.onRelapse],
       ["Storico", actions.onHistory],
       ["Impostazioni", actions.onSettings],
+      ["Aiuto", actions.onHelp],
     ] as const) {
       await fireEvent.press(screen.getByRole("button", { name }));
       expect(handler).toHaveBeenCalled();

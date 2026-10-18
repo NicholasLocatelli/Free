@@ -64,35 +64,35 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 
 ### TC-HIS — Storico, TC-GOAL — Obiettivi, TC-HELP — Help Center
 
-| ID     | Acceptance criteria                                                                  | Stato        |
-| ------ | ------------------------------------------------------------------------------------ | ------------ |
-| HIS-1  | Riepilogo: tempo totale, periodo più lungo, impulsi superati                         | ✅ core      |
-| HIS-2  | Storico con un solo periodo e nessun impulso                                         | ✅ component |
-| GOAL-1 | Milestone configurabili, ordinate, deduplicate, validate                             | ✅           |
-| GOAL-2 | Progresso verso la prossima milestone corretto; completamento quando tutte raggiunte | ✅           |
-| HELP-1 | Help Center a 1 tap dalla Home, funzionante offline                                  | 🟡 M5        |
-| HELP-2 | Ogni risorsa mostra fonte e data di verifica                                         | 🟡 M5        |
+| ID     | Acceptance criteria                                                                       | Stato                                                                       |
+| ------ | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| HIS-1  | Riepilogo: tempo totale, periodo più lungo, impulsi superati                              | ✅ core                                                                     |
+| HIS-2  | Storico con un solo periodo e nessun impulso                                              | ✅ component                                                                |
+| GOAL-1 | Milestone configurabili, ordinate, deduplicate, validate                                  | ✅                                                                          |
+| GOAL-2 | Progresso verso la prossima milestone corretto; completamento quando tutte raggiunte      | ✅                                                                          |
+| HELP-1 | Help Center a 1 tap dalla Home, funzionante offline                                       | ✅ component (Dashboard, SOS, ricaduta → Aiuto; contenuti inclusi nell'app) |
+| HELP-2 | Ogni risorsa mostra fonte e data di verifica; numeri e link coincidono con help-center.md | ✅ component + `resources.test.ts` (coerenza con la documentazione)         |
 
 ## 2. Edge case (Edge Case Tester)
 
-| Caso                                                       | Atteso                                                                 | Copertura                                                          |
-| ---------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Prima apertura, nessun dato                                | Onboarding; nessuna query fallisce                                     | ✅ integration + component (`HomeScreen.test.tsx`)                 |
-| Cancellazione dati                                         | Torna all'onboarding; DB rimosso; notifiche annullate                  | 🟡 M7                                                              |
-| Cambio data/ora manuale avanti                             | Durata cresce (accettato: il device è la fonte di tempo) — documentato | ✅ (comportamento definito)                                        |
-| Cambio data/ora indietro                                   | Clock skew gestito                                                     | ✅                                                                 |
-| Timezone / DST                                             | Durata invariata                                                       | ✅                                                                 |
-| Reinstallazione                                            | Dati persi (local-first) salvo export/backup; onboarding pulito        | 🟡 M7 (dipende da D-014)                                           |
-| Perdita connessione                                        | Nessun impatto sul core; link esterni con numero copiabile             | 🟡 M5                                                              |
-| DB corrotto / JSON invalido                                | ErrorState con opzioni; mai cancellazione silenziosa                   | ✅ `DataCorruptionError` (5 casi) + ErrorState con Riprova         |
-| Migrazione interrotta                                      | Rollback transazione                                                   | ✅ integration                                                     |
-| Dati mancanti (campi null)                                 | Stati `incomplete`/vuoti, nessun crash                                 | ✅ core                                                            |
-| Valori estremi (100 anni, importi massimi, 10.000 impulsi) | Nessun overflow; UI fluida                                             | ✅ core · 🟡 perf M6                                               |
-| Doppio tap                                                 | Nessun duplicato                                                       | ✅ core · ✅ Button · ✅ store (comandi serializzati, id del form) |
-| Notifiche duplicate                                        | Riprogrammazione idempotente (cancella+ripianifica per id)             | 🟡 M6                                                              |
-| Sessione scaduta                                           | N/A nell'MVP (nessun account)                                          | —                                                                  |
-| Testo nota > 2000 caratteri, emoji, RTL                    | Rifiuto oltre il limite; emoji/RTL salvati correttamente               | ✅ limite · 🟡 UI                                                  |
-| Font 200%, screen reader                                   | Nessun testo troncato nei flussi critici                               | 👤 fine M3/M4                                                      |
+| Caso                                                       | Atteso                                                                                          | Copertura                                                          |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Prima apertura, nessun dato                                | Onboarding; nessuna query fallisce                                                              | ✅ integration + component (`HomeScreen.test.tsx`)                 |
+| Cancellazione dati                                         | Torna all'onboarding; DB rimosso; notifiche annullate                                           | 🟡 M7                                                              |
+| Cambio data/ora manuale avanti                             | Durata cresce (accettato: il device è la fonte di tempo) — documentato                          | ✅ (comportamento definito)                                        |
+| Cambio data/ora indietro                                   | Clock skew gestito                                                                              | ✅                                                                 |
+| Timezone / DST                                             | Durata invariata                                                                                | ✅                                                                 |
+| Reinstallazione                                            | Dati persi (local-first) salvo export/backup; onboarding pulito                                 | 🟡 M7 (dipende da D-014)                                           |
+| Perdita connessione                                        | Nessun impatto sul core; Help Center offline; link esterni con numero visibile se non si aprono | ✅ component                                                       |
+| DB corrotto / JSON invalido                                | ErrorState con opzioni; mai cancellazione silenziosa                                            | ✅ `DataCorruptionError` (5 casi) + ErrorState con Riprova         |
+| Migrazione interrotta                                      | Rollback transazione                                                                            | ✅ integration                                                     |
+| Dati mancanti (campi null)                                 | Stati `incomplete`/vuoti, nessun crash                                                          | ✅ core                                                            |
+| Valori estremi (100 anni, importi massimi, 10.000 impulsi) | Nessun overflow; UI fluida                                                                      | ✅ core · 🟡 perf M6                                               |
+| Doppio tap                                                 | Nessun duplicato                                                                                | ✅ core · ✅ Button · ✅ store (comandi serializzati, id del form) |
+| Notifiche duplicate                                        | Riprogrammazione idempotente (cancella+ripianifica per id)                                      | 🟡 M6                                                              |
+| Sessione scaduta                                           | N/A nell'MVP (nessun account)                                                                   | —                                                                  |
+| Testo nota > 2000 caratteri, emoji, RTL                    | Rifiuto oltre il limite; emoji/RTL salvati correttamente                                        | ✅ limite · 🟡 UI                                                  |
+| Font 200%, screen reader                                   | Nessun testo troncato nei flussi critici                                                        | 👤 fine M3/M4                                                      |
 
 ## 3. Release QA — criteri di blocco
 

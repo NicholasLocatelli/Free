@@ -8,6 +8,9 @@ export default function Sos() {
       onRecord={() => {
         router.replace("/urge/new");
       }}
+      onHelp={() => {
+        router.push("/help");
+      }}
       onClose={() => {
         router.back();
       }}

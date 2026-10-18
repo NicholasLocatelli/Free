@@ -14,8 +14,15 @@ describe("SosScreen", () => {
     let clock = 0;
     const onRecord = jest.fn();
     const onClose = jest.fn();
+    const onHelp = jest.fn();
     const utils = renderWithTheme(
-      <SosScreen onRecord={onRecord} onClose={onClose} openUrl={openUrl} now={() => clock} />,
+      <SosScreen
+        onRecord={onRecord}
+        onHelp={onHelp}
+        onClose={onClose}
+        openUrl={openUrl}
+        now={() => clock}
+      />,
     );
     const advance = async (seconds: number) => {
       clock += seconds * 1000;
@@ -24,7 +31,7 @@ describe("SosScreen", () => {
         await Promise.resolve();
       });
     };
-    return { utils, onRecord, onClose, openUrl, advance };
+    return { utils, onRecord, onHelp, onClose, openUrl, advance };
   }
 
   it("offers techniques, the helpline and recording in one place", async () => {
@@ -35,6 +42,13 @@ describe("SosScreen", () => {
     ).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole("button", { name: "Registra l'impulso" }));
     expect(onRecord).toHaveBeenCalled();
+  });
+
+  it("links to the full Help Center", async () => {
+    const { utils, onHelp } = setup();
+    await utils;
+    await fireEvent.press(screen.getByRole("button", { name: "Altre risorse di aiuto" }));
+    expect(onHelp).toHaveBeenCalled();
   });
 
   it("dials the verified national helpline", async () => {
