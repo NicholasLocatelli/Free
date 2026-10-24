@@ -15,7 +15,7 @@ export function createDeviceBackupFiles(): BackupFiles {
     async share(fileName, contents) {
       if (!(await isAvailableAsync())) return "unavailable";
       const file = new File(Paths.cache, fileName);
-      file.write(contents);
+      await file.write(contents);
       try {
         await shareAsync(file.uri, { mimeType: "application/json", dialogTitle: fileName });
       } finally {
