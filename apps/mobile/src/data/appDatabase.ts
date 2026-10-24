@@ -28,6 +28,7 @@ export function createLazyJourneyRepository(getDb: () => Promise<SqlExecutor>): 
   return {
     load: async () => (await repository()).load(),
     save: async (next, previous) => (await repository()).save(next, previous),
+    replace: async (journey) => (await repository()).replace(journey),
     deleteAll: async () => (await repository()).deleteAll(),
   };
 }

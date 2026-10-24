@@ -47,7 +47,36 @@ export interface JourneyRepository {
    * transaction. History is append-only: events are inserted, never updated or deleted.
    */
   save(next: Journey, previous: Journey | null): Promise<void>;
+  /** Atomically replaces the stored journey (import from a backup file). */
+  replace(journey: Journey): Promise<void>;
   deleteAll(): Promise<void>;
+}
+
+async function writeDiff(tx: SqlExecutor, next: Journey, previous: Journey | null) {
+  const oldPeriods = new Map(previous?.periods.map((p) => [p.id, p]));
+  const oldRelapses = new Set(previous?.relapses.map((r) => r.id));
+  const oldUrges = new Set(previous?.urges.map((u) => u.id));
+
+  await tx.run(UPSERT_JOURNEY, journeyParams(next));
+  // Close/edit existing periods before inserting new ones, so the
+  // "one open period" index never sees two open rows.
+  for (const period of next.periods) {
+    const old = oldPeriods.get(period.id);
+    if (old && !samePeriod(old, period)) {
+      await tx.run(UPDATE_PERIOD, [period.startedAt, period.endedAt, period.endReason, period.id]);
+    }
+  }
+  for (const period of next.periods) {
+    if (!oldPeriods.has(period.id)) await tx.run(INSERT_PERIOD, periodParams(next.id, period));
+  }
+  for (const relapse of next.relapses) {
+    if (!oldRelapses.has(relapse.id)) {
+      await tx.run(INSERT_RELAPSE, relapseParams(next.id, relapse));
+    }
+  }
+  for (const urge of next.urges) {
+    if (!oldUrges.has(urge.id)) await tx.run(INSERT_URGE, urgeParams(next.id, urge));
+  }
 }
 
 export function createJourneyRepository(db: SqlExecutor): JourneyRepository {
@@ -74,38 +103,13 @@ export function createJourneyRepository(db: SqlExecutor): JourneyRepository {
     },
 
     async save(next, previous) {
-      const oldPeriods = new Map(previous?.periods.map((p) => [p.id, p]));
-      const oldRelapses = new Set(previous?.relapses.map((r) => r.id));
-      const oldUrges = new Set(previous?.urges.map((u) => u.id));
+      await db.transaction((tx) => writeDiff(tx, next, previous));
+    },
 
+    async replace(journey) {
       await db.transaction(async (tx) => {
-        await tx.run(UPSERT_JOURNEY, journeyParams(next));
-        // Close/edit existing periods before inserting new ones, so the
-        // "one open period" index never sees two open rows.
-        for (const period of next.periods) {
-          const old = oldPeriods.get(period.id);
-          if (old && !samePeriod(old, period)) {
-            await tx.run(UPDATE_PERIOD, [
-              period.startedAt,
-              period.endedAt,
-              period.endReason,
-              period.id,
-            ]);
-          }
-        }
-        for (const period of next.periods) {
-          if (!oldPeriods.has(period.id)) {
-            await tx.run(INSERT_PERIOD, periodParams(next.id, period));
-          }
-        }
-        for (const relapse of next.relapses) {
-          if (!oldRelapses.has(relapse.id)) {
-            await tx.run(INSERT_RELAPSE, relapseParams(next.id, relapse));
-          }
-        }
-        for (const urge of next.urges) {
-          if (!oldUrges.has(urge.id)) await tx.run(INSERT_URGE, urgeParams(next.id, urge));
-        }
+        await tx.run("DELETE FROM journeys");
+        await writeDiff(tx, journey, null);
       });
     },
 

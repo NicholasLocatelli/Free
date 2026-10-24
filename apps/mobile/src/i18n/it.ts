@@ -126,6 +126,41 @@ export const messages = {
   "settings.theme": "Tema",
   "settings.saved": "Salvato.",
   "settings.reminders": "Promemoria",
+  "settings.privacy": "Privacy e dati",
+  "lock.title": "App bloccata",
+  "lock.unlock": "Sblocca",
+  "lock.prompt": "Sblocca l'app",
+  "lock.toggle": "Blocca l'app",
+  "lock.description":
+    "Chiede impronta, volto o PIN del telefono all'apertura e quando torni all'app. Nasconde anche l'anteprima tra le app recenti.",
+  "lock.unavailable":
+    "Per usare il blocco imposta prima un PIN, una sequenza o un'impronta nelle impostazioni del telefono.",
+  "lock.cancelled": "Operazione annullata: l'impostazione non è cambiata.",
+  "backup.title": "Copia dei tuoi dati",
+  "backup.body":
+    "Puoi salvare i tuoi dati in un file e reimportarli, ad esempio su un nuovo telefono. Non esiste una copia online.",
+  "backup.warning":
+    "Il file non è cifrato e contiene il tuo storico e le tue note: salvalo in un posto sicuro e non condividerlo.",
+  "backup.export": "Esporta in un file",
+  "backup.exported": "File pronto. Ricordati dove lo salvi.",
+  "backup.unavailable": "La condivisione di file non è disponibile su questo dispositivo.",
+  "backup.import": "Importa da un file",
+  "backup.importConfirm":
+    "Il file contiene {periods} periodi e {urges} impulsi, a partire dal {start}. Importandolo sostituirai i dati attuali.",
+  "backup.importReplace": "Sostituisci i dati attuali",
+  "backup.imported": "Dati importati.",
+  "backup.error.too_large": "Il file è troppo grande per essere un backup dell'app.",
+  "backup.error.not_json": "Il file non è un backup valido.",
+  "backup.error.wrong_format": "Il file non è un backup di questa app.",
+  "backup.error.unsupported_version":
+    "Il backup è stato creato da una versione più recente dell'app.",
+  "backup.error.invalid_data": "Il backup contiene dati non validi e non è stato importato.",
+  "delete.title": "Cancella tutti i dati",
+  "delete.body":
+    "Cancella dal telefono percorso, storico, note e impostazioni. Non si può annullare: se vuoi conservarli, esportali prima.",
+  "delete.confirmLabel": "Per confermare scrivi CANCELLA",
+  "delete.confirmWord": "CANCELLA",
+  "delete.button": "Cancella definitivamente",
   "reminders.title": "Promemoria discreti",
   "reminders.body":
     "Facoltativi e solo su questo telefono. Il testo non parla mai del tuo percorso, così nessuno può capirlo dalla schermata di blocco.",

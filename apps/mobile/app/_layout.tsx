@@ -1,7 +1,9 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import { AppLockProvider } from "../src/features/lock/AppLockProvider";
 import { RemindersProvider } from "../src/features/reminders/RemindersProvider";
+import { createDeviceAuth } from "../src/platform/deviceAuth";
 import { createExpoReminderScheduler } from "../src/platform/notifications";
 import { createAppServices } from "../src/state/createAppStore";
 import { JourneyStoreProvider } from "../src/state/JourneyStoreProvider";
@@ -42,6 +44,7 @@ function ThemedStack() {
 export default function RootLayout() {
   const [services] = useState(createAppServices);
   const [scheduler] = useState(createExpoReminderScheduler);
+  const [deviceAuth] = useState(createDeviceAuth);
   useEffect(() => {
     void services.journeyStore.getState().load();
   }, [services]);
@@ -52,7 +55,9 @@ export default function RootLayout() {
         <RemindersProvider scheduler={scheduler}>
           <ThemeProvider>
             <SavedThemePreference />
-            <ThemedStack />
+            <AppLockProvider auth={deviceAuth}>
+              <ThemedStack />
+            </AppLockProvider>
           </ThemeProvider>
         </RemindersProvider>
       </SettingsProvider>

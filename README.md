@@ -14,15 +14,16 @@ consapevolezza e accesso rapido a risorse di aiuto ufficiali.
 
 ## Stato
 
-| Milestone          | Stato                                                                        |
-| ------------------ | ---------------------------------------------------------------------------- |
-| M0 — Discovery     | ✅ completata ([review](docs/reviews/MILESTONE-0-1-REVIEW.md))               |
-| M1 — Architecture  | ✅ completata — dominio `@free/core` implementato e testato                  |
-| M2 — Design System | 🟡 codice completo (#1, #2) — verifica accessibilità su dispositivo pendente |
-| M3 — MVP Core      | 🟡 codice completo (#3, #4) — prova su dispositivo pendente                  |
-| M4 — Tracking      | 🟡 codice completo (#5): SOS, impulsi, ricaduta, storico, impostazioni       |
-| M5 — Help Center   | 🟡 codice completo (#6); revisione professionale dei testi pendente          |
-| M6 — Testing       | 🟡 promemoria discreti fatti (#12); E2E in CI da fare                        |
+| Milestone          | Stato                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| M0 — Discovery     | ✅ completata ([review](docs/reviews/MILESTONE-0-1-REVIEW.md))                              |
+| M1 — Architecture  | ✅ completata — dominio `@free/core` implementato e testato                                 |
+| M2 — Design System | 🟡 codice completo (#1, #2) — verifica accessibilità su dispositivo pendente                |
+| M3 — MVP Core      | 🟡 codice completo (#3, #4) — prova su dispositivo pendente                                 |
+| M4 — Tracking      | 🟡 codice completo (#5): SOS, impulsi, ricaduta, storico, impostazioni                      |
+| M5 — Help Center   | 🟡 codice completo (#6); revisione professionale dei testi pendente                         |
+| M6 — Testing       | 🟡 promemoria discreti fatti (#12); E2E in CI da fare                                       |
+| M7 — Security      | 🟡 blocco app, cancellazione dati, export/import, nessun backup di sistema su Android (#13) |
 
 Roadmap completa: [docs/product/roadmap.md](docs/product/roadmap.md).
 

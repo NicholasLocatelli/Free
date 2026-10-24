@@ -24,6 +24,16 @@ export default tseslint.config(
     rules: reactHooks.configs.recommended.rules,
   },
   {
+    // No user data in logs (docs/architecture/security.md): console output is not allowed.
+    files: [
+      "apps/mobile/src/**/*.{ts,tsx}",
+      "apps/mobile/app/**/*.tsx",
+      "packages/core/src/**/*.ts",
+    ],
+    ignores: ["**/*.test.{ts,tsx}", "**/test/**"],
+    rules: { "no-console": "error" },
+  },
+  {
     // Layering (docs/architecture/overview.md): the design system never reaches into
     // app state or persistence, and the domain package never imports the app.
     files: ["apps/mobile/src/ui/**/*.{ts,tsx}"],

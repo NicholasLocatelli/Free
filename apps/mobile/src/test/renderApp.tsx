@@ -6,6 +6,9 @@ import { SettingsProvider } from "../state/SettingsProvider";
 import { RemindersProvider } from "../features/reminders/RemindersProvider";
 import type { ReminderScheduler } from "../platform/notifications";
 import { createFakeScheduler } from "./fakeScheduler";
+import { AppLockProvider } from "../features/lock/AppLockProvider";
+import type { DeviceAuth } from "../platform/deviceAuth";
+import { createFakeDeviceAuth } from "./fakeDeviceAuth";
 import { idSequence } from "./fixtures";
 import { createMemoryRepository, createMemorySettings } from "./memoryRepository";
 import { renderWithTheme } from "./render";
@@ -17,6 +20,7 @@ interface Options {
   now?: () => number;
   load?: boolean;
   scheduler?: ReminderScheduler;
+  auth?: DeviceAuth;
 }
 
 /** Renders `ui` with the real store and theme, backed by in-memory repositories. */
@@ -36,7 +40,7 @@ export async function renderApp(ui: ReactElement, options: Options = {}) {
           scheduler={options.scheduler ?? createFakeScheduler().scheduler}
           now={options.now ?? Date.now}
         >
-          {ui}
+          <AppLockProvider auth={options.auth ?? createFakeDeviceAuth().auth}>{ui}</AppLockProvider>
         </RemindersProvider>
       </SettingsProvider>
     </JourneyStoreProvider>,
