@@ -113,6 +113,15 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner prima della Beta.
 - **Date:** 2026-10-02
 
+### D-025 ✅ Aggiornamento a Expo SDK 58
+
+- **Context:** l'owner testa con Expo Go dagli store, che ora supporta solo SDK 58; il progetto era su SDK 57 e non si apriva più.
+- **Alternatives:** restare su SDK 57 e installare a mano una vecchia Expo Go (non possibile su iOS); passare subito a una development build (richiede EAS).
+- **Chosen:** aggiornamento a SDK 58 (React Native 0.88, React 19.3, Jest 30). Versioni allineate con `expo install --check`; `File.write()` di expo-file-system ora è asincrona.
+- **Reason:** permette di continuare i test su telefono senza costi né account aggiuntivi.
+- **Trade-offs:** ogni nuova SDK di Expo Go richiederà un aggiornamento simile; con la Beta (development build/EAS) non dipenderemo più dalla versione di Expo Go.
+- **Date:** 2026-10-24
+
 ### D-022 ✅ Nessun account, confermato dall'owner
 
 - **Context:** domanda dell'owner "ci si può registrare? cosa comporterebbe?" (analisi in `security.md` § Account e anonimato).
