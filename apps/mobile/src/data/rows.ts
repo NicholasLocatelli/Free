@@ -37,6 +37,7 @@ export interface PeriodRow {
   started_at: number;
   ended_at: number | null;
   end_reason: string | null;
+  retained_milestone_hours: string;
 }
 
 export interface RelapseRow {
@@ -131,6 +132,11 @@ function periodFromRow(row: PeriodRow): Period {
     startedAt: row.started_at,
     endedAt: row.ended_at,
     endReason: row.end_reason,
+    retainedMilestoneHours: parseJsonArray(
+      row.retained_milestone_hours,
+      "retained_milestone_hours",
+      isPositiveInt,
+    ),
   };
 }
 
@@ -182,6 +188,7 @@ export const periodParams = (journeyId: string, p: Period): SqlValue[] => [
   p.startedAt,
   p.endedAt,
   p.endReason,
+  JSON.stringify(p.retainedMilestoneHours),
 ];
 
 export const relapseParams = (journeyId: string, r: RelapseEvent): SqlValue[] => [

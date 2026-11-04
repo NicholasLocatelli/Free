@@ -1,5 +1,5 @@
 import { getCategory, type CategoryId } from "./categories";
-import { normalizeMilestones } from "./milestones";
+import { mergeHours, normalizeMilestones, reachedHours } from "./milestones";
 import { DEFAULT_MONEY_SETTINGS, validateMoneySettings, type MoneySettings } from "./money";
 import { err, ok, type Result } from "./result";
 import { isValidInstant, type Instant } from "./time";
@@ -73,7 +73,15 @@ export function createJourney(input: CreateJourneyInput): Result<Journey, Create
     id: input.id,
     categoryId: input.categoryId,
     createdAt: input.now,
-    periods: [{ id: input.periodId, startedAt: input.startedAt, endedAt: null, endReason: null }],
+    periods: [
+      {
+        id: input.periodId,
+        startedAt: input.startedAt,
+        endedAt: null,
+        endReason: null,
+        retainedMilestoneHours: [],
+      },
+    ],
     relapses: [],
     urges: [],
     milestoneHours: milestones.value,
@@ -137,6 +145,7 @@ export function recordRelapse(
     startedAt: restartAt,
     endedAt: null,
     endReason: null,
+    retainedMilestoneHours: [],
   };
   const relapse: RelapseEvent = {
     id: input.relapseId,
@@ -220,7 +229,10 @@ export function recordUrge(
 
 export type EditStartError = InstantError | "no_open_period" | "before_previous_period";
 
-/** Corrects the start of the open period (e.g. the user picked the wrong date). */
+/**
+ * Corrects the start of the open period (e.g. the user picked the wrong date). Retained
+ * milestones the corrected period has not actually reached are dropped.
+ */
 export function editCurrentPeriodStart(
   journey: Journey,
   startedAt: Instant,
@@ -234,7 +246,12 @@ export function editCurrentPeriodStart(
   if (previous?.endedAt != null && startedAt < previous.endedAt) {
     return err("before_previous_period");
   }
-  return ok({ ...journey, periods: [...journey.periods.slice(0, -1), { ...open, startedAt }] });
+  const moved = { ...open, startedAt };
+  const corrected: Period = {
+    ...moved,
+    retainedMilestoneHours: reachedHours(moved, open.retainedMilestoneHours, now),
+  };
+  return ok({ ...journey, periods: [...journey.periods.slice(0, -1), corrected] });
 }
 
 export function updateMoneySettings(
@@ -245,12 +262,26 @@ export function updateMoneySettings(
   return valid.ok ? ok({ ...journey, money: valid.value }) : err("invalid_money_settings");
 }
 
+/**
+ * Replaces the goals. A removed goal that a period had already reached is retained on that
+ * period, so the achievement stays in history (product principle: never erased, #19).
+ */
 export function updateMilestones(
   journey: Journey,
   milestoneHours: readonly number[],
+  now: Instant,
 ): Result<Journey, "invalid_milestones"> {
   const normalized = normalizeMilestones(milestoneHours);
-  return normalized.ok
-    ? ok({ ...journey, milestoneHours: normalized.value })
-    : err("invalid_milestones");
+  if (!normalized.ok) return err("invalid_milestones");
+  const removed = journey.milestoneHours.filter((h) => !normalized.value.includes(h));
+  const periods = journey.periods.map((period) => {
+    const reached = reachedHours(period, removed, now);
+    return reached.length === 0
+      ? period
+      : {
+          ...period,
+          retainedMilestoneHours: mergeHours(period.retainedMilestoneHours, reached),
+        };
+  });
+  return ok({ ...journey, milestoneHours: normalized.value, periods });
 }

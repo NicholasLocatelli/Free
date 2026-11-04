@@ -24,10 +24,12 @@ const UPSERT_JOURNEY = `
     money_sessions_per_unit = excluded.money_sessions_per_unit,
     money_frequency_unit = excluded.money_frequency_unit`;
 
-const INSERT_PERIOD =
-  "INSERT INTO periods (id, journey_id, started_at, ended_at, end_reason) VALUES (?, ?, ?, ?, ?)";
-const UPDATE_PERIOD =
-  "UPDATE periods SET started_at = ?, ended_at = ?, end_reason = ? WHERE id = ?";
+const INSERT_PERIOD = `INSERT INTO periods
+  (id, journey_id, started_at, ended_at, end_reason, retained_milestone_hours)
+  VALUES (?, ?, ?, ?, ?, ?)`;
+const UPDATE_PERIOD = `UPDATE periods
+  SET started_at = ?, ended_at = ?, end_reason = ?, retained_milestone_hours = ?
+  WHERE id = ?`;
 const INSERT_RELAPSE = `INSERT INTO relapses
   (id, journey_id, period_id, occurred_at, recorded_at, contributing_factors, note)
   VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -37,7 +39,10 @@ const INSERT_URGE = `INSERT INTO urges
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 const samePeriod = (a: Period, b: Period) =>
-  a.startedAt === b.startedAt && a.endedAt === b.endedAt && a.endReason === b.endReason;
+  a.startedAt === b.startedAt &&
+  a.endedAt === b.endedAt &&
+  a.endReason === b.endReason &&
+  a.retainedMilestoneHours.join() === b.retainedMilestoneHours.join();
 
 export interface JourneyRepository {
   /** The single journey of the MVP, or null before onboarding. */
@@ -63,7 +68,13 @@ async function writeDiff(tx: SqlExecutor, next: Journey, previous: Journey | nul
   for (const period of next.periods) {
     const old = oldPeriods.get(period.id);
     if (old && !samePeriod(old, period)) {
-      await tx.run(UPDATE_PERIOD, [period.startedAt, period.endedAt, period.endReason, period.id]);
+      await tx.run(UPDATE_PERIOD, [
+        period.startedAt,
+        period.endedAt,
+        period.endReason,
+        JSON.stringify(period.retainedMilestoneHours),
+        period.id,
+      ]);
     }
   }
   for (const period of next.periods) {

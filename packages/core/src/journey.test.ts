@@ -11,6 +11,7 @@ import {
   type RecordRelapseInput,
   type RecordUrgeInput,
 } from "./journey";
+import { achievedMilestones } from "./milestones";
 import type { Result } from "./result";
 import { journeyStats } from "./summary";
 import { makeJourney, T0 } from "./test-helpers";
@@ -72,8 +73,20 @@ describe("recordRelapse", () => {
   it("closes the current period and opens a new one", () => {
     const journey = unwrap(recordRelapse(makeJourney(), relapseInput({ note: "  stress  " })));
     expect(journey.periods).toEqual([
-      { id: "period-1", startedAt: T0, endedAt: T0 + 10 * MS_PER_DAY, endReason: "relapse" },
-      { id: "period-2", startedAt: T0 + 10 * MS_PER_DAY, endedAt: null, endReason: null },
+      {
+        id: "period-1",
+        startedAt: T0,
+        endedAt: T0 + 10 * MS_PER_DAY,
+        endReason: "relapse",
+        retainedMilestoneHours: [],
+      },
+      {
+        id: "period-2",
+        startedAt: T0 + 10 * MS_PER_DAY,
+        endedAt: null,
+        endReason: null,
+        retainedMilestoneHours: [],
+      },
     ]);
     expect(journey.relapses[0]).toMatchObject({ periodId: "period-1", note: "stress" });
   });
@@ -186,8 +199,8 @@ describe("editCurrentPeriodStart", () => {
 describe("settings", () => {
   it("updates milestones and money with validation", () => {
     const journey = makeJourney();
-    expect(unwrap(updateMilestones(journey, [48, 12])).milestoneHours).toEqual([12, 48]);
-    expect(updateMilestones(journey, [])).toEqual({ ok: false, error: "invalid_milestones" });
+    expect(unwrap(updateMilestones(journey, [48, 12], T0)).milestoneHours).toEqual([12, 48]);
+    expect(updateMilestones(journey, [], T0)).toEqual({ ok: false, error: "invalid_milestones" });
     expect(updateMoneySettings(journey, { ...journey.money, enabled: true })).toEqual({
       ok: false,
       error: "invalid_money_settings",
@@ -275,5 +288,56 @@ describe("optional fields and missing open period", () => {
       frequencyUnit: "day" as const,
     };
     expect(unwrap(updateMoneySettings(makeJourney(), money)).money).toEqual(money);
+  });
+});
+
+describe("removing a goal never erases a reached milestone (#19)", () => {
+  const goals = [24, 72, 168, 336];
+  const eightDays = T0 + 8 * MS_PER_DAY;
+  const reachedBy = (journey: Journey, now: number) =>
+    achievedMilestones(journey.periods, journey.milestoneHours, now).map(
+      (m) => `${m.periodId}:${m.hours}`,
+    );
+
+  it("keeps a removed goal the open period already reached", () => {
+    const journey = unwrap(
+      updateMilestones(makeJourney({ milestoneHours: goals }), [24, 168, 336], eightDays),
+    );
+    expect(journey.periods[0]?.retainedMilestoneHours).toEqual([72]);
+    expect(reachedBy(journey, eightDays)).toEqual(["period-1:24", "period-1:72", "period-1:168"]);
+  });
+
+  it("retains only the removed goals that were already reached", () => {
+    const journey = unwrap(
+      updateMilestones(makeJourney({ milestoneHours: goals }), [24, 72], eightDays),
+    );
+    // 7 days was reached at day 8; 14 days was not, so it is simply gone.
+    expect(journey.periods[0]?.retainedMilestoneHours).toEqual([168]);
+    expect(reachedBy(journey, T0 + 20 * MS_PER_DAY)).toEqual([
+      "period-1:24",
+      "period-1:72",
+      "period-1:168",
+    ]);
+  });
+
+  it("keeps it on a closed period too", () => {
+    const relapsed = unwrap(
+      recordRelapse(
+        makeJourney({ milestoneHours: goals }),
+        relapseInput({ occurredAt: eightDays, now: eightDays }),
+      ),
+    );
+    const journey = unwrap(updateMilestones(relapsed, [336], eightDays + MS_PER_DAY));
+    expect(journey.periods.map((p) => p.retainedMilestoneHours)).toEqual([[24, 72, 168], [24]]);
+    expect(journey.milestoneHours).toEqual([336]);
+  });
+
+  it("drops retained milestones the open period no longer reaches after moving its start", () => {
+    const journey = unwrap(
+      updateMilestones(makeJourney({ milestoneHours: goals }), [336], eightDays),
+    );
+    expect(journey.periods[0]?.retainedMilestoneHours).toEqual([24, 72, 168]);
+    const moved = unwrap(editCurrentPeriodStart(journey, eightDays - 4 * MS_PER_DAY, eightDays));
+    expect(moved.periods[0]?.retainedMilestoneHours).toEqual([24, 72]);
   });
 });

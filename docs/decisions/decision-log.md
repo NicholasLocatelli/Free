@@ -113,6 +113,15 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner prima della Beta.
 - **Date:** 2026-10-02
 
+### D-026 ✅ I traguardi raggiunti sopravvivono alla rimozione dell'obiettivo
+
+- **Context:** #19 (testbook GOAL-06): i traguardi dello Storico erano ricalcolati dagli obiettivi attuali, quindi rimuovere "3 giorni" lo cancellava anche dai periodi che l'avevano raggiunto, contro il principio "una milestone raggiunta non si cancella mai".
+- **Alternatives:** salvare ogni traguardo raggiunto come evento (più dati e più scritture a ogni tick); vietare la rimozione degli obiettivi già raggiunti (limita l'utente).
+- **Chosen:** ogni periodo ha `retainedMilestoneHours`, riempito solo quando un obiettivo raggiunto viene rimosso; lo Storico mostra l'unione con gli obiettivi attuali. Migrazione SQLite v2 (colonna con default `[]`); backup ancora alla versione 1 con campo facoltativo, compatibile nei due sensi.
+- **Reason:** modifica minima, nessun dato in più finché l'utente non rimuove un obiettivo; i traguardi restano derivati dal tempo.
+- **Trade-offs:** se l'utente sposta l'inizio del periodo in corso in avanti, i traguardi conservati non più raggiunti vengono scartati (coerente con il nuovo inizio).
+- **Date:** 2026-11-05
+
 ### D-025 ✅ Aggiornamento a Expo SDK 58
 
 - **Context:** l'owner testa con Expo Go dagli store, che ora supporta solo SDK 58; il progetto era su SDK 57 e non si apriva più.

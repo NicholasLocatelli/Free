@@ -45,6 +45,31 @@ describe("parseJourney", () => {
     expect(parseJourney(viaJson(journey))).toEqual({ ok: true, value: journey });
   });
 
+  it("accepts backups written before retained milestones existed (#19)", () => {
+    const journey = fullJourney();
+    const legacy = viaJson({
+      ...journey,
+      periods: journey.periods.map((p) => {
+        const { retainedMilestoneHours, ...legacy } = p;
+        expect(retainedMilestoneHours).toEqual([]);
+        return legacy;
+      }),
+    });
+    expect(parseJourney(legacy)).toEqual({ ok: true, value: journey });
+  });
+
+  it("normalizes retained milestones", () => {
+    const journey = fullJourney();
+    const input = viaJson({
+      ...journey,
+      periods: journey.periods.map((p, i) =>
+        i === 0 ? { ...p, retainedMilestoneHours: [72, 24, 72] } : p,
+      ),
+    });
+    const parsed = parseJourney(input);
+    expect(parsed.ok && parsed.value.periods[0]?.retainedMilestoneHours).toEqual([24, 72]);
+  });
+
   it.each([
     ["not an object", () => "x"],
     ["unknown category", (j: Journey) => ({ ...j, categoryId: "poker" })],
@@ -82,6 +107,20 @@ describe("parseJourney", () => {
     ["duplicate milestones", (j: Journey) => ({ ...j, milestoneHours: [24, 24] })],
     ["inconsistent money", (j: Journey) => ({ ...j, money: { ...j.money, enabled: true } })],
     ["negative instant", (j: Journey) => ({ ...j, createdAt: -1 })],
+    [
+      "invalid retained milestone",
+      (j: Journey) => ({
+        ...j,
+        periods: [{ ...j.periods[0], retainedMilestoneHours: [0] }, j.periods[1]],
+      }),
+    ],
+    [
+      "retained milestones not an array",
+      (j: Journey) => ({
+        ...j,
+        periods: [{ ...j.periods[0], retainedMilestoneHours: "24" }, j.periods[1]],
+      }),
+    ],
   ])("rejects %s", (_label, mutate) => {
     expect(parseJourney(viaJson(mutate(fullJourney())))).toEqual({
       ok: false,

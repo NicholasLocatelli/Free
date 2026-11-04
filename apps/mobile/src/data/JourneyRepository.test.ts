@@ -5,7 +5,7 @@ import { recordRelapse, recordUrge, updateMilestones, type Journey } from "@free
 import { DAY, newJourney, T0 } from "../test/fixtures";
 import { createNodeSqlExecutor } from "../test/nodeSqlExecutor";
 import { createJourneyRepository } from "./JourneyRepository";
-import { migrate } from "./migrations";
+import { LATEST_SCHEMA_VERSION, migrate, MIGRATIONS } from "./migrations";
 import { DataCorruptionError } from "./rows";
 import { createSettingsRepository } from "./SettingsRepository";
 
@@ -73,9 +73,45 @@ describe("JourneyRepository", () => {
     const { repo } = await setup();
     const start = newJourney();
     await repo.save(start, null);
-    const next = unwrap(updateMilestones(start, [12, 48]));
+    const next = unwrap(updateMilestones(start, [12, 48], T0));
     await repo.save(next, start);
     expect((await repo.load())?.milestoneHours).toEqual([12, 48]);
+  });
+
+  it("persists milestones retained after a reached goal is removed (#19)", async () => {
+    const { repo } = await setup();
+    const start = newJourney();
+    await repo.save(start, null);
+    const next = unwrap(updateMilestones(start, [720], T0 + 8 * DAY));
+    await repo.save(next, start);
+    const loaded = await repo.load();
+    expect(loaded?.periods[0]?.retainedMilestoneHours).toEqual([24, 72, 168]);
+    expect(loaded).toEqual(next);
+  });
+
+  it("upgrades a v1 database without losing data", async () => {
+    const db = createNodeSqlExecutor();
+    await migrate(db, MIGRATIONS.slice(0, 1));
+    await db.run(
+      `INSERT INTO journeys (id, category_id, created_at, milestone_hours) VALUES (?, ?, ?, ?)`,
+      ["journey-1", "gambling", T0, "[24,72]"],
+    );
+    await db.run(
+      "INSERT INTO periods (id, journey_id, started_at, ended_at, end_reason) VALUES (?, ?, ?, ?, ?)",
+      ["period-1", "journey-1", T0, null, null],
+    );
+    expect(await migrate(db)).toBe(LATEST_SCHEMA_VERSION);
+    const loaded = await createJourneyRepository(db).load();
+    expect(loaded?.milestoneHours).toEqual([24, 72]);
+    expect(loaded?.periods).toEqual([
+      {
+        id: "period-1",
+        startedAt: T0,
+        endedAt: null,
+        endReason: null,
+        retainedMilestoneHours: [],
+      },
+    ]);
   });
 
   it("is atomic: a failure mid-save persists nothing (REL-9)", async () => {
