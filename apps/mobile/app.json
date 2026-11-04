@@ -16,7 +16,13 @@
       "predictiveBackGestureEnabled": false,
       "allowBackup": false
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      [
+        "expo-local-authentication",
+        { "faceIDPermission": "Approdo usa Face ID per sbloccare l'app, se attivi il blocco." }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true
     }

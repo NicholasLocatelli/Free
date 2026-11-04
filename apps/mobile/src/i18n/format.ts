@@ -19,15 +19,23 @@ export function formatDuration(ms: number): string {
   return plural(Math.floor(safe / MS_PER_MINUTE), "minuto", "minuti");
 }
 
-const dayMonth = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long" });
+const dayMonth = new Intl.DateTimeFormat("it-IT", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
 const dayMonthTime = new Intl.DateTimeFormat("it-IT", {
   day: "numeric",
   month: "long",
+  year: "numeric",
   hour: "2-digit",
   minute: "2-digit",
 });
 
-/** Dates are shown in the device's current timezone (D-007). */
+/**
+ * Dates are shown in the device's current timezone (D-007), always with the year: a start
+ * chosen more than a year ago must not look like today.
+ */
 export const formatDay = (instant: Instant) => dayMonth.format(instant);
 export const formatDayTime = (instant: Instant) => dayMonthTime.format(instant);
 

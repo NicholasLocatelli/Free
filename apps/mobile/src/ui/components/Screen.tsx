@@ -13,6 +13,8 @@ export interface ScreenProps {
 /**
  * Root of every screen: keeps content clear of the notch, status bar and home indicator
  * (safe-area insets) and scrolls when large fonts make it taller than the display.
+ * On iOS the scroll view also makes room for the keyboard and scrolls the focused field
+ * into view, so what the user types is never hidden.
  */
 export function Screen({ children, centered = false }: ScreenProps) {
   const insets = useSafeAreaInsets();
@@ -22,6 +24,8 @@ export function Screen({ children, centered = false }: ScreenProps) {
       testID="screen"
       style={{ backgroundColor: colors.background }}
       keyboardShouldPersistTaps="handled"
+      automaticallyAdjustKeyboardInsets
+      keyboardDismissMode="interactive"
       contentContainerStyle={[
         styles.content,
         centered && styles.centered,

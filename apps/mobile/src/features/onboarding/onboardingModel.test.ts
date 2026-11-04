@@ -48,6 +48,8 @@ describe("parseStart", () => {
   });
 
   it.each([
+    [{ daysAgo: "" }, "invalid_days"],
+    [{ daysAgo: "  " }, "invalid_days"],
     [{ daysAgo: "-1" }, "invalid_days"],
     [{ daysAgo: "abc" }, "invalid_days"],
     [{ daysAgo: "3651" }, "invalid_days"],

@@ -61,7 +61,7 @@ describe("OnboardingFlow", () => {
     await choose("Prima di adesso");
     await fireEvent.changeText(screen.getByLabelText("Quanti giorni fa?"), "2");
     await fireEvent.changeText(screen.getByLabelText("A che ora? (hh:mm)"), "21:40");
-    expect(screen.getByText("Inizio: 6 ottobre alle ore 21:40")).toBeOnTheScreen();
+    expect(screen.getByText("Inizio: 6 ottobre 2026 alle ore 21:40")).toBeOnTheScreen();
     await press("Continua");
 
     await choose("7 giorni");
