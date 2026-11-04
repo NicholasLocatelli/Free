@@ -53,16 +53,16 @@ describe("HistoryScreen", () => {
         onBack={jest.fn()}
       />,
     );
-    expect(screen.getByText("Dal 1 ottobre al 9 ottobre")).toBeOnTheScreen();
+    expect(screen.getByText("Dal 1 ottobre 2026 al 9 ottobre 2026")).toBeOnTheScreen();
     expect(screen.getByText("Traguardi: 1 giorno, 3 giorni, 7 giorni")).toBeOnTheScreen();
     expect(screen.getByText("Cosa ha contribuito: Stress, Evento sportivo")).toBeOnTheScreen();
     expect(screen.getByText("“giorno di paga”")).toBeOnTheScreen();
-    expect(screen.getByText("Dal 9 ottobre · In corso")).toBeOnTheScreen();
+    expect(screen.getByText("Dal 9 ottobre 2026 · In corso")).toBeOnTheScreen();
   });
 
   it("works for a brand-new journey (HIS-2)", async () => {
     await renderWithTheme(<HistoryScreen journey={newJourney()} now={T0} onBack={jest.fn()} />);
-    expect(screen.getByText("Dal 1 ottobre · In corso")).toBeOnTheScreen();
+    expect(screen.getByText("Dal 1 ottobre 2026 · In corso")).toBeOnTheScreen();
     expect(screen.getByText("Impulsi registrati: 0")).toBeOnTheScreen();
   });
 });

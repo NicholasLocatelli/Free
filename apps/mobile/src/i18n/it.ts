@@ -13,6 +13,7 @@ export const messages = {
   "today.since": "Dal {date}",
   "today.nextGoal": "Prossimo obiettivo: {goal}",
   "today.allGoalsReached": "Hai raggiunto tutti i tuoi obiettivi.",
+  "today.lastReached": "Ultimo traguardo raggiunto: {goal}",
   "today.clockSkew":
     "L'ora del dispositivo sembra cambiata. Il conteggio riprenderà automaticamente.",
   "sos.title": "Questo momento passerà. Proviamo insieme.",

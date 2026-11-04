@@ -36,7 +36,7 @@ describe("MilestoneCard", () => {
         <MilestoneCard hours={36} status="future" />
       </>,
     );
-    expect(screen.getByLabelText("1 giorno, Raggiunto il 4 ottobre")).toBeOnTheScreen();
+    expect(screen.getByLabelText("1 giorno, Raggiunto il 4 ottobre 2026")).toBeOnTheScreen();
     expect(screen.getByLabelText("7 giorni, Prossimo obiettivo")).toBeOnTheScreen();
     expect(screen.getByLabelText("36 ore, Da raggiungere")).toBeOnTheScreen();
   });
@@ -57,7 +57,7 @@ describe("ResourceCard", () => {
     await renderWithTheme(<ResourceCard resource={resource} openUrl={openUrl} />);
     await fireEvent.press(screen.getByRole("button", { name: "Chiama 800 123456" }));
     expect(openUrl).toHaveBeenCalledWith("tel:800123456");
-    expect(screen.getByText("Fonte: Fonte · verificato il 3 ottobre")).toBeOnTheScreen();
+    expect(screen.getByText("Fonte: Fonte · verificato il 3 ottobre 2026")).toBeOnTheScreen();
   });
 
   it("shows the number as text when the link cannot be opened", async () => {

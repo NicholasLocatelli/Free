@@ -29,6 +29,8 @@ describe("TodayScreen", () => {
     expect(
       screen.getByRole("progressbar", { name: "Prossimo obiettivo: 14 giorni" }),
     ).toBeOnTheScreen();
+    // Explains why the next goal is 14 days although the first goal was 1 day.
+    expect(screen.getByText("Ultimo traguardo raggiunto: 7 giorni")).toBeOnTheScreen();
     expect(screen.queryByText("Stima del denaro non speso")).toBeNull();
   });
 
@@ -46,7 +48,8 @@ describe("TodayScreen", () => {
     );
     expect(screen.getByLabelText("0 giorni, 0 ore e 5 minuti")).toBeOnTheScreen();
     expect(screen.getByText("Prossimo obiettivo: 1 giorno")).toBeOnTheScreen();
-    expect(screen.getByText("Dal 1 ottobre alle ore 22:00")).toBeOnTheScreen();
+    expect(screen.queryByText(/Ultimo traguardo raggiunto/)).toBeNull();
+    expect(screen.getByText("Dal 1 ottobre 2026 alle ore 22:00")).toBeOnTheScreen();
   });
 
   it("acknowledges when every goal is reached", async () => {

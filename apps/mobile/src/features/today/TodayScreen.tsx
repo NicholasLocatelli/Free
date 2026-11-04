@@ -32,7 +32,8 @@ export function TodayScreen({
   const view = currentPeriodView(journey, now);
   if (!view) return null;
   const stats = journeyStats(journey, now);
-  const { next, progressToNext } = view.milestones;
+  const { next, progressToNext, reached } = view.milestones;
+  const lastReached = reached.at(-1);
 
   return (
     <Screen centered>
@@ -66,6 +67,11 @@ export function TodayScreen({
             ? t("today.allGoalsReached")
             : t("today.nextGoal", { goal: formatGoal(next) })}
         </AppText>
+        {next !== null && lastReached !== undefined && (
+          <AppText color="muted" style={styles.center}>
+            {t("today.lastReached", { goal: formatGoal(lastReached) })}
+          </AppText>
+        )}
         {view.money.status === "estimated" && (
           <Stat
             label={t("money.label")}

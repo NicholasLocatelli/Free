@@ -31,7 +31,9 @@ export type MomentError = "invalid_days" | "invalid_time" | "in_future";
  */
 export function parseMoment(input: MomentInput, now: Instant): Result<Instant, MomentError> {
   if (input.mode === "now") return ok(now);
-  const days = Number(input.daysAgo.trim());
+  const daysText = input.daysAgo.trim();
+  // Number("") is 0: an empty field must not silently mean "today".
+  const days = daysText === "" ? Number.NaN : Number(daysText);
   if (!Number.isInteger(days) || days < 0 || days > MAX_DAYS_AGO) return err("invalid_days");
   const match = /^(\d{1,2})[:.](\d{2})$/.exec(input.time.trim());
   const hours = Number(match?.[1]);
