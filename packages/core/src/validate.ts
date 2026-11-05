@@ -7,7 +7,12 @@ import {
   MAX_URGE_DURATION_MINUTES,
   MIN_INTENSITY,
 } from "./journey";
-import { normalizeMilestones } from "./milestones";
+import {
+  MAX_MILESTONE_HOURS,
+  MAX_RETAINED_MILESTONES,
+  mergeHours,
+  normalizeMilestones,
+} from "./milestones";
 import { validateMoneySettings, type FrequencyUnit, type MoneySettings } from "./money";
 import { err, ok, type Result } from "./result";
 import { isValidInstant } from "./time";
@@ -44,7 +49,21 @@ function parsePeriod(v: unknown): Period {
   check(v.endReason === null || v.endReason === "relapse");
   check((v.endedAt === null) === (v.endReason === null));
   check(v.endedAt === null || v.endedAt >= v.startedAt);
-  return { id: v.id, startedAt: v.startedAt, endedAt: v.endedAt, endReason: v.endReason };
+  return {
+    id: v.id,
+    startedAt: v.startedAt,
+    endedAt: v.endedAt,
+    endReason: v.endReason,
+    retainedMilestoneHours: parseRetained(v.retainedMilestoneHours),
+  };
+}
+
+/** Optional: backups written before #19 have no retained milestones. */
+function parseRetained(v: unknown): number[] {
+  if (v === undefined) return [];
+  check(Array.isArray(v) && v.length <= MAX_RETAINED_MILESTONES);
+  check(v.every((h) => Number.isSafeInteger(h) && h > 0 && h <= MAX_MILESTONE_HOURS));
+  return mergeHours(v as number[], []);
 }
 
 function parseRelapse(v: unknown): RelapseEvent {

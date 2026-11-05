@@ -41,8 +41,20 @@ describe("planReminders", () => {
     const relapsed: Journey = {
       ...journey,
       periods: [
-        { id: "period-1", startedAt: T0, endedAt: T0 + MS_PER_DAY, endReason: "relapse" },
-        { id: "period-2", startedAt: T0 + MS_PER_DAY, endedAt: null, endReason: null },
+        {
+          id: "period-1",
+          startedAt: T0,
+          endedAt: T0 + MS_PER_DAY,
+          endReason: "relapse",
+          retainedMilestoneHours: [],
+        },
+        {
+          id: "period-2",
+          startedAt: T0 + MS_PER_DAY,
+          endedAt: null,
+          endReason: null,
+          retainedMilestoneHours: [],
+        },
       ],
     };
     const ids = planReminders(relapsed, { ...ON, checkInEnabled: false }, T0 + MS_PER_DAY).map(

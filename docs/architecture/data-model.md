@@ -17,7 +17,7 @@ Journey 1 ──── * Period        (cronologici; solo l'ultimo può essere a
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | **RecoveryCategory** | id, nameKey, descriptionKey, icon, status (`available`/`planned`), defaultMilestoneHours, supportsMoneyEstimate, triggerTags, copingActionTags | Dato statico, versionato col codice. Solo `gambling` è `available`.                                      |
 | **Journey**          | id, categoryId, createdAt, periods, relapses, urges, milestoneHours, money                                                                     | Un percorso attivo per categoria. Append-only rispetto agli eventi.                                      |
-| **Period**           | id, startedAt, endedAt \| null, endReason (`relapse`) \| null                                                                                  | Al massimo un periodo aperto; `startedAt ≤ endedAt`; periodi non sovrapposti; nessun istante nel futuro. |
+| **Period**           | id, startedAt, endedAt \| null, endReason (`relapse`) \| null, retainedMilestoneHours                                                          | Al massimo un periodo aperto; `startedAt ≤ endedAt`; periodi non sovrapposti; nessun istante nel futuro. |
 | **RelapseEvent**     | id, periodId, occurredAt, recordedAt, contributingFactors[], note                                                                              | `occurredAt ≥ period.startedAt`, ≤ now; nota ≤ 2000 caratteri; ≤ 10 tag.                                 |
 | **UrgeEvent**        | id, occurredAt, recordedAt, intensity (1–10 int), trigger, durationMinutes (0–1440), copingActions[], outcome (`resisted`/`acted`), note       | Un urge `acted` **non** chiude il periodo da solo (decide l'utente).                                     |
 | **MoneySettings**    | enabled, currency (ISO 4217), amountPerSessionMinor (int, centesimi), sessionsPerUnit, frequencyUnit (`day`/`week`/`month`)                    | Se `enabled`, baseline completa; importi interi, max 10.000.000,00.                                      |
@@ -36,7 +36,7 @@ lettura), `JourneyRepository.ts` (salvataggio per differenza in una transazione)
 `SettingsRepository.ts`, `expoSqlExecutor.ts` (device) e `src/test/nodeSqlExecutor.ts` (test).
 
 ```sql
--- PRAGMA user_version = 1
+-- PRAGMA user_version = 2 (v1 + la colonna retained_milestone_hours di v2)
 CREATE TABLE journeys (
   id                       TEXT PRIMARY KEY,
   category_id              TEXT NOT NULL,
@@ -55,7 +55,9 @@ CREATE TABLE periods (
   started_at  INTEGER NOT NULL,
   ended_at    INTEGER,
   end_reason  TEXT CHECK (end_reason IN ('relapse')),
-  CHECK (ended_at IS NULL OR ended_at >= started_at)
+  CHECK (ended_at IS NULL OR ended_at >= started_at),
+  -- v2 (#19): JSON array delle milestone (ore) raggiunte con obiettivi poi rimossi
+  retained_milestone_hours TEXT NOT NULL DEFAULT '[]'
 );
 CREATE UNIQUE INDEX one_open_period_per_journey ON periods(journey_id) WHERE ended_at IS NULL;
 CREATE INDEX periods_by_journey ON periods(journey_id, started_at);
@@ -99,6 +101,10 @@ CREATE TABLE app_settings (            -- preferenze non sensibili
 - Migrazioni: array ordinato di script, applicati in transazione aggiornando `user_version`;
   testate in Node (`node:sqlite`): rollback di una migrazione fallita, rifiuto di uno schema più
   recente dell'app (`SchemaTooNewError`).
+- Traguardi raggiunti: derivati dagli obiettivi attuali **più** `retainedMilestoneHours` del
+  periodo. Quando un obiettivo viene rimosso, i periodi che lo avevano già raggiunto lo
+  conservano; spostare l'inizio del periodo aperto scarta quelli non più raggiunti (#19, D-026).
+  Nei backup il campo è facoltativo: i file senza (versione 1 precedente) restano importabili.
 - Mapping riga ⇄ entità: funzioni pure nel repository, testate; i JSON vengono validati in lettura
   (dati corrotti → errore esplicito, Flow 8).
 

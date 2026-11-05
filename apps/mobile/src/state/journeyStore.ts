@@ -135,7 +135,7 @@ export function createJourneyStore({ repository, now, newId }: JourneyStoreDeps)
       updateMoney: (money) => commit(withJourney((journey) => updateMoneySettings(journey, money))),
 
       updateMilestones: (hours) =>
-        commit(withJourney((journey) => updateMilestones(journey, hours))),
+        commit(withJourney((journey, at) => updateMilestones(journey, hours, at))),
 
       importJourney: (journey) =>
         serial(async () => {

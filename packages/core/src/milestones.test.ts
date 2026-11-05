@@ -52,10 +52,34 @@ describe("normalizeMilestones", () => {
 describe("achievedMilestones", () => {
   it("keeps milestones reached by closed periods", () => {
     const periods: Period[] = [
-      { id: "a", startedAt: 0, endedAt: 80 * MS_PER_HOUR, endReason: "relapse" },
-      { id: "b", startedAt: 80 * MS_PER_HOUR, endedAt: null, endReason: null },
+      {
+        id: "a",
+        startedAt: 0,
+        endedAt: 80 * MS_PER_HOUR,
+        endReason: "relapse",
+        retainedMilestoneHours: [],
+      },
+      {
+        id: "b",
+        startedAt: 80 * MS_PER_HOUR,
+        endedAt: null,
+        endReason: null,
+        retainedMilestoneHours: [],
+      },
     ];
     const achieved = achievedMilestones(periods, [24, 72, 168], 110 * MS_PER_HOUR);
     expect(achieved.map((m) => `${m.periodId}:${m.hours}`)).toEqual(["a:24", "a:72", "b:24"]);
+  });
+
+  it("adds retained milestones, without duplicates and only if reached", () => {
+    const period: Period = {
+      id: "a",
+      startedAt: 0,
+      endedAt: 80 * MS_PER_HOUR,
+      endReason: "relapse",
+      retainedMilestoneHours: [24, 48, 168],
+    };
+    const achieved = achievedMilestones([period], [24, 72], 200 * MS_PER_HOUR);
+    expect(achieved.map((m) => m.hours)).toEqual([24, 48, 72]);
   });
 });

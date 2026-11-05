@@ -59,6 +59,10 @@ export const MIGRATIONS: readonly string[] = [
     value TEXT NOT NULL
   );
   `,
+  // v2 (#19): milestones a period reached under goals the user later removed.
+  `
+  ALTER TABLE periods ADD COLUMN retained_milestone_hours TEXT NOT NULL DEFAULT '[]';
+  `,
 ];
 
 export const LATEST_SCHEMA_VERSION = MIGRATIONS.length;

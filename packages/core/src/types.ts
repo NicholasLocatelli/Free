@@ -10,6 +10,11 @@ export interface Period {
   startedAt: Instant;
   endedAt: Instant | null;
   endReason: PeriodEndReason | null;
+  /**
+   * Milestones (hours) this period reached under goals the user later removed. Kept so that
+   * editing the goals never erases an achievement from history (#19). Sorted, unique.
+   */
+  retainedMilestoneHours: readonly number[];
 }
 
 export interface RelapseEvent {

@@ -1,4 +1,4 @@
-import { MS_PER_DAY, recordRelapse, recordUrge, type Journey } from "@free/core";
+import { MS_PER_DAY, recordRelapse, recordUrge, updateMilestones, type Journey } from "@free/core";
 import { screen } from "@testing-library/react-native";
 import { newJourney, T0 } from "../../test/fixtures";
 import { renderWithTheme } from "../../test/render";
@@ -58,6 +58,13 @@ describe("HistoryScreen", () => {
     expect(screen.getByText("Cosa ha contribuito: Stress, Evento sportivo")).toBeOnTheScreen();
     expect(screen.getByText("“giorno di paga”")).toBeOnTheScreen();
     expect(screen.getByText("Dal 9 ottobre 2026 · In corso")).toBeOnTheScreen();
+  });
+
+  it("still shows a milestone after its goal was removed (GOAL-06, #19)", async () => {
+    const now = T0 + 10 * MS_PER_DAY;
+    const edited = unwrap(updateMilestones(journeyWithRelapse(), [24, 168], now));
+    await renderWithTheme(<HistoryScreen journey={edited} now={now} onBack={jest.fn()} />);
+    expect(screen.getByText("Traguardi: 1 giorno, 3 giorni, 7 giorni")).toBeOnTheScreen();
   });
 
   it("works for a brand-new journey (HIS-2)", async () => {

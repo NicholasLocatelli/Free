@@ -3,6 +3,8 @@ import { MS_PER_HOUR, type Instant } from "./time";
 import type { Period } from "./types";
 
 export const MAX_MILESTONES = 50;
+/** Upper bound for a period's retained milestones (validation of imported data). */
+export const MAX_RETAINED_MILESTONES = 500;
 /** 100 years: anything longer is almost certainly an input error. */
 export const MAX_MILESTONE_HOURS = 100 * 366 * 24;
 
@@ -49,7 +51,8 @@ export interface AchievedMilestone {
 
 /**
  * Milestones are derived from period history rather than stored, so a relapse can never
- * delete one: a closed period keeps every milestone it reached before it ended.
+ * delete one: a closed period keeps every milestone it reached before it ended. Goals the
+ * user removed still count for the periods that had reached them (`retainedMilestoneHours`).
  */
 export function achievedMilestones(
   periods: readonly Period[],
@@ -58,7 +61,7 @@ export function achievedMilestones(
 ): AchievedMilestone[] {
   return periods.flatMap((period) => {
     const end = period.endedAt ?? now;
-    return milestoneHours
+    return mergeHours(milestoneHours, period.retainedMilestoneHours)
       .map((hours) => ({
         periodId: period.id,
         hours,
@@ -66,4 +69,19 @@ export function achievedMilestones(
       }))
       .filter((m) => m.achievedAt <= end);
   });
+}
+
+/** Sorted union without duplicates. */
+export function mergeHours(a: readonly number[], b: readonly number[]): number[] {
+  return [...new Set([...a, ...b])].sort((x, y) => x - y);
+}
+
+/** Hours of `milestoneHours` that `period` had reached by `now` (or by its end). */
+export function reachedHours(
+  period: Period,
+  milestoneHours: readonly number[],
+  now: Instant,
+): number[] {
+  const end = period.endedAt ?? now;
+  return milestoneHours.filter((hours) => period.startedAt + hours * MS_PER_HOUR <= end);
 }
