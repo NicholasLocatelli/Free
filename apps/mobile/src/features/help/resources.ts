@@ -5,7 +5,7 @@ import type { Resource } from "../../ui";
  * appear in docs/product/help-center.md with its source and verification date; the test
  * `resources.test.ts` enforces it. Never add a number or service that is not verified there.
  */
-const VERIFIED_AT = Date.UTC(2026, 9, 18);
+const VERIFIED_AT = Date.UTC(2026, 10, 7);
 
 export const TVNGA: Resource = {
   name: "Telefono Verde Nazionale per le problematiche legate al gioco d'azzardo",
@@ -40,7 +40,7 @@ export const GAMBLERS_ANONYMOUS: Resource = {
 export const SELF_EXCLUSION: Resource = {
   name: "Autoesclusione dal gioco online (RUA)",
   description:
-    "Con SPID puoi escluderti da tutti i siti di gioco con concessione italiana. Durate e condizioni sono indicate nella pagina ufficiale.",
+    "Con SPID puoi escluderti da tutti i siti di gioco con concessione italiana, per 30, 60 o 90 giorni oppure a tempo indeterminato.",
   url: "https://arserviziam.adm.gov.it/static/ar_rua_static/index.html",
   source: "Agenzia delle Dogane e dei Monopoli",
   verifiedAt: VERIFIED_AT,
@@ -48,8 +48,8 @@ export const SELF_EXCLUSION: Resource = {
 
 export const TELEFONO_AMICO: Resource = {
   name: "Telefono Amico Italia",
-  description:
-    "Ascolto per chi vive un momento di solitudine o difficoltà. Gli orari sono indicati sul sito.",
+  description: "Ascolto per chi vive un momento di solitudine o difficoltà.",
+  hours: "Tutti i giorni, 24 ore su 24 · costo di una chiamata a un numero fisso",
   phone: "02 2327 2327",
   url: "https://www.telefonoamico.it/cosa-facciamo/come-contattarci/",
   source: "Telefono Amico Italia",

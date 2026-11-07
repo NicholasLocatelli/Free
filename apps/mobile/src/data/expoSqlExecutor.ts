@@ -1,4 +1,5 @@
-import { openDatabaseAsync, type SQLiteDatabase } from "expo-sqlite";
+import { defaultDatabaseDirectory, openDatabaseAsync, type SQLiteDatabase } from "expo-sqlite";
+import { excludeDirectoryFromBackup } from "../platform/backupExclusion";
 import type { SqlExecutor, SqlValue } from "./SqlExecutor";
 
 export const DATABASE_NAME = "free.db";
@@ -33,6 +34,8 @@ export function expoSqlExecutor(db: SQLiteDatabase): SqlExecutor {
 }
 
 export async function openAppDatabase(): Promise<SqlExecutor> {
+  // Before the first write, so the file never reaches an iCloud backup (D-014).
+  excludeDirectoryFromBackup(String(defaultDatabaseDirectory));
   const db = await openDatabaseAsync(DATABASE_NAME);
   await db.execAsync("PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;");
   return expoSqlExecutor(db);

@@ -63,7 +63,7 @@ pnpm test       # solo test
 
 In Italia: **Telefono Verde Nazionale per le problematiche legate al gioco d'azzardo — 800 558822**
 (Istituto Superiore di Sanità, gratuito e anonimo, lun–ven 10–16). In emergenza: **112**.
-Fonti e data di verifica (ultima: 2026-10-18) in [docs/product/help-center.md](docs/product/help-center.md).
+Fonti e data di verifica (ultima: 2026-11-07) in [docs/product/help-center.md](docs/product/help-center.md).
 
 ## Licenza
 

@@ -1,7 +1,7 @@
 # Dichiarazioni privacy per gli store — BOZZA
 
 > Da confermare al momento della pubblicazione (M8) sulla build effettiva; nessun SDK di terze
-> parti che raccolga dati è incluso al 2026-10-18.
+> parti che raccolga dati è incluso al 2026-11-07 (revisione dipendenze in `docs/architecture/security.md`).
 
 ## Apple App Store — Privacy Nutrition Label
 

@@ -48,28 +48,42 @@ dedicato.
 
 ## Threat model (STRIDE semplificato)
 
-| Minaccia                             | Scenario                           | Mitigazione                                                                                                                    |
-| ------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Accesso fisico al telefono sbloccato | Partner/collega apre l'app         | ✅ Blocco app con biometria/PIN del telefono (D-023); anteprima nascosta tra le app recenti; nome/icona discreti               |
-| Shoulder surfing / lock screen       | Notifica esplicita visibile        | ✅ Testi neutri verificati da test; Android visibilità privata (#12)                                                           |
-| Furto del dispositivo bloccato       | Estrazione file                    | Cifratura a riposo dell'OS (iOS Data Protection, Android FBE); valutazione SQLCipher con chiave in secure store (M7)           |
-| Backup cloud del sistema             | DB copiato in iCloud/Google backup | ✅ Android `allowBackup: false` (D-014); ⏳ iOS esclusione via config plugin; export manuale avvisato come non cifrato (D-024) |
-| Log e crash                          | Note/trigger finiscono nei log     | Nessun log di contenuti utente; regola di review; nessun crash reporter remoto nell'MVP                                        |
-| Supply chain                         | Dipendenza compromessa             | Lockfile, CI con `--frozen-lockfile`, dipendenze minime, aggiornamenti revisionati, Dependabot/Renovate (M7)                   |
-| Secret nel repo                      | Chiavi EAS/store                   | Nessun secret nel codice; `.gitignore` per chiavi; secret solo in GitHub/EAS secrets                                           |
-| Deep link malevoli                   | Link che inducono azioni           | Nessuna azione distruttiva via deep link; solo navigazione                                                                     |
-| Link esterni                         | URL manomessi nel contenuto        | Risorse in file versionato e revisionato; solo HTTPS, domini istituzionali                                                     |
+| Minaccia                             | Scenario                           | Mitigazione                                                                                                                                                                                                 |
+| ------------------------------------ | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Accesso fisico al telefono sbloccato | Partner/collega apre l'app         | ✅ Blocco app con biometria/PIN del telefono (D-023); anteprima nascosta tra le app recenti; nome/icona discreti                                                                                            |
+| Shoulder surfing / lock screen       | Notifica esplicita visibile        | ✅ Testi neutri verificati da test; Android visibilità privata (#12)                                                                                                                                        |
+| Furto del dispositivo bloccato       | Estrazione file                    | Cifratura a riposo dell'OS (iOS Data Protection, Android FBE); valutazione SQLCipher con chiave in secure store (M7)                                                                                        |
+| Backup cloud del sistema             | DB copiato in iCloud/Google backup | ✅ Android `allowBackup: false` (D-014); ✅ iOS cartella del DB esclusa dai backup (modulo locale `backup-exclusion`, da verificare su development build); export manuale avvisato come non cifrato (D-024) |
+| Log e crash                          | Note/trigger finiscono nei log     | Nessun log di contenuti utente; regola di review; nessun crash reporter remoto nell'MVP                                                                                                                     |
+| Supply chain                         | Dipendenza compromessa             | Lockfile, CI con `--frozen-lockfile`, dipendenze minime, aggiornamenti revisionati, Dependabot/Renovate (M7)                                                                                                |
+| Secret nel repo                      | Chiavi EAS/store                   | Nessun secret nel codice; `.gitignore` per chiavi; secret solo in GitHub/EAS secrets                                                                                                                        |
+| Deep link malevoli                   | Link che inducono azioni           | Nessuna azione distruttiva via deep link; solo navigazione                                                                                                                                                  |
+| Link esterni                         | URL manomessi nel contenuto        | Risorse in file versionato e revisionato; solo HTTPS, domini istituzionali                                                                                                                                  |
 
 ## Requisiti verificabili (checklist M7)
 
-- [ ] Nessuna richiesta di rete nell'MVP (verifica con proxy durante QA)
-- [x] Permessi richiesti: solo notifiche (opzionale) e autenticazione biometrica (solo se si attiva il blocco). Nessun permesso di posizione/contatti
+- [x] Nessuna richiesta di rete nel codice dell'app: nessun `fetch`/`XMLHttpRequest`/`WebSocket`, nessun push token; gli unici URL sono le risorse dell'Help Center aperte nel browser su tocco dell'utente (analisi statica 2026-11-07) · [ ] verifica del traffico con proxy sulla development build
+- [x] Permessi richiesti: solo notifiche (opzionale) e autenticazione biometrica (solo se si attiva il blocco). Nessun permesso di posizione/contatti. Android: rimossi dal manifest `SYSTEM_ALERT_WINDOW` e `READ/WRITE_EXTERNAL_STORAGE`, aggiunti dalle librerie ma non usati (`blockedPermissions`); restano `INTERNET` (sviluppo e link), `USE_BIOMETRIC`/`USE_FINGERPRINT`, `VIBRATE`
 - [x] Cancellazione dati: "Cancella tutti i dati" (conferma scrivendo CANCELLA) svuota DB e impostazioni con `VACUUM`, annulla i promemoria, spegne il blocco e torna all'onboarding (#13)
 - [x] Notifiche: nessun riferimento al gioco nel testo (test `reminderPlan.test.ts`)
 - [x] Nessun dato utente in console/log: regola ESLint `no-console` su app e dominio
-- [x] Policy backup decisa (D-014): Android `allowBackup: false` · [ ] iOS: esclusione da iCloud via config plugin (development build)
+- [x] Policy backup decisa (D-014): Android `allowBackup: false`, verificato nel manifest generato da `expo prebuild` · [x] iOS: la cartella `Documents/SQLite` è marcata `isExcludedFromBackup` all'apertura del DB (modulo nativo locale `apps/mobile/modules/backup-exclusion`) · [ ] verificare su development build iOS che il flag sia impostato
 - [x] Bozza privacy policy e dichiarazioni store in `docs/legal/` · [ ] revisione legale (input umano)
-- [ ] Revisione dipendenze e licenze
+- [x] Revisione dipendenze e licenze (2026-11-07, sotto)
+
+## Revisione dipendenze e licenze (2026-11-07)
+
+- **Vulnerabilità** (`pnpm audit --prod`): 18 avvisi trovati, tutti in strumenti di sviluppo
+  (`@expo/cli`, `@expo/config`, Jest), nessuno nel codice incluso nell'app. Aggiornati entro i
+  range compatibili: `node-forge` 1.4.1+ risolve 12 avvisi. Restano 6 avvisi (zod, glob,
+  minimatch, deepmerge) che richiedono versioni non compatibili con `@expo/cli`: si risolvono
+  con i prossimi aggiornamenti dell'SDK.
+- **Licenze** (`pnpm licenses list --prod`): tutte permissive (MIT, ISC, BSD, Apache-2.0,
+  BlueOak, 0BSD, Unlicense, CC0/CC-BY per dati). Le uniche MPL-2.0 (`lightningcss`) e
+  `(BSD-3-Clause OR GPL-2.0)` (`node-forge`, usabile con BSD) sono strumenti di build, non
+  incluse nell'app. Nessuna licenza copyleft nel codice distribuito.
+- **Componenti che parlano in rete**: nessuno nel bundle dell'app; `expo-notifications` è usato
+  solo per notifiche locali (nessun push token richiesto).
 
 ## Import di backup
 

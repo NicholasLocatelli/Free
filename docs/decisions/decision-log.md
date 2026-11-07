@@ -113,6 +113,15 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner prima della Beta.
 - **Date:** 2026-10-02
 
+### D-027 ⏳ SQLCipher: proposta di non adottarlo per la Beta
+
+- **Context:** D-024 ha rinviato alla Beta la decisione sulla cifratura del database con SQLCipher; #17.
+- **Alternatives:** (a) SQLCipher con chiave casuale in `expo-secure-store` (Keychain/Keystore); (b) nessuna cifratura aggiuntiva oltre a quella del sistema operativo.
+- **Proposta:** (b) per la Beta. I dati sono già cifrati a riposo dal sistema (iOS Data Protection, Android File-Based Encryption) e accessibili solo all'app; non lasciano il telefono (nessuna rete, backup di sistema esclusi, D-014); il blocco app protegge chi ha in mano il telefono sbloccato (D-023). SQLCipher aggiungerebbe protezione solo contro chi estrae i file da un telefono già sbloccato o compromesso, in cambio di una migrazione del database esistente, una chiave da non perdere (perderla significa perdere i dati) e build più pesanti.
+- **Da rivalutare:** se in futuro i dati lasceranno il telefono (sincronizzazione, account) o se una revisione di sicurezza esterna lo richiede.
+- **Richiede:** conferma dell'owner.
+- **Date:** 2026-11-07
+
 ### D-026 ✅ I traguardi raggiunti sopravvivono alla rimozione dell'obiettivo
 
 - **Context:** #19 (testbook GOAL-06): i traguardi dello Storico erano ricalcolati dagli obiettivi attuali, quindi rimuovere "3 giorni" lo cancellava anche dai periodi che l'avevano raggiunto, contro il principio "una milestone raggiunta non si cancella mai".
@@ -220,5 +229,6 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Alternatives:** lasciare i backup di sistema (comodo al cambio telefono, ma i dati finiscono nel cloud dell'utente senza che lo scelga esplicitamente).
 - **Chosen:** decisione dell'owner (2026-10-18): esclusione dai backup + export/import JSON scelto dall'utente (#13). Android: `allowBackup: false` in `app.json`.
 - **Reason:** privacy (priorità 2): nessuna copia fuori dal telefono senza un'azione esplicita.
-- **Trade-offs:** chi cambia telefono senza esportare perde i dati. **iOS non ancora coperto:** escludere il database da iCloud richiede codice nativo (`NSURLIsExcludedFromBackupKey`) via config plugin in una development build; da fare prima della Beta iOS (#13).
-- **Date:** 2026-10-02 · decisa 2026-10-18
+- **Trade-offs:** chi cambia telefono senza esportare perde i dati. Su Android 12+ il trasferimento diretto da telefono a telefono avviato dall'utente può ancora copiare i dati: è un'azione esplicita verso un suo dispositivo, quindi accettato.
+- **iOS (2026-11-07, #17):** la cartella del database (`Documents/SQLite`) viene marcata `isExcludedFromBackup` prima di aprire il DB, con un modulo nativo locale (`apps/mobile/modules/backup-exclusion`). Il flag sulla cartella vale anche per i file creati dopo (database e WAL). Funziona solo nelle build native, non in Expo Go; da verificare sulla development build.
+- **Date:** 2026-10-02 · decisa 2026-10-18 · iOS 2026-11-07
