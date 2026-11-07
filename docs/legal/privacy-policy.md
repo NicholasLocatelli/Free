@@ -4,7 +4,7 @@
 > verificata da un professionista e completata con i dati del titolare (input umano, #13).
 > Descrive il comportamento dell'app al 2026-10-18.
 
-**App:** Approdo (nome di lavoro) · **Titolare:** _[da completare]_ · **Contatto:** _[da completare]_
+**App:** Free · **Titolare:** _[da completare]_ · **Contatto:** _[da completare]_
 
 ## In breve
 

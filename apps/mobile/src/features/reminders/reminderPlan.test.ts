@@ -3,6 +3,8 @@ import { newJourney, T0 } from "../../test/fixtures";
 import {
   DEFAULT_REMINDER_PREFS,
   deserializePrefs,
+  CHECK_IN_DAYS,
+  CHECK_IN_TITLES,
   MAX_MILESTONE_NOTIFICATIONS,
   NEUTRAL_COPY,
   parseTimeOfDay,
@@ -17,11 +19,46 @@ describe("planReminders", () => {
     expect(planReminders(newJourney(), DEFAULT_REMINDER_PREFS, T0)).toEqual([]);
   });
 
-  it("plans a daily check-in at the chosen local time", () => {
+  it("plans a check-in at the chosen local time for each of the next days", () => {
+    // T0 is 1 Oct 2026, 22:00 in Rome: 21:30 has passed, so the first one is tomorrow.
     const plan = planReminders(null, { ...ON, milestonesEnabled: false }, T0);
-    expect(plan).toEqual([
-      { kind: "check-in", id: "check-in", hour: 21, minute: 30, ...NEUTRAL_COPY.checkIn },
-    ]);
+    expect(plan).toHaveLength(CHECK_IN_DAYS);
+    expect(plan[0]).toMatchObject({
+      kind: "check-in",
+      id: "check-in-2026-10-02",
+      at: Date.UTC(2026, 9, 2, 19, 30),
+      body: NEUTRAL_COPY.checkIn.body,
+    });
+    // Rome leaves summer time on 25 Oct: still 21:30 local, one hour later in UTC.
+    expect(plan.find((n) => n.id === "check-in-2026-10-26")?.at).toBe(
+      Date.UTC(2026, 9, 26, 20, 30),
+    );
+  });
+
+  it("plans today's check-in when its time is still ahead", () => {
+    const plan = planReminders(null, { ...ON, checkInTime: "23:00", milestonesEnabled: false }, T0);
+    expect(plan[0]?.id).toBe("check-in-2026-10-01");
+  });
+
+  it("varies the text from day to day, stably across re-plans (ONB-15)", () => {
+    const plan = planReminders(null, { ...ON, milestonesEnabled: false }, T0);
+    const titles = plan.map((n) => n.title);
+    expect(titles.every((t) => (CHECK_IN_TITLES as readonly string[]).includes(t))).toBe(true);
+    expect(new Set(titles).size).toBeGreaterThan(2);
+    titles.slice(1).forEach((title, i) => {
+      expect(title).not.toBe(titles[i]);
+    });
+    const later = planReminders(null, { ...ON, milestonesEnabled: false }, T0 + 3 * MS_PER_DAY);
+    const sameDay = later.find((n) => n.id === "check-in-2026-10-10");
+    expect(sameDay?.title).toBe(plan.find((n) => n.id === "check-in-2026-10-10")?.title);
+  });
+
+  it("stays under the iOS limit of 64 pending notifications", () => {
+    const many: Journey = {
+      ...newJourney(),
+      milestoneHours: Array.from({ length: 40 }, (_, i) => (i + 1) * 24),
+    };
+    expect(planReminders(many, ON, T0).length).toBeLessThanOrEqual(64);
   });
 
   it("plans only future milestones of the current period", () => {
@@ -73,9 +110,12 @@ describe("planReminders", () => {
   });
 
   it("never mentions gambling, money or relapses in what the lock screen may show", () => {
-    const text = Object.values(NEUTRAL_COPY)
-      .flatMap((c) => [c.title, c.body])
-      .join(" ");
+    const text = [
+      ...CHECK_IN_TITLES,
+      NEUTRAL_COPY.checkIn.body,
+      NEUTRAL_COPY.milestone.title,
+      NEUTRAL_COPY.milestone.body,
+    ].join(" ");
     expect(text).not.toMatch(/gioc|azzard|scommess|denaro|soldi|ricadut|impuls|giorni senza/i);
   });
 });

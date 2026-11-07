@@ -48,19 +48,11 @@ export function createExpoReminderScheduler(): ReminderScheduler {
         await Notifications.scheduleNotificationAsync({
           identifier: item.id,
           content: { title: item.title, body: item.body, sound: false },
-          trigger:
-            item.kind === "check-in"
-              ? {
-                  type: Notifications.SchedulableTriggerInputTypes.DAILY,
-                  hour: item.hour,
-                  minute: item.minute,
-                  channelId: CHANNEL_ID,
-                }
-              : {
-                  type: Notifications.SchedulableTriggerInputTypes.DATE,
-                  date: item.at,
-                  channelId: CHANNEL_ID,
-                },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.DATE,
+            date: item.at,
+            channelId: CHANNEL_ID,
+          },
         });
       }
     },

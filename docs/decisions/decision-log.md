@@ -14,14 +14,14 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Trade-offs:** il nome repo non coincide col nome prodotto (irrilevante per l'utente finale).
 - **Date:** 2026-10-02
 
-### D-002 ⏳ Nome prodotto di lavoro "Approdo"
+### D-002 ✅ Nome dell'app: "Free"
 
-- **Context:** serve un nome discreto, italiano, non associato al gioco.
-- **Alternatives:** Free (generico, conflitto con marchi telco), Riva, Varco.
-- **Chosen:** "Approdo" come nome di lavoro.
-- **Reason:** evoca arrivo/sicurezza, tono calmo, nessun riferimento al gioco.
-- **Trade-offs:** **verifica marchio e disponibilità store necessaria (input umano) prima della Beta.**
-- **Date:** 2026-10-02
+- **Context:** serve un nome discreto, non associato al gioco.
+- **Alternatives:** Approdo (nome di lavoro fino al 2026-11-07), Riva, Varco.
+- **Chosen:** "Free", decisione dell'owner (2026-11-07). Identificativo Android/iOS `com.nicholaslocatelli.free` (modificabile fino al primo caricamento sugli store), scheme `freeapp`.
+- **Reason:** scelta dell'owner; breve, positivo, nessun riferimento al gioco.
+- **Trade-offs:** "Free" è anche un marchio di telecomunicazioni ed è una parola molto comune: **prima della pubblicazione verificare il marchio e la disponibilità del nome sugli store** (eventualmente con un sottotitolo). Il formato dei backup mantiene l'identificativo interno `approdo-backup` per restare compatibile con i file già esportati.
+- **Date:** 2026-10-02 · decisa 2026-11-07
 
 ### D-003 ✅ Lingua: docs/copy in italiano, codice in inglese
 
@@ -113,13 +113,22 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner prima della Beta.
 - **Date:** 2026-10-02
 
-### D-027 ⏳ SQLCipher: proposta di non adottarlo per la Beta
+### D-028 ✅ Build Android con EAS per prima
+
+- **Context:** Face ID, l'esclusione dai backup su iOS e i permessi reali non sono verificabili in Expo Go; serve una build installabile anche per la beta.
+- **Alternatives:** iOS per primo (richiede l'Apple Developer Program a pagamento); build locali con Android Studio/Xcode (strumenti pesanti sul PC dell'owner).
+- **Chosen:** decisione dell'owner (2026-11-07): EAS Build, partendo da Android. Profili `development` (con `expo-dev-client`), `preview` (APK interno) e `production` in `apps/mobile/eas.json`; guida in `docs/release/eas-android.md`. `pnpm --filter @free/mobile start` continua ad aprire Expo Go (`--go`).
+- **Reason:** nessun costo per iniziare, nessuno strumento nativo da installare, la chiave di firma è gestita da EAS.
+- **Trade-offs:** coda e limiti mensili del piano gratuito; il collegamento all'account Expo (`eas init`) va fatto dall'owner.
+- **Date:** 2026-11-07
+
+### D-027 ✅ SQLCipher non adottato per la Beta
 
 - **Context:** D-024 ha rinviato alla Beta la decisione sulla cifratura del database con SQLCipher; #17.
 - **Alternatives:** (a) SQLCipher con chiave casuale in `expo-secure-store` (Keychain/Keystore); (b) nessuna cifratura aggiuntiva oltre a quella del sistema operativo.
-- **Proposta:** (b) per la Beta. I dati sono già cifrati a riposo dal sistema (iOS Data Protection, Android File-Based Encryption) e accessibili solo all'app; non lasciano il telefono (nessuna rete, backup di sistema esclusi, D-014); il blocco app protegge chi ha in mano il telefono sbloccato (D-023). SQLCipher aggiungerebbe protezione solo contro chi estrae i file da un telefono già sbloccato o compromesso, in cambio di una migrazione del database esistente, una chiave da non perdere (perderla significa perdere i dati) e build più pesanti.
+- **Chosen:** (b) per la Beta. I dati sono già cifrati a riposo dal sistema (iOS Data Protection, Android File-Based Encryption) e accessibili solo all'app; non lasciano il telefono (nessuna rete, backup di sistema esclusi, D-014); il blocco app protegge chi ha in mano il telefono sbloccato (D-023). SQLCipher aggiungerebbe protezione solo contro chi estrae i file da un telefono già sbloccato o compromesso, in cambio di una migrazione del database esistente, una chiave da non perdere (perderla significa perdere i dati) e build più pesanti.
 - **Da rivalutare:** se in futuro i dati lasceranno il telefono (sincronizzazione, account) o se una revisione di sicurezza esterna lo richiede.
-- **Richiede:** conferma dell'owner.
+- **Decisione:** confermata dall'owner il 2026-11-07.
 - **Date:** 2026-11-07
 
 ### D-026 ✅ I traguardi raggiunti sopravvivono alla rimozione dell'obiettivo
@@ -170,7 +179,8 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Chosen:** expo-notifications locali; check-in giornaliero e traguardi; testi fissi neutri; permesso chiesto solo all'attivazione; ripianificazione completa a ogni modifica; step facoltativo in onboarding (chiude D-018).
 - **Reason:** nessun dato esce dal telefono; nessuno può dedurre il tema dalla lock screen; nessun duplicato possibile.
 - **Trade-offs:** testi meno "motivanti"; niente promemoria intelligenti basati sugli orari degli impulsi (valutabile in futuro, sempre in locale).
-- **Date:** 2026-10-18
+- **Aggiornamento 2026-11-07 (ONB-15):** su richiesta dell'owner il check-in mostra ogni giorno uno di cinque testi neutri ("Come va oggi?", "Prenditi il tuo tempo.", …), stabile per quel giorno e mai uguale al giorno prima. Per farlo i prossimi 30 giorni sono programmati come notifiche singole, ripianificate a ogni apertura e ritorno in primo piano (30 check-in + 20 traguardi restano sotto il limite iOS di 64). Se l'app non viene aperta per 30 giorni i check-in si fermano.
+- **Date:** 2026-10-18 · aggiornata 2026-11-07
 
 ### D-019 ✅ Navigazione a stack con collegamenti dalla Dashboard (niente tab per ora)
 

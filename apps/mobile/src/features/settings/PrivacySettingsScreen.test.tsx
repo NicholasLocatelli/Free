@@ -49,7 +49,7 @@ describe("PrivacySettingsScreen", () => {
     expect(screen.getByText(/Il file non è cifrato/)).toBeOnTheScreen();
     await press("Esporta in un file");
     expect(await screen.findByText("File pronto. Ricordati dove lo salvi.")).toBeOnTheScreen();
-    expect(shared[0]?.name).toBe("approdo-backup-2026-10-01.json");
+    expect(shared[0]?.name).toBe("free-backup-2026-10-01.json");
     expect(parseBackup(shared[0]?.contents ?? "")).toMatchObject({
       ok: true,
       value: { journey: newJourney(), settings: { theme: "dark" } },

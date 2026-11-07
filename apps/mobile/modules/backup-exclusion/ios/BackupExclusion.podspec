@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary        = 'Keeps the app data out of iCloud and device backups (D-014).'
   s.description    = s.summary
   s.license        = 'UNLICENSED'
-  s.author         = 'Approdo'
+  s.author         = 'Free'
   s.homepage       = 'https://github.com/NicholasLocatelli/Free'
   s.platforms      = { :ios => '16.4' }
   s.source         = { git: 'https://github.com/NicholasLocatelli/Free.git' }

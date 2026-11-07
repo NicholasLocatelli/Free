@@ -25,6 +25,6 @@ describe("backup format", () => {
   });
 
   it("names files by date without personal data", () => {
-    expect(backupFileName(T0)).toBe("approdo-backup-2026-10-01.json");
+    expect(backupFileName(T0)).toBe("free-backup-2026-10-01.json");
   });
 });

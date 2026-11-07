@@ -1,17 +1,17 @@
 {
   "expo": {
-    "name": "Approdo",
+    "name": "Free",
     "slug": "free",
     "version": "0.1.0",
     "orientation": "portrait",
-    "scheme": "approdo",
+    "scheme": "freeapp",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.approdo.mobile"
+      "bundleIdentifier": "com.nicholaslocatelli.free"
     },
     "android": {
-      "package": "app.approdo.mobile",
+      "package": "com.nicholaslocatelli.free",
       "permissions": [],
       "blockedPermissions": [
         "android.permission.SYSTEM_ALERT_WINDOW",
@@ -25,7 +25,7 @@
       "expo-router",
       [
         "expo-local-authentication",
-        { "faceIDPermission": "Approdo usa Face ID per sbloccare l'app, se attivi il blocco." }
+        { "faceIDPermission": "Free usa Face ID per sbloccare l'app, se attivi il blocco." }
       ]
     ],
     "experiments": {

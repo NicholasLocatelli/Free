@@ -23,17 +23,35 @@ export const DEFAULT_REMINDER_PREFS: ReminderPrefs = {
 
 export const REMINDER_SETTINGS_KEY = "reminders";
 
-/** iOS keeps at most 64 pending local notifications; stay well below. */
+/** iOS keeps at most 64 pending local notifications: 30 check-ins + 20 milestones fit. */
 export const MAX_MILESTONE_NOTIFICATIONS = 20;
+/**
+ * Check-ins are scheduled one by one so each day can show a different text. The window is
+ * re-planned every time the app opens, so it only runs out after 30 days without opening it.
+ */
+export const CHECK_IN_DAYS = 30;
+
+/** Rotated daily (owner's request, ONB-15). Neutral: the lock screen may show them. */
+export const CHECK_IN_TITLES = [
+  "Come va oggi?",
+  "Prenditi il tuo tempo.",
+  "Un momento per te?",
+  "Un passo alla volta.",
+  "Respira con calma.",
+] as const;
 
 export const NEUTRAL_COPY = {
-  checkIn: { title: "Un momento per te?", body: "Apri l'app quando vuoi." },
+  checkIn: { body: "Apri l'app quando vuoi." },
   milestone: { title: "Hai un nuovo traguardo.", body: "Apri l'app per vederlo." },
 } as const;
 
-export type PlannedNotification =
-  | { kind: "check-in"; id: string; hour: number; minute: number; title: string; body: string }
-  | { kind: "milestone"; id: string; at: Instant; title: string; body: string };
+export interface PlannedNotification {
+  kind: "check-in" | "milestone";
+  id: string;
+  at: Instant;
+  title: string;
+  body: string;
+}
 
 export function parseTimeOfDay(text: string): { hour: number; minute: number } | null {
   const match = /^(\d{1,2})[:.](\d{2})$/.exec(text.trim());
@@ -53,9 +71,7 @@ export function planReminders(
 ): PlannedNotification[] {
   const planned: PlannedNotification[] = [];
   const time = parseTimeOfDay(prefs.checkInTime);
-  if (prefs.checkInEnabled && time) {
-    planned.push({ kind: "check-in", id: "check-in", ...time, ...NEUTRAL_COPY.checkIn });
-  }
+  if (prefs.checkInEnabled && time) planned.push(...planCheckIns(time, now));
   const open = journey?.periods.at(-1);
   if (prefs.milestonesEnabled && journey && open && open.endedAt === null) {
     journey.milestoneHours
@@ -72,6 +88,45 @@ export function planReminders(
       });
   }
   return planned;
+}
+
+/** Next CHECK_IN_DAYS local occurrences of hh:mm (DST handled by the platform). */
+function planCheckIns(time: { hour: number; minute: number }, now: Instant): PlannedNotification[] {
+  const first = new Date(now);
+  first.setHours(time.hour, time.minute, 0, 0);
+  if (first.getTime() <= now) first.setDate(first.getDate() + 1);
+  return Array.from({ length: CHECK_IN_DAYS }, (_, i) => {
+    const day = new Date(first);
+    day.setDate(first.getDate() + i);
+    const key = localDateKey(day);
+    return {
+      kind: "check-in" as const,
+      id: `check-in-${key}`,
+      at: day.getTime(),
+      title: checkInTitle(key),
+      body: NEUTRAL_COPY.checkIn.body,
+    };
+  });
+}
+
+const localDateKey = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+/**
+ * Text for a calendar day: looks random but is stable, so re-planning on every app start
+ * never changes a day's message, and two consecutive days never repeat the same one.
+ */
+export function checkInTitle(dateKey: string): string {
+  const index = (key: string) => {
+    let hash = 0;
+    for (const char of key) hash = (Math.imul(hash, 31) + char.charCodeAt(0)) >>> 0;
+    return hash % CHECK_IN_TITLES.length;
+  };
+  const date = new Date(`${dateKey}T12:00:00`);
+  date.setDate(date.getDate() - 1);
+  const today = index(dateKey);
+  const chosen = today === index(localDateKey(date)) ? (today + 1) % CHECK_IN_TITLES.length : today;
+  return CHECK_IN_TITLES[chosen] ?? CHECK_IN_TITLES[0];
 }
 
 export function serializePrefs(prefs: ReminderPrefs): string {

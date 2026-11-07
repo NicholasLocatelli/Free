@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { AppState } from "react-native";
 import type { PermissionState, ReminderScheduler } from "../../platform/notifications";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import { useSettings } from "../../state/SettingsProvider";
@@ -52,6 +53,17 @@ export function RemindersProvider({ scheduler, children, now = Date.now }: Remin
   const [prefs, setPrefs] = useState<ReminderPrefs>(DEFAULT_REMINDER_PREFS);
   const [loaded, setLoaded] = useState(false);
   const queue = useRef<Promise<unknown>>(Promise.resolve());
+  // Bumped when the app returns to the foreground, so the 30-day check-in window rolls on.
+  const [resumes, setResumes] = useState(0);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (state) => {
+      if (state === "active") setResumes((n) => n + 1);
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -83,7 +95,7 @@ export function RemindersProvider({ scheduler, children, now = Date.now }: Remin
     };
     // Best effort: a failed sync must never break the app; the next change retries.
     queue.current = queue.current.then(sync, sync).catch(() => undefined);
-  }, [loaded, prefs, journey, scheduler, now]);
+  }, [loaded, prefs, journey, scheduler, now, resumes]);
 
   const update = useCallback(
     async (next: ReminderPrefs): Promise<UpdateResult> => {

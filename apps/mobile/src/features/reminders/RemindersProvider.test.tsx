@@ -5,7 +5,7 @@ import { createFakeScheduler } from "../../test/fakeScheduler";
 import { newJourney, T0 } from "../../test/fixtures";
 import { createMemoryRepository, createMemorySettings } from "../../test/memoryRepository";
 import { renderApp } from "../../test/renderApp";
-import { REMINDER_SETTINGS_KEY, serializePrefs } from "./reminderPlan";
+import { REMINDER_SETTINGS_KEY, serializePrefs, CHECK_IN_DAYS } from "./reminderPlan";
 
 const now = () => T0 + MS_PER_DAY / 2;
 const checkIn = () => screen.getByRole("switch", { name: "Promemoria giornaliero" });
@@ -37,10 +37,10 @@ describe("reminders", () => {
     });
     await fireEvent.press(checkIn());
     await waitFor(() => {
-      expect(state.scheduled).toEqual([
-        expect.objectContaining({ kind: "check-in", hour: 20, minute: 0 }),
-      ]);
+      expect(state.scheduled).toHaveLength(CHECK_IN_DAYS);
     });
+    // 2 Oct 2026 at 20:00 in Rome, the first evening after "now" (10:00).
+    expect(state.scheduled[0]).toMatchObject({ kind: "check-in", at: Date.UTC(2026, 9, 2, 18, 0) });
     expect(state.requests).toBe(1);
     expect(await settings.get(REMINDER_SETTINGS_KEY)).toContain('"checkInEnabled":true');
   });
