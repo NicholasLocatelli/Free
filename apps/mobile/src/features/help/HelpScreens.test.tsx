@@ -32,7 +32,7 @@ describe("HelpSectionScreen", () => {
     ).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "Chiama 800 558822" })).toBeOnTheScreen();
     expect(
-      screen.getByText("Fonte: Istituto Superiore di Sanità · verificato il 18 ottobre 2026"),
+      screen.getByText("Fonte: Istituto Superiore di Sanità · verificato il 7 novembre 2026"),
     ).toBeOnTheScreen();
   });
 

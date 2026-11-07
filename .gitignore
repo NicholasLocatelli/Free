@@ -15,3 +15,5 @@ android/
 *.p12
 *.key
 *.mobileprovision
+# Local native modules are source code, not generated folders
+!apps/mobile/modules/*/ios/
