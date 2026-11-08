@@ -10,12 +10,12 @@ CI. Catalogo visivo (solo build di sviluppo): route `/dev/catalog`.
 
 ## 1. Brand
 
-**Nome di lavoro: _Approdo_** — il luogo sicuro dove si arriva dopo una navigazione difficile.
-Italiano, calmo, non clinico, nessuna associazione al gioco. Alternative valutate: _Riva_, _Varco_,
-_Free_ (nome del repo: troppo generico e in conflitto con marchi telco noti). ⚠️ Verifica marchio
-e disponibilità sugli store = decisione umana prima della Beta (D-002).
+**Nome: _Free_** (scelto dall'owner il 2026-11-07, D-002): breve, positivo, nessuna associazione
+al gioco, discreto sulla schermata del telefono. Nome di lavoro precedente: _Approdo_.
+⚠️ "Free" è anche un marchio di telecomunicazioni: prima della pubblicazione verificare marchio e
+disponibilità sugli store; il nome sugli store può avere un sottotitolo descrittivo.
 
-**Discrezione:** nome e icona non menzionano il gioco. Icona: forma astratta (orizzonte/approdo),
+**Discrezione:** nome e icona non menzionano il gioco. Icona: forma astratta (orizzonte, approdo),
 nessuna fiche, carta, dado, moneta, trifoglio, "7".
 
 **Personalità:** calmo · adulto · caldo · essenziale · affidabile.

@@ -1,7 +1,7 @@
 # Free — compagno di percorso per smettere di giocare
 
-> Nome in codice del repository: **Free**. Nome prodotto di lavoro: **Approdo** (da validare, vedi
-> [decision log](docs/decisions/decision-log.md) D-002).
+> Nome dell'app: **Free**, scelto dall'owner (D-002 nel [decision log](docs/decisions/decision-log.md)).
+> Prima della pubblicazione serve la verifica del marchio e del nome sugli store.
 
 App mobile (Android + iOS) **privacy-first** per chi vuole ridurre o smettere un comportamento di
 dipendenza. La prima categoria supportata è il **gioco d'azzardo**; il dominio è progettato per
@@ -50,7 +50,11 @@ Requisiti: Node ≥ 22.12, pnpm 10 (`corepack enable`).
 pnpm install
 pnpm check      # format:check + lint + typecheck + test
 pnpm test       # solo test
+pnpm --filter @free/mobile start       # app in Expo Go
+pnpm --filter @free/mobile start:dev   # app nella development build
 ```
+
+Build installabile Android con EAS: [docs/release/eas-android.md](docs/release/eas-android.md).
 
 ## Documenti chiave
 

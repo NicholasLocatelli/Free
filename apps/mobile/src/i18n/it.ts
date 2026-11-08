@@ -168,7 +168,7 @@ export const messages = {
   "reminders.checkIn": "Promemoria giornaliero",
   "reminders.checkInTime": "A che ora? (hh:mm)",
   "reminders.milestones": "Avvisami quando raggiungo un traguardo",
-  "reminders.preview": "Esempio di testo: «{title}»",
+  "reminders.preview": "Il testo cambia ogni giorno, per esempio «{title}»",
   "reminders.invalid_time": "Inserisci un orario come 20:00.",
   "reminders.denied":
     "Le notifiche sono disattivate per questa app nelle impostazioni del telefono.",

@@ -6,6 +6,10 @@ import { REMINDER_SETTINGS_KEY } from "../reminders/reminderPlan";
  * Plain-JSON backup the user saves and moves between phones themselves (no account, no
  * server). The file is NOT encrypted: the UI says so before exporting.
  */
+/**
+ * File format identifier. It keeps the app's earlier working name (D-002) on purpose:
+ * changing it would make every backup exported so far unreadable.
+ */
 export const BACKUP_FORMAT = "approdo-backup";
 export const BACKUP_VERSION = 1;
 /** Preferences that travel with the data; onboarding drafts and lock state do not. */
@@ -63,5 +67,5 @@ export function parseBackup(text: string): Result<BackupContent, BackupError> {
 }
 
 export function backupFileName(at: Instant): string {
-  return `approdo-backup-${new Date(at).toISOString().slice(0, 10)}.json`;
+  return `free-backup-${new Date(at).toISOString().slice(0, 10)}.json`;
 }
