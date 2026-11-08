@@ -1,11 +1,12 @@
 import { fireEvent, screen } from "@testing-library/react-native";
 import { renderWithTheme } from "../../test/render";
-import { getHelpSection, HELP_SECTIONS } from "./content";
+import { setLanguage } from "../../i18n";
+import { getHelpSection, getHelpSections } from "./content";
 import { HelpScreen } from "./HelpScreen";
 import { HelpSectionScreen } from "./HelpSectionScreen";
 
 function section(id: string) {
-  const found = getHelpSection(id);
+  const found = getHelpSection(id, "IT");
   if (!found) throw new Error(`missing section ${id}`);
   return found;
 }
@@ -13,9 +14,13 @@ function section(id: string) {
 describe("HelpScreen", () => {
   it("lists every section and opens it (HELP-1)", async () => {
     const onOpen = jest.fn();
-    await renderWithTheme(<HelpScreen onOpen={onOpen} onBack={jest.fn()} />);
+    const sections = getHelpSections("IT");
+    await renderWithTheme(
+      <HelpScreen sections={sections} hasCountry onOpen={onOpen} onBack={jest.fn()} />,
+    );
     expect(screen.getByRole("header", { name: "Aiuto" })).toBeOnTheScreen();
-    for (const s of HELP_SECTIONS) {
+    expect(screen.queryByText("Nessuna risorsa verificata per il tuo paese")).toBeNull();
+    for (const s of sections) {
       expect(screen.getByRole("button", { name: `${s.title}. ${s.summary}` })).toBeOnTheScreen();
     }
     await fireEvent.press(screen.getByRole("button", { name: /^Se sei in pericolo/ }));
@@ -52,6 +57,34 @@ describe("HelpSectionScreen", () => {
   });
 
   it("returns undefined for unknown sections (route redirects)", () => {
-    expect(getHelpSection("nope")).toBeUndefined();
+    expect(getHelpSection("nope", "IT")).toBeUndefined();
+  });
+});
+
+describe("a country without verified resources", () => {
+  it("says so and never shows another country's numbers", async () => {
+    const sections = getHelpSections(null);
+    await renderWithTheme(
+      <HelpScreen sections={sections} hasCountry={false} onOpen={jest.fn()} onBack={jest.fn()} />,
+    );
+    expect(screen.getByText("Nessuna risorsa verificata per il tuo paese")).toBeOnTheScreen();
+    expect(sections.every((s) => s.resources.length === 0)).toBe(true);
+    const text = sections.flatMap((s) => s.body).join(" ");
+    expect(text).not.toMatch(/Italia|Ser\.D|112/);
+  });
+});
+
+describe("in English", () => {
+  afterEach(() => {
+    setLanguage("it");
+  });
+
+  it("shows English guidance with Italy's resources described in English", async () => {
+    setLanguage("en");
+    await renderWithTheme(<HelpSectionScreen section={section("emergency")} onBack={jest.fn()} />);
+    expect(screen.getByRole("header", { name: "If you are in danger" })).toBeOnTheScreen();
+    expect(screen.getByText("In Italy the single emergency number is 112.")).toBeOnTheScreen();
+    expect(screen.getByRole("button", { name: "Call 112" })).toBeOnTheScreen();
+    expect(screen.getAllByText(/Source: .* · checked on 7 November 2026/)).toHaveLength(2);
   });
 });

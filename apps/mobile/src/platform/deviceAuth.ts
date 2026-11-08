@@ -6,6 +6,7 @@ import {
   preventScreenCaptureAsync,
 } from "expo-screen-capture";
 import { Platform } from "react-native";
+import { t } from "../i18n";
 
 /** Device-level protection used by the app lock. Never stores a secret in the app. */
 export interface DeviceAuth {
@@ -31,7 +32,7 @@ export function createDeviceAuth(): DeviceAuth {
       try {
         const result = await authenticateAsync({
           promptMessage: reason,
-          cancelLabel: "Annulla",
+          cancelLabel: t("common.cancel"),
           disableDeviceFallback: false,
         });
         return result.success;

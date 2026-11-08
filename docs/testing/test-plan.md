@@ -64,15 +64,18 @@ _Owner: Team D. Stato colonne: ✅ automatizzato · 🟡 previsto (milestone) ·
 
 ### TC-HIS — Storico, TC-GOAL — Obiettivi, TC-HELP — Help Center
 
-| ID     | Acceptance criteria                                                                       | Stato                                                                                           |
-| ------ | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| HIS-1  | Riepilogo: tempo totale, periodo più lungo, impulsi superati                              | ✅ core                                                                                         |
-| HIS-2  | Storico con un solo periodo e nessun impulso                                              | ✅ component                                                                                    |
-| GOAL-1 | Milestone configurabili, ordinate, deduplicate, validate                                  | ✅                                                                                              |
-| GOAL-2 | Progresso verso la prossima milestone corretto; completamento quando tutte raggiunte      | ✅                                                                                              |
-| GOAL-3 | Rimuovere un obiettivo già raggiunto non lo cancella dallo Storico (#19)                  | ✅ `journey.test.ts`, `HistoryScreen.test.tsx`, migrazione v1→v2 in `JourneyRepository.test.ts` |
-| HELP-1 | Help Center a 1 tap dalla Home, funzionante offline                                       | ✅ component (Dashboard, SOS, ricaduta → Aiuto; contenuti inclusi nell'app)                     |
-| HELP-2 | Ogni risorsa mostra fonte e data di verifica; numeri e link coincidono con help-center.md | ✅ component + `resources.test.ts` (coerenza con la documentazione)                             |
+| ID     | Acceptance criteria                                                                                                               | Stato                                                                                           |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| HIS-1  | Riepilogo: tempo totale, periodo più lungo, impulsi superati                                                                      | ✅ core                                                                                         |
+| HIS-2  | Storico con un solo periodo e nessun impulso                                                                                      | ✅ component                                                                                    |
+| GOAL-1 | Milestone configurabili, ordinate, deduplicate, validate                                                                          | ✅                                                                                              |
+| GOAL-2 | Progresso verso la prossima milestone corretto; completamento quando tutte raggiunte                                              | ✅                                                                                              |
+| GOAL-3 | Rimuovere un obiettivo già raggiunto non lo cancella dallo Storico (#19)                                                          | ✅ `journey.test.ts`, `HistoryScreen.test.tsx`, migrazione v1→v2 in `JourneyRepository.test.ts` |
+| HELP-1 | Help Center a 1 tap dalla Home, funzionante offline                                                                               | ✅ component (Dashboard, SOS, ricaduta → Aiuto; contenuti inclusi nell'app)                     |
+| HELP-2 | Ogni risorsa mostra fonte e data di verifica; numeri e link coincidono con help-center.md                                         | ✅ component + `resources.test.ts` (coerenza con la documentazione)                             |
+| I18N-1 | Lingua del telefono (riserva inglese), scelta manuale salvata; stessi segnaposto in ogni catalogo; tono verificato in ogni lingua | ✅ `i18n.test.ts`, `LocaleProvider.test.tsx`                                                    |
+| I18N-2 | Paese senza risorse verificate: nessun numero di altri paesi in Aiuto, SOS e ricaduta                                             | ✅ `HelpScreens.test.tsx`, `SosScreen.test.tsx`, `RelapseScreen.test.tsx`                       |
+| I18N-3 | Notifiche nella lingua scelta, sempre neutre in ogni lingua                                                                       | ✅ `reminderPlan.test.ts`                                                                       |
 
 ## 2. Edge case (Edge Case Tester)
 

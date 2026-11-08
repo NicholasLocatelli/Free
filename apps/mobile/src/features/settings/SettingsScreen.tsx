@@ -1,4 +1,6 @@
-import { t } from "../../i18n/it";
+import { LANGUAGE_NAMES, LANGUAGES, t } from "../../i18n";
+import { COUNTRY_CODES } from "../help/countries";
+import { useLocale, type CountryPreference } from "../locale/LocaleProvider";
 import { useSettings } from "../../state/SettingsProvider";
 import {
   AppText,
@@ -23,6 +25,14 @@ interface SettingsScreenProps {
 export function SettingsScreen({ onOpen, onBack }: SettingsScreenProps) {
   const { preference, setPreference } = useThemeContext();
   const settings = useSettings();
+  const locale = useLocale();
+  const countryOptions: readonly CountryPreference[] = ["auto", ...COUNTRY_CODES, "none"];
+  const countryLabel = (option: CountryPreference) =>
+    option === "auto"
+      ? t("settings.countryAuto")
+      : option === "none"
+        ? t("settings.countryOther")
+        : t(`country.${option}`);
 
   const section = (key: SettingsSection, label: string) => (
     <Card
@@ -56,6 +66,32 @@ export function SettingsScreen({ onOpen, onBack }: SettingsScreenProps) {
             onPress={() => {
               setPreference(p);
               settings.set(THEME_SETTINGS_KEY, p).catch(() => undefined);
+            }}
+          />
+        ))}
+      </ChoiceGroup>
+      <ChoiceGroup label={t("settings.language")}>
+        {(["system", ...LANGUAGES] as const).map((option) => (
+          <Chip
+            key={option}
+            selection="single"
+            label={option === "system" ? t("settings.languageSystem") : LANGUAGE_NAMES[option]}
+            selected={locale.languagePreference === option}
+            onPress={() => {
+              locale.setLanguagePreference(option);
+            }}
+          />
+        ))}
+      </ChoiceGroup>
+      <ChoiceGroup label={t("settings.country")}>
+        {countryOptions.map((option) => (
+          <Chip
+            key={option}
+            selection="single"
+            label={countryLabel(option)}
+            selected={locale.countryPreference === option}
+            onPress={() => {
+              locale.setCountryPreference(option);
             }}
           />
         ))}

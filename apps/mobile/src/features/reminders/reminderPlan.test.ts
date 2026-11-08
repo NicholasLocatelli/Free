@@ -1,12 +1,12 @@
 import { MS_PER_DAY, MS_PER_HOUR, type Journey } from "@free/core";
+import { LANGUAGES, setLanguage } from "../../i18n";
 import { newJourney, T0 } from "../../test/fixtures";
 import {
   DEFAULT_REMINDER_PREFS,
   deserializePrefs,
   CHECK_IN_DAYS,
-  CHECK_IN_TITLES,
+  checkInTitles,
   MAX_MILESTONE_NOTIFICATIONS,
-  NEUTRAL_COPY,
   parseTimeOfDay,
   planReminders,
   serializePrefs,
@@ -27,7 +27,7 @@ describe("planReminders", () => {
       kind: "check-in",
       id: "check-in-2026-10-02",
       at: Date.UTC(2026, 9, 2, 19, 30),
-      body: NEUTRAL_COPY.checkIn.body,
+      body: "Apri l'app quando vuoi.",
     });
     // Rome leaves summer time on 25 Oct: still 21:30 local, one hour later in UTC.
     expect(plan.find((n) => n.id === "check-in-2026-10-26")?.at).toBe(
@@ -43,7 +43,7 @@ describe("planReminders", () => {
   it("varies the text from day to day, stably across re-plans (ONB-15)", () => {
     const plan = planReminders(null, { ...ON, milestonesEnabled: false }, T0);
     const titles = plan.map((n) => n.title);
-    expect(titles.every((t) => (CHECK_IN_TITLES as readonly string[]).includes(t))).toBe(true);
+    expect(titles.every((title) => checkInTitles().includes(title))).toBe(true);
     expect(new Set(titles).size).toBeGreaterThan(2);
     titles.slice(1).forEach((title, i) => {
       expect(title).not.toBe(titles[i]);
@@ -68,7 +68,8 @@ describe("planReminders", () => {
       kind: "milestone",
       id: "milestone-period-1-72",
       at: T0 + 72 * MS_PER_HOUR,
-      ...NEUTRAL_COPY.milestone,
+      title: "Hai un nuovo traguardo.",
+      body: "Apri l'app per vederlo.",
     });
     expect(plan.every((n) => n.kind === "milestone" && n.at > now)).toBe(true);
   });
@@ -110,13 +111,15 @@ describe("planReminders", () => {
   });
 
   it("never mentions gambling, money or relapses in what the lock screen may show", () => {
-    const text = [
-      ...CHECK_IN_TITLES,
-      NEUTRAL_COPY.checkIn.body,
-      NEUTRAL_COPY.milestone.title,
-      NEUTRAL_COPY.milestone.body,
-    ].join(" ");
-    expect(text).not.toMatch(/gioc|azzard|scommess|denaro|soldi|ricadut|impuls|giorni senza/i);
+    const text = LANGUAGES.flatMap((language) => {
+      setLanguage(language);
+      const plan = planReminders(newJourney(), ON, T0);
+      setLanguage("it");
+      return plan.flatMap((n) => [n.title, n.body]);
+    }).join(" ");
+    expect(text).not.toMatch(
+      /gioc|azzard|scommess|denaro|soldi|ricadut|impuls|giorni senza|gambl|bet|casino|money|relapse|urge/i,
+    );
   });
 });
 

@@ -2,7 +2,7 @@ import { getCategory, MAX_NOTE_LENGTH, periodDurationMs } from "@free/core";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { formatDayTime, formatDuration } from "../../i18n/format";
-import { t, type MessageKey } from "../../i18n/it";
+import { t, type MessageKey } from "../../i18n";
 import { tagLabel } from "../../i18n/tags";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import {
@@ -15,7 +15,8 @@ import {
   spacing,
   TextField,
 } from "../../ui";
-import { TVNGA } from "../help/resources";
+import { toResource } from "../help/content";
+import { useCountryHelp } from "../locale/LocaleProvider";
 import { currentTimeText, parseMoment, type MomentInput } from "../shared/formInputs";
 
 type Step = "when" | "reflect" | "done";
@@ -34,6 +35,7 @@ interface RelapseScreenProps {
  */
 export function RelapseScreen({ onDone, onHelp, onCancel, now = Date.now }: RelapseScreenProps) {
   const journey = useJourneyStore((s) => s.journey);
+  const countryHelp = useCountryHelp();
   const recordRelapse = useJourneyStore((s) => s.recordRelapse);
   const [step, setStep] = useState<Step>("when");
   const [moment, setMoment] = useState<MomentInput>({ mode: "now", daysAgo: "0", time: "" });
@@ -56,8 +58,12 @@ export function RelapseScreen({ onDone, onHelp, onCancel, now = Date.now }: Rela
             {t("relapse.doneBody", { duration: formatDuration(periodDurationMs(closed, now())) })}
           </AppText>
         )}
-        <AppText variant="heading">{t("relapse.supportTitle")}</AppText>
-        <ResourceCard resource={TVNGA} />
+        {countryHelp && (
+          <>
+            <AppText variant="heading">{t("relapse.supportTitle")}</AppText>
+            <ResourceCard resource={toResource(countryHelp.helpline)} />
+          </>
+        )}
         <Button label={t("help.more")} variant="secondary" onPress={onHelp} />
         <Button label={t("relapse.backToToday")} onPress={onDone} />
       </Screen>

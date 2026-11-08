@@ -106,12 +106,28 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner.
 - **Date:** 2026-10-02
 
-### D-013 ⏳ Modello di business
+### D-013 ✅ Modello di business: gratuita, senza pubblicità, sostenuta da donazioni ed enti
 
-- **Context:** non deducibile dal brief.
-- **Vincolo già deciso:** SOS, Help Center, storico e cancellazione dati restano sempre gratuiti; nessuna pubblicità comportamentale.
-- **Richiede:** decisione dell'owner prima della Beta.
-- **Date:** 2026-10-02
+- **Context:** l'app si rivolge a persone vulnerabili, spesso con problemi economici; il nome "Free" crea l'aspettativa di gratuità; nessun abbonamento premium previsto.
+- **Alternatives:** prezzo d'acquisto (barriera proprio per chi ha bisogno, stona con il nome); pubblicità (le reti pubblicitarie raccolgono identificativi e dati d'uso, rendendo falsa la dichiarazione "nessun dato raccolto", e scelgono da sole gli annunci, con il rischio di mostrare scommesse e casinò a chi cerca di smettere); abbonamento premium (spingerebbe a mettere a pagamento funzioni utili al percorso).
+- **Chosen:** decisione dell'owner (2026-11-08):
+  1. app gratuita e completa per chi la usa, per sempre; nessuna funzione utile al percorso a pagamento;
+  2. **nessuna pubblicità**, in nessuna forma (banner, overlay, video);
+  3. donazioni facoltative nell'app ("Sostieni Free"), senza vantaggi in cambio, tramite il sistema di pagamento degli store: **dopo la Beta**; regole degli store da verificare prima dello sviluppo;
+  4. sostegno da enti e progetti a impatto sociale (associazioni, Ser.D., fondazioni, welfare aziendale, fondi pubblici per la prevenzione), che non ricevono mai dati degli utenti;
+  5. eventuale acquisto "sostenitore" con extra solo estetici, da valutare in futuro.
+- **Reason:** coerenza con i principi (privacy, nessun giudizio, accessibilità) e con il nome; costi vivi bassi (account sviluppatore degli store, nessun server).
+- **Trade-offs:** ricavi incerti e probabilmente limitati; il sostegno da enti richiede tempo e relazioni. La scelta della licenza (D-012, #7) può aiutare: un codice verificabile rende più credibile la promessa "nessun dato raccolto".
+- **Date:** 2026-10-02 · decisa 2026-11-08
+
+### D-029 ✅ App multilingua; risorse di aiuto per paese
+
+- **Context:** l'owner vuole rendere l'app globale (inglese, poi francese e spagnolo). Le risorse dell'Aiuto (numeri, servizi, autoesclusione, numero di emergenza) sono italiane.
+- **Alternatives:** risorse legate alla lingua (sbagliato: la lingua non dice il paese); mostrare le risorse italiane come riserva (pericoloso: numeri non raggiungibili o sbagliati in un momento di crisi); librerie i18n esterne (non necessarie per un solo formato di messaggi).
+- **Chosen:** decisione dell'owner (2026-11-08). Lingua e paese separati: la lingua segue il telefono (riserva: inglese), il paese segue la regione del telefono solo se ha risorse verificate; entrambi modificabili nelle Impostazioni. Un paese senza risorse non ne mostra di altri. Prima l'inglese (rivisto dall'owner), poi francese e spagnolo (revisione madrelingua prima della pubblicazione), poi le risorse di Regno Unito, Francia e Spagna, verificate sulle fonti ufficiali. Dettagli in `docs/product/localization.md`.
+- **Reason:** sicurezza dell'utente (mai un numero sbagliato) e semplicità (cataloghi tipizzati, `Intl` per date, numeri e plurali).
+- **Trade-offs:** ogni paese richiede ricerca e verifica; finché non è verificato l'app non offre numeri locali. Cambiare lingua riporta alla schermata Oggi.
+- **Date:** 2026-11-08
 
 ### D-028 ✅ Build Android con EAS per prima
 

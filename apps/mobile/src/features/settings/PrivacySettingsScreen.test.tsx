@@ -62,7 +62,7 @@ describe("PrivacySettingsScreen", () => {
       picked: serializeBackup({ journey: other, settings: {} }, T0),
     });
     await press("Importa da un file");
-    expect(await screen.findByText(/Il file contiene 1 periodi e 0 impulsi/)).toBeOnTheScreen();
+    expect(await screen.findByText(/Il file contiene 1 periodo e 0 impulsi/)).toBeOnTheScreen();
     expect(store.getState().journey?.id).toBe("journey-1");
     await press("Sostituisci i dati attuali");
     expect(await screen.findByText("Dati importati.")).toBeOnTheScreen();

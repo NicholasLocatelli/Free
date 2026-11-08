@@ -1,6 +1,12 @@
 import { act, fireEvent, screen } from "@testing-library/react-native";
 import { renderWithTheme } from "../../test/render";
-import { SosScreen, WAIT_SECONDS } from "./SosScreen";
+import { SosScreen, WAIT_SECONDS, type SosHelpline } from "./SosScreen";
+
+const TELEFONO_VERDE: SosHelpline = {
+  name: "il Telefono Verde",
+  phone: "800 558822",
+  hours: "Lunedì–venerdì, 10:00–16:00 · gratuito e anonimo",
+};
 
 describe("SosScreen", () => {
   beforeEach(() => {
@@ -10,7 +16,10 @@ describe("SosScreen", () => {
     jest.useRealTimers();
   });
 
-  function setup(openUrl = jest.fn(() => Promise.resolve())) {
+  function setup(
+    openUrl = jest.fn(() => Promise.resolve()),
+    helpline: SosHelpline | null = TELEFONO_VERDE,
+  ) {
     let clock = 0;
     const onRecord = jest.fn();
     const onClose = jest.fn();
@@ -20,6 +29,7 @@ describe("SosScreen", () => {
         onRecord={onRecord}
         onHelp={onHelp}
         onClose={onClose}
+        helpline={helpline}
         openUrl={openUrl}
         now={() => clock}
       />,
@@ -58,6 +68,19 @@ describe("SosScreen", () => {
       screen.getByRole("button", { name: "Chiama il Telefono Verde 800 558822" }),
     );
     expect(openUrl).toHaveBeenCalledWith("tel:800558822");
+  });
+
+  it("shows the helpline's hours", async () => {
+    const { utils } = setup();
+    await utils;
+    expect(screen.getByText(TELEFONO_VERDE.hours ?? "")).toBeOnTheScreen();
+  });
+
+  it("offers no call when the country has no verified helpline", async () => {
+    const { utils } = setup(undefined, null);
+    await utils;
+    expect(screen.queryByRole("button", { name: /^Chiama/ })).toBeNull();
+    expect(screen.getByRole("button", { name: "Altre risorse di aiuto" })).toBeOnTheScreen();
   });
 
   it("shows the number when the phone app cannot be opened", async () => {

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Linking } from "react-native";
-import { t, type MessageKey } from "../../i18n/it";
+import { t, type MessageKey } from "../../i18n";
 import { AppText, Button, TextField, Toggle } from "../../ui";
-import { CHECK_IN_TITLES, parseTimeOfDay, type ReminderPrefs } from "./reminderPlan";
+import { checkInTitles, parseTimeOfDay, type ReminderPrefs } from "./reminderPlan";
 import { useReminders } from "./RemindersProvider";
 
 interface RemindersFormProps {
@@ -57,7 +57,7 @@ export function RemindersForm({ openSettings = defaultOpenSettings }: RemindersF
         }}
       />
       <AppText variant="caption" color="muted">
-        {t("reminders.preview", { title: CHECK_IN_TITLES[0] })}
+        {t("reminders.preview", { title: checkInTitles()[0] ?? "" })}
       </AppText>
       {message !== null && (
         <AppText color="warning" accessibilityRole="alert">

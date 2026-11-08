@@ -11,6 +11,7 @@ import {
 import { AppState } from "react-native";
 import type { PermissionState, ReminderScheduler } from "../../platform/notifications";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
+import { useLocale } from "../locale/LocaleProvider";
 import { useSettings } from "../../state/SettingsProvider";
 import {
   anyReminderEnabled,
@@ -50,6 +51,8 @@ interface RemindersProviderProps {
 export function RemindersProvider({ scheduler, children, now = Date.now }: RemindersProviderProps) {
   const settings = useSettings();
   const journey = useJourneyStore((s) => s.journey);
+  // Notification texts are written when they are scheduled: re-plan when the language changes.
+  const { language } = useLocale();
   const [prefs, setPrefs] = useState<ReminderPrefs>(DEFAULT_REMINDER_PREFS);
   const [loaded, setLoaded] = useState(false);
   const queue = useRef<Promise<unknown>>(Promise.resolve());
@@ -95,7 +98,7 @@ export function RemindersProvider({ scheduler, children, now = Date.now }: Remin
     };
     // Best effort: a failed sync must never break the app; the next change retries.
     queue.current = queue.current.then(sync, sync).catch(() => undefined);
-  }, [loaded, prefs, journey, scheduler, now, resumes]);
+  }, [loaded, prefs, journey, scheduler, now, resumes, language]);
 
   const update = useCallback(
     async (next: ReminderPrefs): Promise<UpdateResult> => {

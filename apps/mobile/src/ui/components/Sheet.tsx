@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Modal, Pressable, StyleSheet, View } from "react-native";
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
 import { useTheme } from "../theme/ThemeProvider";
 import { radius, spacing } from "../theme/tokens";
 import { AppText } from "./AppText";

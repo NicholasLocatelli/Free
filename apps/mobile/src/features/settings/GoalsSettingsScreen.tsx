@@ -1,7 +1,7 @@
 import { DEFAULT_MILESTONE_HOURS, MAX_MILESTONE_HOURS, MS_PER_DAY, MS_PER_HOUR } from "@free/core";
 import { useState } from "react";
 import { formatGoal } from "../../i18n/format";
-import { t, type MessageKey } from "../../i18n/it";
+import { t, type MessageKey } from "../../i18n";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import { AppText, Button, Card, Screen, TextField } from "../../ui";
 
