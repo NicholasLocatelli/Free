@@ -120,6 +120,15 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Trade-offs:** ricavi incerti e probabilmente limitati; il sostegno da enti richiede tempo e relazioni. La scelta della licenza (D-012, #7) può aiutare: un codice verificabile rende più credibile la promessa "nessun dato raccolto".
 - **Date:** 2026-10-02 · decisa 2026-11-08
 
+### D-029 ✅ App multilingua; risorse di aiuto per paese
+
+- **Context:** l'owner vuole rendere l'app globale (inglese, poi francese e spagnolo). Le risorse dell'Aiuto (numeri, servizi, autoesclusione, numero di emergenza) sono italiane.
+- **Alternatives:** risorse legate alla lingua (sbagliato: la lingua non dice il paese); mostrare le risorse italiane come riserva (pericoloso: numeri non raggiungibili o sbagliati in un momento di crisi); librerie i18n esterne (non necessarie per un solo formato di messaggi).
+- **Chosen:** decisione dell'owner (2026-11-08). Lingua e paese separati: la lingua segue il telefono (riserva: inglese), il paese segue la regione del telefono solo se ha risorse verificate; entrambi modificabili nelle Impostazioni. Un paese senza risorse non ne mostra di altri. Prima l'inglese (rivisto dall'owner), poi francese e spagnolo (revisione madrelingua prima della pubblicazione), poi le risorse di Regno Unito, Francia e Spagna, verificate sulle fonti ufficiali. Dettagli in `docs/product/localization.md`.
+- **Reason:** sicurezza dell'utente (mai un numero sbagliato) e semplicità (cataloghi tipizzati, `Intl` per date, numeri e plurali).
+- **Trade-offs:** ogni paese richiede ricerca e verifica; finché non è verificato l'app non offre numeri locali. Cambiare lingua riporta alla schermata Oggi.
+- **Date:** 2026-11-08
+
 ### D-028 ✅ Build Android con EAS per prima
 
 - **Context:** Face ID, l'esclusione dai backup su iOS e i permessi reali non sono verificabili in Expo Go; serve una build installabile anche per la beta.

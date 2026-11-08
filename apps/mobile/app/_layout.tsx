@@ -1,9 +1,11 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import { LocaleProvider, useLocale } from "../src/features/locale/LocaleProvider";
 import { AppLockProvider } from "../src/features/lock/AppLockProvider";
 import { RemindersProvider } from "../src/features/reminders/RemindersProvider";
 import { createDeviceAuth } from "../src/platform/deviceAuth";
+import { readDeviceLocale } from "../src/platform/deviceLocale";
 import { createExpoReminderScheduler } from "../src/platform/notifications";
 import { createAppServices } from "../src/state/createAppStore";
 import { JourneyStoreProvider } from "../src/state/JourneyStoreProvider";
@@ -28,10 +30,13 @@ function SavedThemePreference() {
 
 function ThemedStack() {
   const { colors, scheme } = useTheme();
+  // A language change remounts the screens so every text is rendered again in it.
+  const { language } = useLocale();
   return (
     <>
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />
       <Stack
+        key={language}
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: colors.background },
@@ -52,14 +57,16 @@ export default function RootLayout() {
   return (
     <JourneyStoreProvider store={services.journeyStore}>
       <SettingsProvider settings={services.settings}>
-        <RemindersProvider scheduler={scheduler}>
-          <ThemeProvider>
-            <SavedThemePreference />
-            <AppLockProvider auth={deviceAuth}>
-              <ThemedStack />
-            </AppLockProvider>
-          </ThemeProvider>
-        </RemindersProvider>
+        <LocaleProvider device={readDeviceLocale}>
+          <RemindersProvider scheduler={scheduler}>
+            <ThemeProvider>
+              <SavedThemePreference />
+              <AppLockProvider auth={deviceAuth}>
+                <ThemedStack />
+              </AppLockProvider>
+            </ThemeProvider>
+          </RemindersProvider>
+        </LocaleProvider>
       </SettingsProvider>
     </JourneyStoreProvider>
   );

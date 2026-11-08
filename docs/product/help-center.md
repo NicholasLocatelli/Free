@@ -5,6 +5,13 @@ _Owner: A4 Help Center Agent. Prima verifica: 2026-10-02. **Ultima riverifica: 2
 > Le risorse mostrate nell'app sono in `apps/mobile/src/features/help/resources.ts`. Il test
 > `resources.test.ts` fallisce se un numero o un link dell'app non compare in questa pagina.
 
+## Paesi
+
+Le risorse sono organizzate **per paese** (`apps/mobile/src/features/help/countries/`), i testi
+di consiglio **per lingua** (D-029, `docs/product/localization.md`). Questa pagina documenta le
+risorse dell'**Italia**; ogni nuovo paese aggiunge qui la sua tabella con fonti e date. Un
+paese senza risorse verificate non ne mostra di altri paesi.
+
 ## Regole
 
 1. **Non inventare** numeri, associazioni, servizi o informazioni sanitarie.

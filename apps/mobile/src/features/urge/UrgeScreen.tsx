@@ -1,6 +1,6 @@
 import { getCategory, MAX_INTENSITY, MIN_INTENSITY, MAX_NOTE_LENGTH } from "@free/core";
 import { useState } from "react";
-import { t, type MessageKey } from "../../i18n/it";
+import { t, type MessageKey } from "../../i18n";
 import { tagLabel } from "../../i18n/tags";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import { AppText, Button, Chip, ChoiceGroup, Screen, TextField } from "../../ui";

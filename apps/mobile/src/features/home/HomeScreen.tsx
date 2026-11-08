@@ -1,5 +1,5 @@
 import { ActivityIndicator } from "react-native";
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
 import { useNow } from "../../platform/useNow";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import { Button, ErrorState, Screen, useTheme } from "../../ui";
@@ -19,7 +19,7 @@ export function HomeScreen({ actions }: { actions: TodayActions }) {
   if (boot.status === "loading") {
     return (
       <Screen centered>
-        <ActivityIndicator color={colors.primary} accessibilityLabel="Caricamento" />
+        <ActivityIndicator color={colors.primary} accessibilityLabel={t("common.loading")} />
       </Screen>
     );
   }

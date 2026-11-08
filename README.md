@@ -61,6 +61,7 @@ Build installabile Android con EAS: [docs/release/eas-android.md](docs/release/e
 - [Product vision](docs/product/product-vision.md) · [Principi](docs/product/product-principles.md) · [MVP](docs/product/mvp.md)
 - [Architettura](docs/architecture/overview.md) · [Stack (ADR-001)](docs/architecture/ADR-001-tech-stack.md) · [Modello dati](docs/architecture/data-model.md) · [Sicurezza](docs/architecture/security.md)
 - [Design system](docs/ux/design-system.md) · [User flow](docs/ux/user-flows.md)
+- [Lingue e paesi](docs/product/localization.md)
 - [Strategia di test](docs/testing/test-strategy.md) · [Piano di test](docs/testing/test-plan.md)
 
 ## Se hai bisogno di aiuto adesso
