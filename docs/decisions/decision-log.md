@@ -106,12 +106,19 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Richiede:** decisione dell'owner.
 - **Date:** 2026-10-02
 
-### D-013 ⏳ Modello di business
+### D-013 ✅ Modello di business: gratuita, senza pubblicità, sostenuta da donazioni ed enti
 
-- **Context:** non deducibile dal brief.
-- **Vincolo già deciso:** SOS, Help Center, storico e cancellazione dati restano sempre gratuiti; nessuna pubblicità comportamentale.
-- **Richiede:** decisione dell'owner prima della Beta.
-- **Date:** 2026-10-02
+- **Context:** l'app si rivolge a persone vulnerabili, spesso con problemi economici; il nome "Free" crea l'aspettativa di gratuità; nessun abbonamento premium previsto.
+- **Alternatives:** prezzo d'acquisto (barriera proprio per chi ha bisogno, stona con il nome); pubblicità (le reti pubblicitarie raccolgono identificativi e dati d'uso, rendendo falsa la dichiarazione "nessun dato raccolto", e scelgono da sole gli annunci, con il rischio di mostrare scommesse e casinò a chi cerca di smettere); abbonamento premium (spingerebbe a mettere a pagamento funzioni utili al percorso).
+- **Chosen:** decisione dell'owner (2026-11-08):
+  1. app gratuita e completa per chi la usa, per sempre; nessuna funzione utile al percorso a pagamento;
+  2. **nessuna pubblicità**, in nessuna forma (banner, overlay, video);
+  3. donazioni facoltative nell'app ("Sostieni Free"), senza vantaggi in cambio, tramite il sistema di pagamento degli store: **dopo la Beta**; regole degli store da verificare prima dello sviluppo;
+  4. sostegno da enti e progetti a impatto sociale (associazioni, Ser.D., fondazioni, welfare aziendale, fondi pubblici per la prevenzione), che non ricevono mai dati degli utenti;
+  5. eventuale acquisto "sostenitore" con extra solo estetici, da valutare in futuro.
+- **Reason:** coerenza con i principi (privacy, nessun giudizio, accessibilità) e con il nome; costi vivi bassi (account sviluppatore degli store, nessun server).
+- **Trade-offs:** ricavi incerti e probabilmente limitati; il sostegno da enti richiede tempo e relazioni. La scelta della licenza (D-012, #7) può aiutare: un codice verificabile rende più credibile la promessa "nessun dato raccolto".
+- **Date:** 2026-10-02 · decisa 2026-11-08
 
 ### D-028 ✅ Build Android con EAS per prima
 
