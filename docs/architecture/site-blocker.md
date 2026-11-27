@@ -20,11 +20,11 @@ dell'utente, dentro Free, come **unica funzione a pagamento**. Il resto dell'app
 
 ## Piattaforme
 
-| Piattaforma  | Tecnica                                                                  | Copertura                                | Vincoli esterni                                                                                    |
-| ------------ | ------------------------------------------------------------------------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Android      | `VpnService` **locale**: risponde alle richieste DNS dei domini in lista | Tutto il telefono (browser e app)        | Dichiarazione VpnService in Play Console; build nativa (non Expo Go); l'utente può spegnere la VPN |
-| iOS (fase 1) | **Safari Content Blocker** (estensione)                                  | Solo Safari                              | Nessun permesso speciale; l'utente la attiva in Impostazioni → Safari → Estensioni                 |
-| iOS (dopo)   | Tempo di utilizzo (`FamilyControls`, `ManagedSettings`)                  | App e siti, ma limite di circa 50 domini | Permesso di distribuzione concesso da Apple su richiesta (attese di settimane, esito incerto)      |
+| Piattaforma          | Tecnica                                                                  | Copertura                                | Vincoli esterni                                                                                    |
+| -------------------- | ------------------------------------------------------------------------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Android              | `VpnService` **locale**: risponde alle richieste DNS dei domini in lista | Tutto il telefono (browser e app)        | Dichiarazione VpnService in Play Console; build nativa (non Expo Go); l'utente può spegnere la VPN |
+| iOS (fase 1, decisa) | **Safari Content Blocker** (estensione)                                  | Solo Safari                              | Nessun permesso speciale; l'utente la attiva in Impostazioni → Safari → Estensioni                 |
+| iOS (dopo)           | Tempo di utilizzo (`FamilyControls`, `ManagedSettings`)                  | App e siti, ma limite di circa 50 domini | Permesso di distribuzione concesso da Apple su richiesta (attese di settimane, esito incerto)      |
 
 Android per primo, coerente con D-028.
 

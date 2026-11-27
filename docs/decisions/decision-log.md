@@ -124,7 +124,7 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 
 - **Context:** l'owner vuole un blocco dei siti di gioco dentro Free, ispirato a BetBlocker, come unica funzione a pagamento (2026-11-27).
 - **Alternatives:** segnalare gratuitamente BetBlocker (gratuito, ente benefico) nell'Aiuto; un blocco nostro ma gratuito; nessun blocco.
-- **Chosen:** decisione dell'owner, dopo aver valutato le alternative: blocco nostro e a pagamento. **Modifica la D-013, punto 1**, solo per questa funzione; tutto il resto resta gratuito e senza pubblicità. Progetto in `docs/architecture/site-blocker.md`: Android con VPN locale per primo, iOS inizialmente solo Safari.
+- **Chosen:** decisione dell'owner, dopo aver valutato le alternative: blocco nostro e a pagamento. **Modifica la D-013, punto 1**, solo per questa funzione; tutto il resto resta gratuito e senza pubblicità. Progetto in `docs/architecture/site-blocker.md`: Android con VPN locale per primo, iOS inizialmente solo Safari (confermato dall'owner), **acquisto unico** (confermato dall'owner; prezzo da decidere).
 - **Reason:** scelta dell'owner per sostenere l'app.
 - **Trade-offs e rischi (segnalati prima della decisione):** è una protezione a pagamento per persone vulnerabili, anche economicamente (mitigazione: alternative gratuite sempre visibili, prezzo basso, nessuna pressione all'acquisto); mesi di lavoro nativo; vincoli degli store (dichiarazione VpnService, permessi Apple); commissioni degli store e adempimenti fiscali; nessun blocco è completo.
 - **Date:** 2026-11-27
