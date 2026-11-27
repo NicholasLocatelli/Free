@@ -1,4 +1,5 @@
 import { MS_PER_HOUR, type Instant, type Journey } from "@free/core";
+import { t } from "../../i18n";
 
 /**
  * Local reminders (issue #12). Pure planning: which notifications should exist right now.
@@ -32,18 +33,13 @@ export const MAX_MILESTONE_NOTIFICATIONS = 20;
 export const CHECK_IN_DAYS = 30;
 
 /** Rotated daily (owner's request, ONB-15). Neutral: the lock screen may show them. */
-export const CHECK_IN_TITLES = [
-  "Come va oggi?",
-  "Prenditi il tuo tempo.",
-  "Un momento per te?",
-  "Un passo alla volta.",
-  "Respira con calma.",
-] as const;
-
-export const NEUTRAL_COPY = {
-  checkIn: { body: "Apri l'app quando vuoi." },
-  milestone: { title: "Hai un nuovo traguardo.", body: "Apri l'app per vederlo." },
-} as const;
+export const checkInTitles = (): string[] => [
+  t("notification.checkIn.1"),
+  t("notification.checkIn.2"),
+  t("notification.checkIn.3"),
+  t("notification.checkIn.4"),
+  t("notification.checkIn.5"),
+];
 
 export interface PlannedNotification {
   kind: "check-in" | "milestone";
@@ -83,7 +79,8 @@ export function planReminders(
           kind: "milestone",
           id: `milestone-${open.id}-${m.hours}`,
           at: m.at,
-          ...NEUTRAL_COPY.milestone,
+          title: t("notification.milestone.title"),
+          body: t("notification.milestone.body"),
         });
       });
   }
@@ -104,7 +101,7 @@ function planCheckIns(time: { hour: number; minute: number }, now: Instant): Pla
       id: `check-in-${key}`,
       at: day.getTime(),
       title: checkInTitle(key),
-      body: NEUTRAL_COPY.checkIn.body,
+      body: t("notification.checkIn.body"),
     };
   });
 }
@@ -117,16 +114,17 @@ const localDateKey = (d: Date) =>
  * never changes a day's message, and two consecutive days never repeat the same one.
  */
 export function checkInTitle(dateKey: string): string {
+  const titles = checkInTitles();
   const index = (key: string) => {
     let hash = 0;
     for (const char of key) hash = (Math.imul(hash, 31) + char.charCodeAt(0)) >>> 0;
-    return hash % CHECK_IN_TITLES.length;
+    return hash % titles.length;
   };
   const date = new Date(`${dateKey}T12:00:00`);
   date.setDate(date.getDate() - 1);
   const today = index(dateKey);
-  const chosen = today === index(localDateKey(date)) ? (today + 1) % CHECK_IN_TITLES.length : today;
-  return CHECK_IN_TITLES[chosen] ?? CHECK_IN_TITLES[0];
+  const chosen = today === index(localDateKey(date)) ? (today + 1) % titles.length : today;
+  return titles[chosen] ?? "";
 }
 
 export function serializePrefs(prefs: ReminderPrefs): string {

@@ -1,4 +1,4 @@
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
 import { AppText, Button, Screen } from "../../ui";
 import { RemindersForm } from "../reminders/RemindersForm";
 

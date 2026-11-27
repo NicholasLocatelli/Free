@@ -1,7 +1,7 @@
 import { currentPeriodView, journeyStats, type Instant, type Journey } from "@free/core";
 import { StyleSheet, View } from "react-native";
 import { formatDayTime, formatDuration, formatGoal, formatMoney } from "../../i18n/format";
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
 import { AppText, Button, ProgressRing, Screen, spacing, Stat, Timer } from "../../ui";
 
 export interface TodayActions {

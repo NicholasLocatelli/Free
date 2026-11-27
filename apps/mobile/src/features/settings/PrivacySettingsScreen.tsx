@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatDay } from "../../i18n/format";
-import { t, type MessageKey } from "../../i18n/it";
+import { count, t, type MessageKey } from "../../i18n";
 import type { BackupFiles } from "../../platform/backupFiles";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import { useSettings } from "../../state/SettingsProvider";
@@ -21,6 +21,7 @@ import {
   serializeBackup,
   type BackupContent,
 } from "../backup/backupFormat";
+import { useLocale } from "../locale/LocaleProvider";
 import { useAppLock } from "../lock/AppLockProvider";
 import { useReminders } from "../reminders/RemindersProvider";
 import { THEME_SETTINGS_KEY } from "./SettingsScreen";
@@ -52,6 +53,7 @@ export function PrivacySettingsScreen({
   const lock = useAppLock();
   const reminders = useReminders();
   const { setPreference } = useThemeContext();
+  const locale = useLocale();
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [pending, setPending] = useState<BackupContent | null>(null);
   const [confirmText, setConfirmText] = useState("");
@@ -109,6 +111,7 @@ export function PrivacySettingsScreen({
     const theme = pending.settings[THEME_SETTINGS_KEY];
     if (isTheme(theme)) setPreference(theme);
     await reminders.reload();
+    await locale.reload();
     setPending(null);
     setFeedback({ key: "backup.imported", error: false });
   };
@@ -122,6 +125,7 @@ export function PrivacySettingsScreen({
     await reminders.reset();
     await lock.reset();
     setPreference("system");
+    locale.reset();
     onDeleted();
   };
 
@@ -155,8 +159,8 @@ export function PrivacySettingsScreen({
           <>
             <AppText accessibilityLiveRegion="polite">
               {t("backup.importConfirm", {
-                periods: pending.journey.periods.length,
-                urges: pending.journey.urges.length,
+                periods: count("period", pending.journey.periods.length),
+                urges: count("urge", pending.journey.urges.length),
                 start: formatDay(first.startedAt),
               })}
             </AppText>

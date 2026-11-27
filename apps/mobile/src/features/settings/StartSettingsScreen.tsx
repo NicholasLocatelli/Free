@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatDayTime } from "../../i18n/format";
-import { t, type MessageKey } from "../../i18n/it";
+import { t, type MessageKey } from "../../i18n";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import { AppText, Button, Screen, TextField } from "../../ui";
 import { currentTimeText, parseMoment, type MomentInput } from "../shared/formInputs";

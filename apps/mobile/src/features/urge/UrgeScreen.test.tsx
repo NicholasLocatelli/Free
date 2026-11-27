@@ -31,7 +31,9 @@ describe("UrgeScreen", () => {
     await press("Salva");
 
     expect(
-      await screen.findByRole("header", { name: "Hai superato un impulso. Sono 1 finora." }),
+      await screen.findByRole("header", {
+        name: "Hai superato un impulso. Impulsi superati finora: 1.",
+      }),
     ).toBeOnTheScreen();
     expect(store.getState().journey?.urges[0]).toMatchObject({
       intensity: 8,
@@ -86,7 +88,9 @@ describe("UrgeScreen", () => {
     const { store } = await setup();
     await choose("radio", "5");
     await press("Salva");
-    await screen.findByRole("header", { name: "Hai superato un impulso. Sono 1 finora." });
+    await screen.findByRole("header", {
+      name: "Hai superato un impulso. Impulsi superati finora: 1.",
+    });
     const saved = store.getState().journey?.urges[0];
     if (!saved) throw new Error("urge not saved");
     expect(

@@ -9,7 +9,7 @@ import {
 } from "@free/core";
 import { StyleSheet, View } from "react-native";
 import { formatDay, formatDuration, formatGoal, formatMoney } from "../../i18n/format";
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
 import { tagLabel } from "../../i18n/tags";
 import { AppText, Button, Card, Screen, spacing, Stat } from "../../ui";
 

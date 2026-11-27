@@ -1,5 +1,6 @@
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
+import { t } from "../i18n";
 import type { PlannedNotification } from "../features/reminders/reminderPlan";
 
 export type PermissionState = "granted" | "denied" | "undetermined";
@@ -24,7 +25,7 @@ const toState = (status: Notifications.PermissionStatus): PermissionState =>
 async function ensureAndroidChannel() {
   if (Platform.OS !== "android") return;
   await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
-    name: "Promemoria",
+    name: t("notification.channel"),
     importance: Notifications.AndroidImportance.DEFAULT,
     // Content stays hidden on a secure lock screen until the device is unlocked.
     lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,

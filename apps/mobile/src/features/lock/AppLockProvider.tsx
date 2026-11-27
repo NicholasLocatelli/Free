@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { AppState, StyleSheet, View } from "react-native";
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
 import type { DeviceAuth } from "../../platform/deviceAuth";
 import { useSettings } from "../../state/SettingsProvider";
 import { AppText, Button, Screen } from "../../ui";

@@ -1,6 +1,6 @@
 import type { FrequencyUnit } from "@free/core";
 import { useState } from "react";
-import { t, type MessageKey } from "../../i18n/it";
+import { t, type MessageKey } from "../../i18n";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import { AppText, Button, Chip, ChoiceGroup, Screen, TextField, Toggle } from "../../ui";
 import { moneyInputFromSettings, parseMoneyInput, type MoneyInput } from "../shared/formInputs";

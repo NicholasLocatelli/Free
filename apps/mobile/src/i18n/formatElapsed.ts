@@ -1,6 +1,5 @@
 import type { DurationParts } from "@free/core";
-
-import { plural } from "./format";
+import { count, t } from "./index";
 
 export interface ElapsedText {
   /** Hero value, e.g. "12 giorni". */
@@ -12,7 +11,10 @@ export interface ElapsedText {
 }
 
 export function formatElapsed({ days, hours, minutes }: DurationParts): ElapsedText {
-  const headline = plural(days, "giorno", "giorni");
-  const detail = `${plural(hours, "ora", "ore")} e ${plural(minutes, "minuto", "minuti")}`;
+  const headline = count("day", days);
+  const detail = t("elapsed.detail", {
+    hours: count("hour", hours),
+    minutes: count("minute", minutes),
+  });
   return { headline, detail, accessibilityLabel: `${headline}, ${detail}` };
 }

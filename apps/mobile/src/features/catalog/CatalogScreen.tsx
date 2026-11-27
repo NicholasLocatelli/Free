@@ -1,7 +1,7 @@
 import { DEFAULT_MILESTONE_HOURS, MS_PER_HOUR } from "@free/core";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
 import {
   AppText,
   Button,

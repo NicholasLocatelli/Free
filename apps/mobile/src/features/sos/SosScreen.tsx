@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Linking, StyleSheet, View } from "react-native";
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
+import { spellDigits } from "../../i18n/format";
 import { AppText, Button, Screen, spacing } from "../../ui";
 
 export const BREATHING_SECONDS = 60;
@@ -9,8 +10,13 @@ const BREATH_PHASE_SECONDS = 4;
 const TICK_MS = 1_000;
 const SECONDS_PER_MINUTE = 60;
 
-/** Verified 2026-10-02, see docs/product/help-center.md (TVNGA, Istituto Superiore di Sanità). */
-export const TVNGA_PHONE = "800558822";
+/** The country's helpline, in the user's language; null when none is verified there. */
+export interface SosHelpline {
+  /** E.g. "il Telefono Verde". */
+  name: string;
+  phone: string;
+  hours?: string;
+}
 
 type Mode = "menu" | "breathe" | "wait";
 
@@ -18,6 +24,7 @@ interface SosScreenProps {
   onRecord: () => void;
   onHelp: () => void;
   onClose: () => void;
+  helpline: SosHelpline | null;
   openUrl?: (url: string) => Promise<unknown>;
   now?: () => number;
 }
@@ -92,6 +99,7 @@ export function SosScreen({
   onRecord,
   onHelp,
   onClose,
+  helpline,
   openUrl = defaultOpenUrl,
   now = Date.now,
 }: SosScreenProps) {
@@ -133,24 +141,31 @@ export function SosScreen({
             setMode("wait");
           }}
         />
-        <Button
-          label={t("sos.call")}
-          variant="secondary"
-          onPress={async () => {
-            try {
-              await openUrl(`tel:${TVNGA_PHONE}`);
-            } catch {
-              setCallFailed(true);
-            }
-          }}
-        />
-        <AppText variant="caption" color="muted">
-          {t("sos.callHours")}
-        </AppText>
-        {callFailed && (
-          <AppText color="warning" accessibilityRole="alert" selectable>
-            {t("resource.openFailed", { phone: "800 558822" })}
-          </AppText>
+        {helpline && (
+          <>
+            <Button
+              label={t("sos.call", { name: helpline.name, phone: helpline.phone })}
+              accessibilityHint={spellDigits(helpline.phone)}
+              variant="secondary"
+              onPress={async () => {
+                try {
+                  await openUrl(`tel:${helpline.phone.replace(/\s/g, "")}`);
+                } catch {
+                  setCallFailed(true);
+                }
+              }}
+            />
+            {helpline.hours !== undefined && (
+              <AppText variant="caption" color="muted">
+                {helpline.hours}
+              </AppText>
+            )}
+            {callFailed && (
+              <AppText color="warning" accessibilityRole="alert" selectable>
+                {t("resource.openFailed", { phone: helpline.phone })}
+              </AppText>
+            )}
+          </>
         )}
       </View>
       <Button label={t("sos.record")} onPress={onRecord} />

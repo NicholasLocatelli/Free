@@ -4,6 +4,7 @@ import { createJourneyStore } from "../state/journeyStore";
 import { JourneyStoreProvider } from "../state/JourneyStoreProvider";
 import { SettingsProvider } from "../state/SettingsProvider";
 import { RemindersProvider } from "../features/reminders/RemindersProvider";
+import { LocaleProvider, type DeviceLocale } from "../features/locale/LocaleProvider";
 import type { ReminderScheduler } from "../platform/notifications";
 import { createFakeScheduler } from "./fakeScheduler";
 import { AppLockProvider } from "../features/lock/AppLockProvider";
@@ -21,7 +22,11 @@ interface Options {
   load?: boolean;
   scheduler?: ReminderScheduler;
   auth?: DeviceAuth;
+  /** Defaults to an Italian phone in Italy. */
+  device?: DeviceLocale;
 }
+
+export const ITALIAN_PHONE: DeviceLocale = { languages: ["it"], region: "IT" };
 
 /** Renders `ui` with the real store and theme, backed by in-memory repositories. */
 export async function renderApp(ui: ReactElement, options: Options = {}) {
@@ -36,12 +41,16 @@ export async function renderApp(ui: ReactElement, options: Options = {}) {
   await renderWithTheme(
     <JourneyStoreProvider store={store}>
       <SettingsProvider settings={settings}>
-        <RemindersProvider
-          scheduler={options.scheduler ?? createFakeScheduler().scheduler}
-          now={options.now ?? Date.now}
-        >
-          <AppLockProvider auth={options.auth ?? createFakeDeviceAuth().auth}>{ui}</AppLockProvider>
-        </RemindersProvider>
+        <LocaleProvider device={() => options.device ?? ITALIAN_PHONE}>
+          <RemindersProvider
+            scheduler={options.scheduler ?? createFakeScheduler().scheduler}
+            now={options.now ?? Date.now}
+          >
+            <AppLockProvider auth={options.auth ?? createFakeDeviceAuth().auth}>
+              {ui}
+            </AppLockProvider>
+          </RemindersProvider>
+        </LocaleProvider>
       </SettingsProvider>
     </JourneyStoreProvider>,
   );

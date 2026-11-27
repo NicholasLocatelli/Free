@@ -1,5 +1,6 @@
 /**
- * Italian copy. Tone rules: docs/ux/design-system.md §2 (no blame, no clinical promises,
+ * Italian copy: the source catalog. Every other language must provide the same keys
+ * (checked by the type of each catalog). Tone rules: docs/ux/design-system.md §2 (no blame, no clinical promises,
  * estimates labelled as estimates). Placeholders use {name}.
  */
 export const messages = {
@@ -17,7 +18,7 @@ export const messages = {
   "today.clockSkew":
     "L'ora del dispositivo sembra cambiata. Il conteggio riprenderà automaticamente.",
   "sos.title": "Questo momento passerà. Proviamo insieme.",
-  "urge.resisted": "Hai superato un impulso. Sono {n} finora.",
+  "urge.resisted": "Hai superato un impulso. Impulsi superati finora: {n}.",
   "relapse.title": "Il percorso continua.",
   "milestone.reachedMessage": "Hai raggiunto {goal}. Prenditi un momento per riconoscerlo.",
   "milestone.reachedOn": "Raggiunto il {date}",
@@ -77,8 +78,7 @@ export const messages = {
   "today.urgesResisted": "Impulsi superati",
   "sos.breathe": "Respira per un minuto",
   "sos.wait": "Aspetta 15 minuti",
-  "sos.call": "Chiama il Telefono Verde 800 558822",
-  "sos.callHours": "Gratuito e anonimo, lunedì–venerdì 10–16",
+  "sos.call": "Chiama {name} {phone}",
   "sos.record": "Registra l'impulso",
   "sos.breatheIn": "Inspira lentamente",
   "sos.breatheOut": "Espira lentamente",
@@ -108,7 +108,7 @@ export const messages = {
   "relapse.reflectBody": "È facoltativo. Può aiutarti a riconoscere i momenti difficili.",
   "relapse.save": "Salva",
   "relapse.doneBody":
-    "Hai registrato una ricaduta. I tuoi {duration} precedenti restano nel tuo storico.",
+    "Hai registrato una ricaduta. Il periodo precedente ({duration}) resta nel tuo storico.",
   "relapse.supportTitle": "Parlarne può aiutare",
   "relapse.backToToday": "Torna a Oggi",
   "relapse.before_period_start": "Questo orario è precedente all'inizio del periodo in corso.",
@@ -147,7 +147,7 @@ export const messages = {
   "backup.unavailable": "La condivisione di file non è disponibile su questo dispositivo.",
   "backup.import": "Importa da un file",
   "backup.importConfirm":
-    "Il file contiene {periods} periodi e {urges} impulsi, a partire dal {start}. Importandolo sostituirai i dati attuali.",
+    "Il file contiene {periods} e {urges}, a partire dal {start}. Importandolo sostituirai i dati attuali.",
   "backup.importReplace": "Sostituisci i dati attuali",
   "backup.imported": "Dati importati.",
   "backup.error.too_large": "Il file è troppo grande per essere un backup dell'app.",
@@ -184,13 +184,53 @@ export const messages = {
   "theme.system": "Sistema",
   "theme.light": "Chiaro",
   "theme.dark": "Scuro",
+  "common.loading": "Caricamento",
+  "unit.day.one": "{n} giorno",
+  "unit.day.other": "{n} giorni",
+  "unit.hour.one": "{n} ora",
+  "unit.hour.other": "{n} ore",
+  "unit.minute.one": "{n} minuto",
+  "unit.minute.other": "{n} minuti",
+  "unit.period.one": "{n} periodo",
+  "unit.period.other": "{n} periodi",
+  "unit.urge.one": "{n} impulso",
+  "unit.urge.other": "{n} impulsi",
+  "elapsed.detail": "{hours} e {minutes}",
+  "tag.boredom": "Noia",
+  "tag.stress": "Stress",
+  "tag.loneliness": "Solitudine",
+  "tag.money_available": "Soldi disponibili",
+  "tag.sports_event": "Evento sportivo",
+  "tag.advertising": "Pubblicità",
+  "tag.alcohol": "Alcol",
+  "tag.conflict": "Conflitto",
+  "tag.celebration": "Festeggiamento",
+  "tag.breathing": "Respirare",
+  "tag.waited_it_out": "Aspettare",
+  "tag.called_someone": "Chiamare qualcuno",
+  "tag.went_outside": "Uscire",
+  "tag.physical_activity": "Attività fisica",
+  "tag.distraction": "Distrarmi",
+  "tag.used_blocker": "Usare un blocco dei siti",
+  "tag.other": "Altro",
+  "notification.channel": "Promemoria",
+  "notification.checkIn.1": "Come va oggi?",
+  "notification.checkIn.2": "Prenditi il tuo tempo.",
+  "notification.checkIn.3": "Un momento per te?",
+  "notification.checkIn.4": "Un passo alla volta.",
+  "notification.checkIn.5": "Respira con calma.",
+  "notification.checkIn.body": "Apri l'app quando vuoi.",
+  "notification.milestone.title": "Hai un nuovo traguardo.",
+  "notification.milestone.body": "Apri l'app per vederlo.",
+  "settings.language": "Lingua",
+  "settings.languageSystem": "Come il telefono",
+  "settings.country": "Paese per le risorse di aiuto",
+  "settings.countryAuto": "Automatico",
+  "settings.countryOther": "Altro paese",
+  "country.IT": "Italia",
+  "help.noCountry.title": "Nessuna risorsa verificata per il tuo paese",
+  "help.noCountry.body":
+    "Per ora l'app ha numeri e servizi verificati solo per alcuni paesi. Se sei in pericolo, chiama il numero di emergenza del paese in cui ti trovi. Puoi scegliere il paese in Impostazioni.",
 } as const;
 
 export type MessageKey = keyof typeof messages;
-
-export function t(key: MessageKey, vars: Readonly<Record<string, string | number>> = {}): string {
-  return messages[key].replace(/\{(\w+)\}/g, (match, name: string) => {
-    const value = vars[name];
-    return value === undefined ? match : String(value);
-  });
-}

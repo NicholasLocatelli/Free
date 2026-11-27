@@ -1,7 +1,7 @@
 import type { Instant } from "@free/core";
 import { StyleSheet, View } from "react-native";
 import { formatDay, formatGoal } from "../../i18n/format";
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
 import { useTheme } from "../theme/ThemeProvider";
 import { radius, spacing } from "../theme/tokens";
 import { AppText } from "./AppText";

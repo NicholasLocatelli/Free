@@ -1,5 +1,6 @@
 import { err, ok, parseJourney, type Instant, type Journey, type Result } from "@free/core";
 import { THEME_SETTINGS_KEY } from "../settings/SettingsScreen";
+import { COUNTRY_SETTINGS_KEY, LANGUAGE_SETTINGS_KEY } from "../locale/LocaleProvider";
 import { REMINDER_SETTINGS_KEY } from "../reminders/reminderPlan";
 
 /**
@@ -13,7 +14,12 @@ import { REMINDER_SETTINGS_KEY } from "../reminders/reminderPlan";
 export const BACKUP_FORMAT = "approdo-backup";
 export const BACKUP_VERSION = 1;
 /** Preferences that travel with the data; onboarding drafts and lock state do not. */
-export const PORTABLE_SETTINGS = [THEME_SETTINGS_KEY, REMINDER_SETTINGS_KEY] as const;
+export const PORTABLE_SETTINGS = [
+  THEME_SETTINGS_KEY,
+  REMINDER_SETTINGS_KEY,
+  LANGUAGE_SETTINGS_KEY,
+  COUNTRY_SETTINGS_KEY,
+] as const;
 /** Generous upper bound (years of daily use is well under 1 MB). */
 export const MAX_BACKUP_BYTES = 5 * 1024 * 1024;
 

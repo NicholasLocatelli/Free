@@ -2,7 +2,7 @@ import type { Instant } from "@free/core";
 import { useState } from "react";
 import { Linking } from "react-native";
 import { formatDay, spellDigits } from "../../i18n/format";
-import { t } from "../../i18n/it";
+import { t } from "../../i18n";
 import { AppText } from "./AppText";
 import { Button } from "./Button";
 import { Card } from "./Card";

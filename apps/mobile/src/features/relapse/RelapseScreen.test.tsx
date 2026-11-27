@@ -3,6 +3,7 @@ import { fireEvent, screen } from "@testing-library/react-native";
 import { messages } from "../../i18n/it";
 import { newJourney, T0 } from "../../test/fixtures";
 import { createMemoryRepository } from "../../test/memoryRepository";
+import type { DeviceLocale } from "../locale/LocaleProvider";
 import { renderApp } from "../../test/renderApp";
 import { RelapseScreen } from "./RelapseScreen";
 
@@ -10,7 +11,7 @@ import { RelapseScreen } from "./RelapseScreen";
 const NOW = T0 + 10 * MS_PER_DAY;
 const now = () => NOW;
 
-async function setup() {
+async function setup(device?: DeviceLocale) {
   const onDone = jest.fn();
   const onCancel = jest.fn();
   const onHelp = jest.fn();
@@ -19,6 +20,7 @@ async function setup() {
     {
       repository: createMemoryRepository(newJourney()),
       now,
+      ...(device ? { device } : {}),
     },
   );
   return { ...app, onDone, onCancel, onHelp };
@@ -42,7 +44,7 @@ describe("RelapseScreen", () => {
     expect(await screen.findByRole("header", { name: "Il percorso continua." })).toBeOnTheScreen();
     expect(
       screen.getByText(
-        "Hai registrato una ricaduta. I tuoi 10 giorni precedenti restano nel tuo storico.",
+        "Hai registrato una ricaduta. Il periodo precedente (10 giorni) resta nel tuo storico.",
       ),
     ).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "Chiama 800 558822" })).toBeOnTheScreen();
@@ -59,6 +61,16 @@ describe("RelapseScreen", () => {
     expect(onHelp).toHaveBeenCalled();
     await press("Torna a Oggi");
     expect(onDone).toHaveBeenCalled();
+  });
+
+  it("offers no helpline where none is verified, but keeps the way to Help", async () => {
+    await setup({ languages: ["it"], region: "DE" });
+    await press("Continua");
+    await press("Salva");
+    expect(await screen.findByRole("header", { name: "Il percorso continua." })).toBeOnTheScreen();
+    expect(screen.queryByText("Parlarne può aiutare")).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Chiama/ })).toBeNull();
+    expect(screen.getByRole("button", { name: "Altre risorse di aiuto" })).toBeOnTheScreen();
   });
 
   it("records an earlier time and rejects one before the period started (REL-5)", async () => {

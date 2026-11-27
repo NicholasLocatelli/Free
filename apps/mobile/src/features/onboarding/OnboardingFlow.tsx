@@ -2,7 +2,7 @@ import type { FrequencyUnit } from "@free/core";
 import { useState, type ReactNode } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { formatDayTime, formatGoal } from "../../i18n/format";
-import { t, type MessageKey } from "../../i18n/it";
+import { t, type MessageKey } from "../../i18n";
 import { useJourneyStore } from "../../state/JourneyStoreProvider";
 import { AppText, Button, Chip, Screen, spacing, TextField, Toggle, useTheme } from "../../ui";
 import {
@@ -38,7 +38,7 @@ export function OnboardingFlow({ now = Date.now }: OnboardingFlowProps) {
   if (!progress) {
     return (
       <Screen centered>
-        <ActivityIndicator color={colors.primary} accessibilityLabel="Caricamento" />
+        <ActivityIndicator color={colors.primary} accessibilityLabel={t("common.loading")} />
       </Screen>
     );
   }

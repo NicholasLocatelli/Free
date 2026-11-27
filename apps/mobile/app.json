@@ -25,8 +25,11 @@
       "expo-router",
       [
         "expo-local-authentication",
-        { "faceIDPermission": "Free usa Face ID per sbloccare l'app, se attivi il blocco." }
-      ]
+        {
+          "faceIDPermission": "Free usa Face ID per sbloccare l'app, se attivi il blocco."
+        }
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
