@@ -49,7 +49,7 @@ Android per primo, coerente con D-028.
 - Acquisto nell'app tramite gli store (Google Play Billing, StoreKit), **senza servizi di terzi
   che ricevono dati** (es. niente RevenueCat). Verifica dell'acquisto sul telefono, perché Free
   non ha server.
-- Modello e prezzo: da decidere (acquisto unico consigliato rispetto all'abbonamento).
+- **Acquisto unico** (decisione dell'owner, 2026-11-27): si paga una volta e resta per sempre. Prezzo da decidere.
 - "Ripristina acquisti" obbligatorio.
 - Prerequisiti fuori dal codice: account Google Play e Apple attivi, profilo fiscale e bancario
   negli store, **parere di un commercialista** sugli obblighi fiscali prima di attivare i pagamenti.
