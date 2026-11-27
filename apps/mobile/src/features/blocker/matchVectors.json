@@ -1,0 +1,20 @@
+{
+  "listed": ["bet.example", "casino.example.co.uk", "sisal.it"],
+  "cases": [
+    { "host": "bet.example", "blocked": true },
+    { "host": "BET.EXAMPLE.", "blocked": true },
+    { "host": "www.bet.example", "blocked": true },
+    { "host": "a.b.bet.example:443", "blocked": true },
+    { "host": "notbet.example", "blocked": false },
+    { "host": "bet.example.org", "blocked": false },
+    { "host": "casino.example.co.uk", "blocked": true },
+    { "host": "example.co.uk", "blocked": false },
+    { "host": "co.uk", "blocked": false },
+    { "host": "www.sisal.it", "blocked": true },
+    { "host": "usciredalgioco.iss.it", "blocked": false },
+    { "host": "192.168.1.1", "blocked": false },
+    { "host": "[2001:db8::1]", "blocked": false },
+    { "host": "", "blocked": false },
+    { "host": "bad..bet.example", "blocked": false }
+  ]
+}

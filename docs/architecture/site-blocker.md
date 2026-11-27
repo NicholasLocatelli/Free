@@ -1,6 +1,6 @@
 # Blocco dei siti di gioco (funzione a pagamento)
 
-_Progetto del 2026-11-27, decisione D-030. Stato: progettazione._
+_Progetto del 2026-11-27, decisione D-030. Stato: fase 1 in corso (lista, corrispondenza dei domini, stato)._
 
 ## Obiettivo
 
@@ -36,6 +36,22 @@ Android per primo, coerente con D-028.
 - Lista inclusa nell'app (funziona offline, nessuna richiesta di rete) e aggiornata a ogni
   versione dell'app. Nessun download dinamico nella prima versione (D-004).
 - Script di costruzione nel repository, con fonti, licenze e data registrate.
+
+### Stato della lista (2026-11-27)
+
+- Costruita con `pnpm blocklist` (`tools/blocklist/`): fonti e licenze in `sources.json`,
+  domini mai bloccabili in `allowlist.txt`, risultato in `apps/mobile/blocklist/`
+  (`gambling.txt.gz`, `manifest.json` con data, conteggi e hash).
+- Fonti attuali: The Block List Project, elenco "gambling" (Unlicense, pubblico dominio) e
+  StevenBlack/hosts "gambling-only" (MIT). Circa 343.000 domini, 1,4 MB compressi; include i
+  principali operatori con concessione in Italia.
+- L'allowlist ha già evitato un errore: la fonte pubblica conteneva `gamblersanonymous.org`.
+- Elenco ADM dei siti inibiti: da aggiungere (il sito ADM non è raggiungibile dalla sessione
+  di sviluppo).
+- Regole di corrispondenza in `features/blocker/domainMatch.ts`: un host è bloccato se lui o un
+  dominio padre è in lista. I casi condivisi con i filtri nativi sono in `matchVectors.json`.
+- Safari accetta un numero limitato di regole per estensione: per iOS (fase 4) servirà una
+  selezione della lista.
 
 ## Impegno
 
