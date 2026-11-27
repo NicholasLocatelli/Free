@@ -1,0 +1,16 @@
+[
+  {
+    "id": "blocklistproject-gambling",
+    "name": "The Block List Project — gambling",
+    "url": "https://raw.githubusercontent.com/blocklistproject/Lists/master/gambling.txt",
+    "licence": "Unlicense (public domain)",
+    "licenceUrl": "https://raw.githubusercontent.com/blocklistproject/Lists/master/LICENSE"
+  },
+  {
+    "id": "stevenblack-gambling",
+    "name": "StevenBlack/hosts — gambling-only",
+    "url": "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling-only/hosts",
+    "licence": "MIT",
+    "licenceUrl": "https://raw.githubusercontent.com/StevenBlack/hosts/master/license.txt"
+  }
+]

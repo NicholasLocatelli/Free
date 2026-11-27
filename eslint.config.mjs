@@ -79,4 +79,11 @@ export default tseslint.config(
       globals: { module: "writable", process: "readonly" },
     },
   },
+  {
+    // Node scripts in tools/ (e.g. the blocklist build).
+    files: ["tools/**/*.mjs"],
+    languageOptions: {
+      globals: { console: "readonly", fetch: "readonly", process: "readonly" },
+    },
+  },
 );

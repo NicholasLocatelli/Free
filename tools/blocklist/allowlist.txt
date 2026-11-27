@@ -1,0 +1,37 @@
+# Domains that must never be blocked: sources of help, regulators, self-exclusion services,
+# blockers and common services. The build fails if a source lists one of them or a parent.
+# One domain per line; subdomains are covered.
+
+# Help and regulators (Italy, help-center.md)
+iss.it
+usciredalgioco.iss.it
+giocatorianonimi.org
+telefonoamico.it
+adm.gov.it
+gov.it
+
+# Help, self-exclusion and blockers elsewhere
+betblocker.org
+gamblingtherapy.org
+gordonmoody.org.uk
+gamcare.org.uk
+begambleaware.org
+gambleaware.org
+gamstop.co.uk
+gamban.com
+gamblersanonymous.org
+gamblersanonymous.org.uk
+joueurs-info-service.fr
+anj.fr
+
+# Common services
+google.com
+youtube.com
+apple.com
+microsoft.com
+wikipedia.org
+github.com
+expo.dev
+paypal.com
+amazon.com
+amazon.it

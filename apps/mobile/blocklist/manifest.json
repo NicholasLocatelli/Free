@@ -1,0 +1,28 @@
+{
+  "builtAt": "2026-11-27T21:10:52.082Z",
+  "domains": 343200,
+  "sha256": "c22b28fafaec8c02b231f809a1ee41a213984bf1ac51640492fead80876d3214",
+  "removedByAllowlist": [
+    "gamblersanonymous.org"
+  ],
+  "sources": [
+    {
+      "id": "blocklistproject-gambling",
+      "name": "The Block List Project — gambling",
+      "url": "https://raw.githubusercontent.com/blocklistproject/Lists/master/gambling.txt",
+      "licence": "Unlicense (public domain)",
+      "licenceUrl": "https://raw.githubusercontent.com/blocklistproject/Lists/master/LICENSE",
+      "sha256": "d583202e86eb80f8cb6311e65d10f36e472d921d7cac5ff18e98d7dd0b9cf439",
+      "domains": 342623
+    },
+    {
+      "id": "stevenblack-gambling",
+      "name": "StevenBlack/hosts — gambling-only",
+      "url": "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling-only/hosts",
+      "licence": "MIT",
+      "licenceUrl": "https://raw.githubusercontent.com/StevenBlack/hosts/master/license.txt",
+      "sha256": "71313fdcf66dd7a4b289607c7945d90a0029292cfae540bd36721322edfe9bdd",
+      "domains": 6744
+    }
+  ]
+}
