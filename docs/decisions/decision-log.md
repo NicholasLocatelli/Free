@@ -111,7 +111,7 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Context:** l'app si rivolge a persone vulnerabili, spesso con problemi economici; il nome "Free" crea l'aspettativa di gratuità; nessun abbonamento premium previsto.
 - **Alternatives:** prezzo d'acquisto (barriera proprio per chi ha bisogno, stona con il nome); pubblicità (le reti pubblicitarie raccolgono identificativi e dati d'uso, rendendo falsa la dichiarazione "nessun dato raccolto", e scelgono da sole gli annunci, con il rischio di mostrare scommesse e casinò a chi cerca di smettere); abbonamento premium (spingerebbe a mettere a pagamento funzioni utili al percorso).
 - **Chosen:** decisione dell'owner (2026-11-08):
-  1. app gratuita e completa per chi la usa, per sempre; nessuna funzione utile al percorso a pagamento;
+  1. app gratuita e completa per chi la usa, per sempre; nessuna funzione utile al percorso a pagamento (eccezione decisa il 2026-11-27: il blocco dei siti, D-030);
   2. **nessuna pubblicità**, in nessuna forma (banner, overlay, video);
   3. donazioni facoltative nell'app ("Sostieni Free"), senza vantaggi in cambio, tramite il sistema di pagamento degli store: **dopo la Beta**; regole degli store da verificare prima dello sviluppo;
   4. sostegno da enti e progetti a impatto sociale (associazioni, Ser.D., fondazioni, welfare aziendale, fondi pubblici per la prevenzione), che non ricevono mai dati degli utenti;
@@ -119,6 +119,15 @@ Stato: ✅ decisa · ⏳ aperta (richiede input umano o milestone futura).
 - **Reason:** coerenza con i principi (privacy, nessun giudizio, accessibilità) e con il nome; costi vivi bassi (account sviluppatore degli store, nessun server).
 - **Trade-offs:** ricavi incerti e probabilmente limitati; il sostegno da enti richiede tempo e relazioni. La scelta della licenza (D-012, #7) può aiutare: un codice verificabile rende più credibile la promessa "nessun dato raccolto".
 - **Date:** 2026-10-02 · decisa 2026-11-08
+
+### D-030 ✅ Blocco dei siti di gioco come unica funzione a pagamento (modifica D-013)
+
+- **Context:** l'owner vuole un blocco dei siti di gioco dentro Free, ispirato a BetBlocker, come unica funzione a pagamento (2026-11-27).
+- **Alternatives:** segnalare gratuitamente BetBlocker (gratuito, ente benefico) nell'Aiuto; un blocco nostro ma gratuito; nessun blocco.
+- **Chosen:** decisione dell'owner, dopo aver valutato le alternative: blocco nostro e a pagamento. **Modifica la D-013, punto 1**, solo per questa funzione; tutto il resto resta gratuito e senza pubblicità. Progetto in `docs/architecture/site-blocker.md`: Android con VPN locale per primo, iOS inizialmente solo Safari.
+- **Reason:** scelta dell'owner per sostenere l'app.
+- **Trade-offs e rischi (segnalati prima della decisione):** è una protezione a pagamento per persone vulnerabili, anche economicamente (mitigazione: alternative gratuite sempre visibili, prezzo basso, nessuna pressione all'acquisto); mesi di lavoro nativo; vincoli degli store (dichiarazione VpnService, permessi Apple); commissioni degli store e adempimenti fiscali; nessun blocco è completo.
+- **Date:** 2026-11-27
 
 ### D-029 ✅ App multilingua; risorse di aiuto per paese
 
